@@ -11,6 +11,7 @@ const navLinks = [
   { to: "/keith-shingleton-david-edwards", label: "Associates" },
   { to: "/the-architect-of-deception-and-adam-howells-web-of-accomplices", label: "Web of Accomplices" },
   { to: "/blog", label: "Crypto Scam Blog" },
+  { to: "/music", label: "Music" },
 ];
 
 const Layout = ({ children }: { children: React.ReactNode }) => {

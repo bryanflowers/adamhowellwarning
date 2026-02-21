@@ -17,6 +17,7 @@ import InvestigativeUpdateSuperdoge from "./pages/InvestigativeUpdateSuperdoge";
 import Articles from "./pages/Articles";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import Music from "./pages/Music";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/articles" element={<Articles />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/music" element={<Music />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
