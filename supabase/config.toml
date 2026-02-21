@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.suno-webhook]
 verify_jwt = false
+
+[functions.moderate-comments]
+verify_jwt = false
