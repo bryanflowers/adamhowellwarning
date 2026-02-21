@@ -1,24 +1,38 @@
 
-# Fix Broken Image in Thai Translation + Reset Thai Audio Cache
 
-## Problem 1: Broken Image
-The cached Thai translation stored in the database contains a hardcoded path `/src/assets/drummond-superdoge-defense.png` which doesn't exist in production builds. Vite transforms asset paths during build, so only the ES6-imported version works. The fix is to delete the cached translation so it regenerates with the correct Vite-processed URL.
+# Fix English Audio: Extract Full Article Text for Narration
 
-## Problem 2: Thai Audio Starts from Wrong Place
-The cached Thai audio was generated before the title-prepending fix was applied. It needs to be deleted so it regenerates starting from the article title.
+## Problem
+The text extraction in `ArticlePage.tsx` (line 83-84) finds the first `<h2>` heading and reads only **that element's text**. For the "Unmasking Adam Howell" article, the first heading is "Introduction: The Predator Behind the Schemes", so the narration contains only the title prefix plus that one heading -- a few seconds of audio instead of the full article.
 
-## Steps
+## Root Cause (line 83-84)
+```typescript
+const firstHeading = proseRef.current.querySelector("h1, h2, h3, h4, h5, h6");
+const startNode = (firstHeading || proseRef.current) as HTMLElement;
+const bodyText = startNode.innerText || startNode.textContent || "";
+```
+`startNode.innerText` on an `<h2>` returns only that heading's text, not the rest of the article.
 
-### 1. Delete the cached Thai translation for this article
-Run a database migration to remove the row from `article_translations` where `article_slug = '/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned'` and `language = 'th'`. When the user next visits the Thai page, a fresh translation will be generated with correct image URLs.
+## Fix
 
-### 2. Delete the cached Thai audio for this article
-Run a database migration to remove the row from `article_audio` where `article_slug = '/th/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned'`. The next "Listen to Article" click will generate fresh audio starting from the article title.
+### 1. Update text extraction (`src/components/ArticlePage.tsx`, lines 79-88)
+Use the full prose container for text extraction instead of a single heading:
 
-### 3. No code changes needed
-The title-prepending fix in `ArticlePage.tsx` was already applied in the previous update, so the regenerated audio will correctly start from the title. The image issue is purely a stale cache problem -- the fresh translation will capture the correct Vite-processed image URL from the rendered DOM.
+```typescript
+useEffect(() => {
+  if (proseRef.current) {
+    const bodyText = proseRef.current.innerText || proseRef.current.textContent || "";
+    const prefix = [displayTitle, displaySubtitle].filter(Boolean).join(". ") + ". ";
+    setArticleText((prefix + bodyText).slice(0, 5000));
+  }
+}, [children, displayTitle, displaySubtitle, translatedHtml]);
+```
 
-## Summary
-- 2 database rows deleted (1 translation cache, 1 audio cache)
-- 0 code files modified
-- Both will auto-regenerate correctly on next visit
+This captures the entire article body (up to 5000 chars) and prepends the title.
+
+### 2. Delete the stale English audio cache
+Remove the cached row from `article_audio` for slug `/unmasking-adam-howell-the-serial-scammer-extortionist-and-crypto-fraudster-a-warning-to-investors` so the next click regenerates with the full article text.
+
+## Impact
+- This fix applies to **all articles** globally, ensuring every article sends its full body text (not just the first heading) to the audio generation service.
+- The 5000-character and 4900-character limits remain in place (client-side and edge function respectively), so very long articles will still be trimmed but will cover significantly more content than before.
