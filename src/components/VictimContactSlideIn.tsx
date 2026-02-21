@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { X, Send, ShieldAlert, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -60,6 +60,8 @@ const VictimContactSlideIn = () => {
   const { lang } = useLanguage();
   const s = t[lang];
 
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
   // Escape key to close modal
   useEffect(() => {
     if (!formOpen) return;
@@ -71,6 +73,17 @@ const VictimContactSlideIn = () => {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
+  }, [formOpen]);
+
+  // Body scroll lock + auto-focus
+  useEffect(() => {
+    if (formOpen) {
+      document.body.style.overflow = "hidden";
+      setTimeout(() => nameInputRef.current?.focus(), 100);
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
   }, [formOpen]);
 
   useEffect(() => {
@@ -116,7 +129,7 @@ const VictimContactSlideIn = () => {
       setEmail("");
       setMessage("");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to send message";
+      const msg = err instanceof Error ? err.message : (lang === "th" ? "ส่งข้อความไม่สำเร็จ" : "Failed to send message");
       toast.error(msg);
     } finally {
       setSending(false);
@@ -210,6 +223,7 @@ const VictimContactSlideIn = () => {
                         {s.nameLabel} <span className="text-muted-foreground">{s.nameHint}</span>
                       </label>
                       <input
+                        ref={nameInputRef}
                         id="victim-name"
                         type="text"
                         value={name}

@@ -129,8 +129,14 @@ const questions: Question[] = [
   },
 ];
 
-const getRating = (score: number, total: number) => {
+const getRating = (score: number, total: number, lang: string) => {
   const pct = score / total;
+  if (lang === "th") {
+    if (pct >= 0.9) return { label: "นักสืบหลอกลวงระดับสุดยอด 🕵️", color: "text-green-500", desc: "คุณสามารถจับ rug pull ได้จากระยะไกล" };
+    if (pct >= 0.7) return { label: "นักลงทุนสายตาคม 🔍", color: "text-blue-500", desc: "คุณจับสัญญาณอันตรายได้เกือบทั้งหมด — ระวังต่อไป!" };
+    if (pct >= 0.5) return { label: "กำลังเรียนรู้ 📚", color: "text-yellow-500", desc: "คุณกำลังพัฒนา ศึกษากลยุทธ์ทั่วไปเพิ่มเติม" };
+    return { label: "เป้าหมายง่าย 🎯", color: "text-destructive", desc: "คุณควรอ่านบทความสืบสวนของเรา" };
+  }
   if (pct >= 0.9) return { label: "Elite Scam Detective 🕵️", color: "text-green-500", desc: "You can spot a rug pull from orbit." };
   if (pct >= 0.7) return { label: "Sharp Investor 🔍", color: "text-blue-500", desc: "You catch most red flags — stay vigilant!" };
   if (pct >= 0.5) return { label: "Learning the Ropes 📚", color: "text-yellow-500", desc: "You're getting there. Study up on common tactics." };
@@ -188,7 +194,7 @@ const RedFlagQuiz = () => {
     setFinished(false);
   };
 
-  const rating = getRating(score, totalFlags);
+  const rating = getRating(score, totalFlags, lang);
 
   return (
     <Layout>
@@ -217,6 +223,12 @@ const RedFlagQuiz = () => {
               {tr.quizSubtitle}
             </p>
           </div>
+
+          {lang === "th" && (
+            <div className="bg-muted/50 border border-border rounded-lg p-3 mb-6 text-center text-sm text-muted-foreground">
+              ⚠️ เนื้อหาแบบทดสอบมีเฉพาะภาษาอังกฤษเท่านั้นในขณะนี้
+            </div>
+          )}
 
           {!finished ? (
             <div className="bg-card border rounded-xl p-6 md:p-8">
@@ -301,12 +313,15 @@ const RedFlagQuiz = () => {
                 </Button>
                 <Button
                   onClick={() => {
-                    const text = `I scored ${Math.round((score / totalFlags) * 100)}% on the Spot the Red Flag crypto quiz! Rating: ${rating.label}`;
+                    const pct = Math.round((score / totalFlags) * 100);
+                    const text = lang === "th"
+                      ? `ฉันได้ ${pct}% ในแบบทดสอบ Spot the Red Flag! ระดับ: ${rating.label}`
+                      : `I scored ${pct}% on the Spot the Red Flag crypto quiz! Rating: ${rating.label}`;
                     if (navigator.share) {
                       navigator.share({ text, url: window.location.href });
                     } else {
                       navigator.clipboard.writeText(`${text} ${window.location.href}`);
-                      toast.success("Result copied to clipboard!");
+                      toast.success(lang === "th" ? "คัดลอกผลลัพธ์แล้ว!" : "Result copied to clipboard!");
                     }
                   }}
                   className="gap-2"

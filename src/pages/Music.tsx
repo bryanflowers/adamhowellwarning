@@ -266,7 +266,7 @@ const Music = () => {
                 }}
               >
                 <Shuffle className="w-5 h-5" />
-                Shuffle {shuffleMode ? tr.shuffleOn : tr.shuffleOff}
+                {lang === "th" ? "สุ่ม" : "Shuffle"} {shuffleMode ? tr.shuffleOn : tr.shuffleOff}
               </Button>
             </div>
           )}
@@ -312,7 +312,7 @@ const Music = () => {
                     </h3>
                     <p className="text-xs text-muted-foreground line-clamp-2">{track.description}</p>
                     {!hasAudio && (
-                      <p className="text-xs text-destructive mt-1">Generating...</p>
+                      <p className="text-xs text-destructive mt-1">{lang === "th" ? "กำลังสร้าง..." : "Generating..."}</p>
                     )}
                   </button>
                   <button

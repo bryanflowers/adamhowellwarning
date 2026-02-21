@@ -47,6 +47,11 @@ const BlogPost = () => {
             <img src={heroImg} alt={article.title} className="rounded-lg shadow-lg w-full max-h-[400px] object-cover" />
           </figure>
         )}
+        {localPath("/") !== "/" && (
+          <div className="bg-muted/50 border border-border rounded-lg p-3 mb-6 text-sm text-muted-foreground text-center">
+            ⚠️ เนื้อหาบทความนี้มีเฉพาะภาษาอังกฤษเท่านั้นในขณะนี้
+          </div>
+        )}
         <div dangerouslySetInnerHTML={{ __html: article.content }} />
         <RelatedArticles currentSlug={`/blog/${article.slug}`} />
       </ArticlePage>
