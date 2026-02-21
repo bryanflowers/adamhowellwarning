@@ -205,6 +205,19 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <p className="text-muted-foreground text-xs mt-2">
             {tr.footerLine2}
           </p>
+          <div className="flex items-center justify-center gap-4 mt-4 text-xs text-muted-foreground">
+            <Link to={localPath("/disclaimer")} className="hover:text-primary transition-colors">
+              {tr.disclaimer}
+            </Link>
+            <span aria-hidden="true">|</span>
+            <Link to={localPath("/privacy")} className="hover:text-primary transition-colors">
+              {tr.privacyPolicy}
+            </Link>
+            <span aria-hidden="true">|</span>
+            <Link to={localPath("/about")} className="hover:text-primary transition-colors">
+              {tr.about}
+            </Link>
+          </div>
         </div>
       </footer>
     </div>

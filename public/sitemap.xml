@@ -144,4 +144,29 @@
   <url><loc>https://web-rescu.lovable.app/blog/social-engineering-crypto-attacks</loc><xhtml:link rel="alternate" hreflang="en" href="https://web-rescu.lovable.app/blog/social-engineering-crypto-attacks"/><xhtml:link rel="alternate" hreflang="th" href="https://web-rescu.lovable.app/th/blog/social-engineering-crypto-attacks"/><lastmod>2026-02-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://web-rescu.lovable.app/blog/wrapped-token-scams</loc><xhtml:link rel="alternate" hreflang="en" href="https://web-rescu.lovable.app/blog/wrapped-token-scams"/><xhtml:link rel="alternate" hreflang="th" href="https://web-rescu.lovable.app/th/blog/wrapped-token-scams"/><lastmod>2026-02-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://web-rescu.lovable.app/blog/crypto-gambling-scams</loc><xhtml:link rel="alternate" hreflang="en" href="https://web-rescu.lovable.app/blog/crypto-gambling-scams"/><xhtml:link rel="alternate" hreflang="th" href="https://web-rescu.lovable.app/th/blog/crypto-gambling-scams"/><lastmod>2026-02-21</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- Trust Pages -->
+  <url>
+    <loc>https://web-rescu.lovable.app/disclaimer</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://web-rescu.lovable.app/disclaimer"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://web-rescu.lovable.app/th/disclaimer"/>
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://web-rescu.lovable.app/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://web-rescu.lovable.app/privacy"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://web-rescu.lovable.app/th/privacy"/>
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://web-rescu.lovable.app/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://web-rescu.lovable.app/about"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://web-rescu.lovable.app/th/about"/>
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>

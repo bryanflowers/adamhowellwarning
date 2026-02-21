@@ -23,6 +23,9 @@ const Music = lazy(() => import("./pages/Music"));
 const RedFlagQuiz = lazy(() => import("./pages/RedFlagQuiz"));
 const ScamBingo = lazy(() => import("./pages/ScamBingo"));
 const AdminComments = lazy(() => import("./pages/AdminComments"));
+const Disclaimer = lazy(() => import("./pages/Disclaimer"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const About = lazy(() => import("./pages/About"));
 
 const queryClient = new QueryClient();
 
@@ -52,6 +55,9 @@ const AppRoutes = () => (
     <Route path="quiz" element={<RedFlagQuiz />} />
     <Route path="bingo" element={<ScamBingo />} />
     <Route path="admin/comments" element={<AdminComments />} />
+    <Route path="disclaimer" element={<Disclaimer />} />
+    <Route path="privacy" element={<PrivacyPolicy />} />
+    <Route path="about" element={<About />} />
   </>
 );
 
