@@ -5,6 +5,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import UnmaskingAdamHowell from "./pages/UnmaskingAdamHowell";
+import SuperDogeRugPull from "./pages/SuperDogeRugPull";
+import InvestigativeReport from "./pages/InvestigativeReport";
+import SuperDogeScamUpdate from "./pages/SuperDogeScamUpdate";
+import KeithShingletonDavidEdwards from "./pages/KeithShingletonDavidEdwards";
+import ArchitectOfDeception from "./pages/ArchitectOfDeception";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +22,12 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/unmasking-adam-howell" element={<UnmaskingAdamHowell />} />
+          <Route path="/superdoge-rug-pull" element={<SuperDogeRugPull />} />
+          <Route path="/investigative-report" element={<InvestigativeReport />} />
+          <Route path="/superdoge-scam-update" element={<SuperDogeScamUpdate />} />
+          <Route path="/keith-shingleton-david-edwards" element={<KeithShingletonDavidEdwards />} />
+          <Route path="/architect-of-deception" element={<ArchitectOfDeception />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
