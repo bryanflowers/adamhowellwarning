@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const navLinks = [
   { to: "/", label: "Home" },
-  { to: "/unmasking-adam-howell", label: "Unmasking Adam Howell" },
+  { to: "/articles", label: "All Articles" },
   { to: "/superdoge-rug-pull", label: "SuperDoge Exposé" },
   { to: "/investigative-report", label: "Investigative Report" },
   { to: "/superdoge-scam-update", label: "SuperDoge Update" },

@@ -13,6 +13,7 @@ import KeithShingletonDavidEdwards from "./pages/KeithShingletonDavidEdwards";
 import ArchitectOfDeception from "./pages/ArchitectOfDeception";
 import ExposingSuperdogeRugPull from "./pages/ExposingSuperdogeRugPull";
 import InvestigativeUpdateSuperdoge from "./pages/InvestigativeUpdateSuperdoge";
+import Articles from "./pages/Articles";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/the-architect-of-deception-and-adam-howells-web-of-accomplices" element={<ArchitectOfDeception />} />
           <Route path="/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned" element={<ExposingSuperdogeRugPull />} />
           <Route path="/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties" element={<InvestigativeUpdateSuperdoge />} />
+          <Route path="/articles" element={<Articles />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="*" element={<NotFound />} />
