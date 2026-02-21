@@ -4,6 +4,8 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, Share2, PartyPopper } from "lucide-react";
 import { toast } from "sonner";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t, bingoSquaresTh } from "@/i18n/translations";
 
 const allSquares = [
   "Anonymous Team",
@@ -53,21 +55,20 @@ const shuffle = (arr: string[]) => {
 };
 
 const checkBingo = (marked: boolean[]): boolean => {
-  // Rows
   for (let r = 0; r < 5; r++) {
     if ([0, 1, 2, 3, 4].every((c) => marked[r * 5 + c])) return true;
   }
-  // Cols
   for (let c = 0; c < 5; c++) {
     if ([0, 1, 2, 3, 4].every((r) => marked[r * 5 + c])) return true;
   }
-  // Diagonals
   if ([0, 6, 12, 18, 24].every((i) => marked[i])) return true;
   if ([4, 8, 12, 16, 20].every((i) => marked[i])) return true;
   return false;
 };
 
 const ScamBingo = () => {
+  const { lang } = useLanguage();
+  const tr = t[lang];
   const [seed, setSeed] = useState(0);
   const board = useMemo(() => {
     const shuffled = shuffle(allSquares);
@@ -102,20 +103,25 @@ const ScamBingo = () => {
     setMarked(init);
   };
 
+  const localizeSquare = (text: string): string => {
+    if (lang === "th") return bingoSquaresTh[text] || text;
+    return text;
+  };
+
   return (
     <Layout>
       <Helmet>
-        <title>Crypto Scam Bingo — Spot the Tactics | Adam Howell Warning</title>
-        <meta name="description" content="Play Crypto Scam Bingo! Click squares as you spot common scam tactics in real crypto projects. How many can you find?" />
+        <title>{tr.bingoTitle} | Adam Howell Warning</title>
+        <meta name="description" content={tr.bingoSubtitle} />
       </Helmet>
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-2xl">
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Crypto Scam Bingo
+              {tr.bingoTitle}
             </h1>
             <p className="text-muted-foreground max-w-lg mx-auto">
-              Click squares as you spot these common scam tactics in real crypto projects. Get 5 in a row for BINGO!
+              {tr.bingoSubtitle}
             </p>
           </div>
 
@@ -124,11 +130,11 @@ const ScamBingo = () => {
               <PartyPopper className="w-12 h-12 text-primary mx-auto mb-3" />
               <h2 className="text-2xl font-black text-primary mb-2">🎉 BINGO! 🎉</h2>
               <p className="text-sm text-muted-foreground mb-4">
-                You found a full line of scam tactics! Unfortunately, that means this project is probably a scam.
+                {tr.bingoWin}
               </p>
               <div className="flex justify-center gap-3">
                 <Button onClick={reset} variant="outline" className="gap-2">
-                  <RotateCcw className="w-4 h-4" /> New Card
+                  <RotateCcw className="w-4 h-4" /> {tr.newCard}
                 </Button>
                 <Button
                   onClick={() => {
@@ -142,7 +148,7 @@ const ScamBingo = () => {
                   }}
                   className="gap-2"
                 >
-                  <Share2 className="w-4 h-4" /> Share
+                  <Share2 className="w-4 h-4" /> {tr.share}
                 </Button>
               </div>
             </div>
@@ -165,16 +171,16 @@ const ScamBingo = () => {
                   }`}
                   style={isMarked && !isFree ? { animationIterationCount: 1, animationDuration: "0.4s" } : undefined}
                 >
-                  {text}
+                  {localizeSquare(text)}
                 </button>
               );
             })}
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">{markedCount}/25 spotted</span>
+            <span className="text-sm text-muted-foreground">{markedCount}/25 {tr.spotted}</span>
             <Button onClick={reset} variant="outline" size="sm" className="gap-2">
-              <RotateCcw className="w-4 h-4" /> Shuffle Card
+              <RotateCcw className="w-4 h-4" /> {tr.shuffleCard}
             </Button>
           </div>
         </div>

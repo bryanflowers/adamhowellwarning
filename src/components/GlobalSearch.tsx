@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { musicTracks } from "@/data/musicTracks";
 import { blogArticles } from "@/data/blogArticles";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t } from "@/i18n/translations";
 
 const investigativeArticles = [
   { slug: "/unmasking-adam-howell", title: "Unmasking Adam Howell", type: "article" as const },
@@ -26,6 +28,8 @@ const GlobalSearch = () => {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { lang, localPath } = useLanguage();
+  const tr = t[lang];
 
   const results = useMemo<SearchResult[]>(() => {
     if (query.length < 2) return [];
@@ -33,18 +37,18 @@ const GlobalSearch = () => {
 
     const articles: SearchResult[] = investigativeArticles
       .filter((a) => a.title.toLowerCase().includes(q))
-      .map((a) => ({ title: a.title, slug: a.slug, type: "article" }));
+      .map((a) => ({ title: a.title, slug: localPath(a.slug), type: "article" }));
 
     const blogs: SearchResult[] = blogArticles
       .filter((b) => b.title.toLowerCase().includes(q) || b.excerpt.toLowerCase().includes(q))
-      .map((b) => ({ title: b.title, slug: `/blog/${b.slug}`, type: "blog", subtitle: b.excerpt.slice(0, 80) }));
+      .map((b) => ({ title: b.title, slug: localPath(`/blog/${b.slug}`), type: "blog", subtitle: b.excerpt.slice(0, 80) }));
 
     const tracks: SearchResult[] = musicTracks
       .filter((t) => t.title.toLowerCase().includes(q) || t.description.toLowerCase().includes(q) || t.genre.toLowerCase().includes(q))
-      .map((t) => ({ title: t.title, slug: `/music?track=${t.id}`, type: "music", subtitle: `${t.genre} — ${t.description}` }));
+      .map((t) => ({ title: t.title, slug: localPath(`/music?track=${t.id}`), type: "music", subtitle: `${t.genre} — ${t.description}` }));
 
     return [...articles, ...blogs, ...tracks].slice(0, 8);
-  }, [query]);
+  }, [query, localPath]);
 
   useEffect(() => {
     if (open) inputRef.current?.focus();
@@ -85,7 +89,7 @@ const GlobalSearch = () => {
         className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground border rounded-md hover:bg-secondary transition-colors"
       >
         <Search className="w-4 h-4" />
-        <span className="hidden md:inline">Search…</span>
+        <span className="hidden md:inline">{tr.search}</span>
         <kbd className="hidden md:inline text-xs border rounded px-1 py-0.5 bg-muted">⌘K</kbd>
       </button>
     );
@@ -100,7 +104,7 @@ const GlobalSearch = () => {
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search articles, blog, music…"
+            placeholder={tr.search}
             className="pl-9 pr-8 w-56 md:w-72 h-9"
           />
           <button onClick={() => { setOpen(false); setQuery(""); }} className="absolute right-2 top-1/2 -translate-y-1/2">

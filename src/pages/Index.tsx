@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { AlertTriangle, FileText, ArrowRight, Shield, Eye, Calendar, Clock } from "lucide-react";
 import { blogArticles } from "@/data/blogArticles";
 import ShareButtons from "@/components/ShareButtons";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t, articlesMeta } from "@/i18n/translations";
 import TableOfContents from "@/components/TableOfContents";
 import ImageLightbox from "@/components/ImageLightbox";
 import andrewDrummondPost from "@/assets/andrew-drummond-post-court.png";
@@ -59,6 +61,9 @@ const articles = [
 ];
 
 const Index = () => {
+  const { lang, localPath } = useLanguage();
+  const tr = t[lang];
+  const localArticles = articlesMeta[lang];
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
 
   const handleArticleClick = useCallback((e: MouseEvent) => {
@@ -95,7 +100,7 @@ const Index = () => {
           <div className="max-w-3xl">
             <div className="flex items-center gap-2 mb-6">
               <AlertTriangle className="w-5 h-5 text-primary" />
-              <span className="text-primary font-semibold text-sm tracking-widest uppercase">Public Warning</span>
+              <span className="text-primary font-semibold text-sm tracking-widest uppercase">{tr.publicWarning}</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-black leading-[1.1] mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
               Conduct Profile of Adam Howell – Birthdate 2nd of March 1982
@@ -113,15 +118,15 @@ const Index = () => {
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-lg px-4 py-2">
                 <Shield className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium">Investor Protection</span>
+                <span className="text-sm font-medium">{tr.investorProtection}</span>
               </div>
               <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-lg px-4 py-2">
                 <Eye className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium">Evidence-Based Research</span>
+                <span className="text-sm font-medium">{tr.evidenceBasedResearch}</span>
               </div>
               <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-lg px-4 py-2">
                 <FileText className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium">Court Records & Public Sources</span>
+                <span className="text-sm font-medium">{tr.courtRecords}</span>
               </div>
             </div>
           </div>
@@ -394,15 +399,15 @@ const Index = () => {
       <section className="py-16 md:py-20 bg-secondary/30">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Investigative Reports
+            {tr.investigativeReports}
           </h2>
-          <p className="text-muted-foreground mb-10">In-depth articles documenting the evidence trail.</p>
+          <p className="text-muted-foreground mb-10">{tr.inDepthArticles}</p>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {articles.map((article) => (
+            {localArticles.map((article) => (
               <Link
                 key={article.slug}
-                to={article.slug}
+                to={localPath(article.slug)}
                 className="group bg-card border rounded-xl p-6 hover:shadow-lg transition-all hover:border-primary/30 hover:-translate-y-0.5"
               >
                 <span className="inline-block text-xs font-bold tracking-widest uppercase text-primary mb-3">
@@ -415,7 +420,7 @@ const Index = () => {
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-muted-foreground">{article.readTime}</span>
                   <span className="text-primary flex items-center gap-1 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                    Read <ArrowRight className="w-4 h-4" />
+                    {tr.readMore} <ArrowRight className="w-4 h-4" />
                   </span>
                 </div>
               </Link>
@@ -430,19 +435,19 @@ const Index = () => {
           <div className="flex items-center justify-between mb-10">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
-                Crypto Scam Warning Blog
+                {tr.cryptoScamWarningBlog}
               </h2>
-              <p className="text-muted-foreground">Educational articles on identifying and avoiding cryptocurrency fraud.</p>
+              <p className="text-muted-foreground">{tr.cryptoScamWarningBlogDesc}</p>
             </div>
-            <Link to="/blog" className="hidden sm:flex items-center gap-1 text-primary font-medium hover:underline">
-              View all <ArrowRight className="w-4 h-4" />
+            <Link to={localPath("/blog")} className="hidden sm:flex items-center gap-1 text-primary font-medium hover:underline">
+              {tr.viewAll} <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {blogArticles.slice(0, 6).map((article) => (
               <Link
                 key={article.slug}
-                to={`/blog/${article.slug}`}
+                to={localPath(`/blog/${article.slug}`)}
                 className="group bg-card border rounded-xl p-6 hover:shadow-lg transition-all hover:border-primary/30 hover:-translate-y-0.5"
               >
                 <span className="inline-block text-xs font-bold tracking-widest uppercase text-primary mb-3">
@@ -455,14 +460,14 @@ const Index = () => {
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-muted-foreground">{article.readTime}</span>
                   <span className="text-primary flex items-center gap-1 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                    Read <ArrowRight className="w-4 h-4" />
+                    {tr.readMore} <ArrowRight className="w-4 h-4" />
                   </span>
                 </div>
               </Link>
             ))}
           </div>
           <div className="mt-8 text-center sm:hidden">
-            <Link to="/blog" className="text-primary font-medium hover:underline">View all blog articles →</Link>
+            <Link to={localPath("/blog")} className="text-primary font-medium hover:underline">{tr.viewAllBlog}</Link>
           </div>
         </div>
       </section>
@@ -472,10 +477,10 @@ const Index = () => {
         <div className="container mx-auto px-4 text-center max-w-2xl">
           <AlertTriangle className="w-10 h-10 text-primary mx-auto mb-4" />
           <h2 className="text-2xl font-bold mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Have Information to Share?
+            {tr.haveInfo}
           </h2>
           <p className="text-muted-foreground">
-            If you've been a victim of Adam Howell's schemes or have evidence to contribute, reach out through secure channels. Protecting future investors starts with transparency.
+            {tr.haveInfoDesc}
           </p>
         </div>
       </section>

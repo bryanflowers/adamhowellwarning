@@ -3,13 +3,15 @@ import Layout from "@/components/Layout";
 import ArticlePage from "@/components/ArticlePage";
 import RelatedArticles from "@/components/RelatedArticles";
 import { getArticleBySlug } from "@/data/blogArticles";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
+  const { localPath } = useLanguage();
   const article = slug ? getArticleBySlug(slug) : undefined;
 
   if (!article) {
-    return <Navigate to="/blog" replace />;
+    return <Navigate to={localPath("/blog")} replace />;
   }
 
   return (
