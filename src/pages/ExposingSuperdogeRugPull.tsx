@@ -21,7 +21,9 @@ const ExposingSuperdogeRugPull = () => {
           "@type": "Article",
           "headline": "Exposing the SuperDoge Rug Pull",
           "datePublished": "2026-01-12",
+          "dateModified": "2026-02-01",
           "author": { "@type": "Organization", "name": "Adam Howell Warning" },
+          "mainEntityOfPage": "https://web-rescu.lovable.app/exposing-the-superdoge-rug-pull-adam-howells-13m-crypto-scheme",
         }}
       />
       <ArticlePage

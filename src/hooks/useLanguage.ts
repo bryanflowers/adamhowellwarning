@@ -6,7 +6,7 @@ export const useLanguage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const lang: Language = location.pathname.startsWith("/th") ? "th" : "en";
+  const lang: Language = (location.pathname === "/th" || location.pathname.startsWith("/th/")) ? "th" : "en";
 
   const toggleLanguage = () => {
     if (lang === "en") {

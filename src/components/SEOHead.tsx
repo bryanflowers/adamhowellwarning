@@ -25,7 +25,8 @@ const SEOHead = ({
   const { lang } = useLanguage();
 
   // Strip /th prefix to get the base path
-  const basePath = pathname.startsWith("/th") ? pathname.slice(3) || "/" : pathname;
+  const isThai = pathname === "/th" || pathname.startsWith("/th/");
+  const basePath = isThai ? pathname.slice(3) || "/" : pathname;
   const canonicalUrl = `${BASE_URL}${basePath === "/" ? "" : basePath}`;
   const enUrl = `${BASE_URL}${basePath === "/" ? "" : basePath}`;
   const thUrl = `${BASE_URL}/th${basePath === "/" ? "" : basePath}`;

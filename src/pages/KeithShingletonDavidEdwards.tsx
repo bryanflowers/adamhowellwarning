@@ -16,7 +16,9 @@ const KeithShingletonDavidEdwards = () => {
           "@context": "https://schema.org", "@type": "Article",
           "headline": "Deep Dive on Keith Shingleton, David Edwards and Adam Howell",
           "datePublished": "2026-01-29",
+          "dateModified": "2026-02-01",
           "author": { "@type": "Organization", "name": "Adam Howell Warning" },
+          "mainEntityOfPage": "https://web-rescu.lovable.app/keith-shingleton-david-edwards",
         }}
       />
       <ArticlePage

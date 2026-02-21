@@ -18,8 +18,8 @@ import adamHowellDmca from "@/assets/adam-howell-dmca-request.jpg";
 import drummondDopecoinComment from "@/assets/drummond-dopecoin-comment.jpeg";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
-
-const PROSE_CLASSES = "prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h4:text-lg prose-p:leading-relaxed prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground prose-blockquote:border-primary prose-blockquote:text-muted-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline";
+import ArticleNarration from "@/components/ArticleNarration";
+import { PROSE_CLASSES } from "@/lib/constants";
 
 const Index = () => {
   const { lang, localPath } = useLanguage();
@@ -167,9 +167,14 @@ const Index = () => {
               <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> {lang === "th" ? "22 พฤศจิกายน 2569" : "November 22, 2026"}</span>
               <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {lang === "th" ? "อ่าน 25 นาที" : "25 min read"}</span>
             </div>
-            <div className="mb-8">
+            <div className="mb-4">
               <ShareButtons title={lang === "th" ? "ประวัติพฤติกรรมของ Adam Howell" : "Conduct Profile of Adam Howell – Birthdate 2nd of March 1982"} />
             </div>
+            <ArticleNarration
+              articleSlug={lang === "th" ? "/th" : "/"}
+              articleText={lang === "th" ? "ประวัติพฤติกรรมของ Adam Howell วันเกิด 2 มีนาคม 1982 คำเตือนเกี่ยวกับ Adam Howell ชาวแคนาดา" : "Conduct Profile of Adam Howell. Warning about Adam Howell, a Canadian national with a documented history of online harassment, reputational attacks, fabricated allegations, and financially motivated disinformation campaigns."}
+              language={lang}
+            />
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-lg px-4 py-2">
                 <Shield className="w-4 h-4 text-primary" />

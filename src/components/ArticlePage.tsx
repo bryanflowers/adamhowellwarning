@@ -10,6 +10,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PROSE_CLASSES } from "@/lib/constants";
 
 interface ArticlePageProps {
   title: string;
@@ -228,7 +229,7 @@ const ArticlePage = ({
         ) : (
           <div
             ref={proseRef}
-            className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h4:text-lg prose-p:leading-relaxed prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground prose-blockquote:border-primary prose-blockquote:text-muted-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline"
+            className={PROSE_CLASSES}
           >
             {lang === "th" && translatedHtml ? (
               <div dangerouslySetInnerHTML={{ __html: translatedHtml }} />
