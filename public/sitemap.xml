@@ -184,4 +184,24 @@
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
+  <!-- Timeline -->
+  <url>
+    <loc>https://web-rescu.lovable.app/timeline</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://web-rescu.lovable.app/timeline"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://web-rescu.lovable.app/th/timeline"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://web-rescu.lovable.app/timeline"/>
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- Glossary & FAQ -->
+  <url>
+    <loc>https://web-rescu.lovable.app/glossary</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://web-rescu.lovable.app/glossary"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://web-rescu.lovable.app/th/glossary"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://web-rescu.lovable.app/glossary"/>
+    <lastmod>2026-02-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Layout from "@/components/Layout";
+import NewsletterSignup from "@/components/NewsletterSignup";
+import AnonymousTipForm from "@/components/AnonymousTipForm";
 import SEOHead from "@/components/SEOHead";
 import { Link } from "react-router-dom";
 import { AlertTriangle, FileText, ArrowRight, Shield, Eye, Calendar, Clock, Globe } from "lucide-react";
@@ -544,6 +546,16 @@ const Index = () => {
                 <span className="text-xs text-muted-foreground">{article.readTime}</span>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter & Anonymous Tip Section */}
+      <section className="py-12 bg-secondary/30">
+        <div className="container mx-auto px-4">
+          <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
+            <NewsletterSignup />
+            <AnonymousTipForm />
           </div>
         </div>
       </section>

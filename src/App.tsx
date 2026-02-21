@@ -26,6 +26,9 @@ const AdminComments = lazy(() => import("./pages/AdminComments"));
 const Disclaimer = lazy(() => import("./pages/Disclaimer"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const About = lazy(() => import("./pages/About"));
+const Timeline = lazy(() => import("./pages/Timeline"));
+const Glossary = lazy(() => import("./pages/Glossary"));
+const ConfirmNewsletter = lazy(() => import("./pages/ConfirmNewsletter"));
 
 const queryClient = new QueryClient();
 
@@ -58,6 +61,9 @@ const AppRoutes = () => (
     <Route path="disclaimer" element={<Disclaimer />} />
     <Route path="privacy" element={<PrivacyPolicy />} />
     <Route path="about" element={<About />} />
+    <Route path="timeline" element={<Timeline />} />
+    <Route path="glossary" element={<Glossary />} />
+    <Route path="confirm-newsletter" element={<ConfirmNewsletter />} />
   </>
 );
 
