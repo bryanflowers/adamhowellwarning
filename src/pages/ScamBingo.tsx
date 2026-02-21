@@ -146,12 +146,14 @@ const ScamBingo = () => {
                 </Button>
                 <Button
                   onClick={() => {
-                    const text = `🎰 BINGO! I spotted ${markedCount} scam red flags on Crypto Scam Bingo!`;
+                    const text = lang === "th"
+                      ? `🎰 BINGO! ฉันพบสัญญาณหลอกลวง ${markedCount} รายการใน Crypto Scam Bingo!`
+                      : `🎰 BINGO! I spotted ${markedCount} scam red flags on Crypto Scam Bingo!`;
                     if (navigator.share) {
                       navigator.share({ text, url: window.location.href });
                     } else {
                       navigator.clipboard.writeText(`${text} ${window.location.href}`);
-                      toast.success("Copied to clipboard!");
+                      toast.success(lang === "th" ? "คัดลอกแล้ว!" : "Copied to clipboard!");
                     }
                   }}
                   className="gap-2"

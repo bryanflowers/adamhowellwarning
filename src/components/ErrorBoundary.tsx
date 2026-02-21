@@ -26,23 +26,25 @@ class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
+      const isThai = window.location.pathname === "/th" || window.location.pathname.startsWith("/th/");
       return (
         this.props.fallback ?? (
           <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
             <div className="text-center max-w-md px-6">
-              <h1 className="text-4xl font-bold mb-4">Something went wrong</h1>
+              <h1 className="text-4xl font-bold mb-4">
+                {isThai ? "เกิดข้อผิดพลาด" : "Something went wrong"}
+              </h1>
               <p className="text-muted-foreground mb-6">
-                {this.state.error?.message || "An unexpected error occurred."}
+                {this.state.error?.message || (isThai ? "เกิดข้อผิดพลาดที่ไม่คาดคิด" : "An unexpected error occurred.")}
               </p>
               <button
                 onClick={() => {
                   this.setState({ hasError: false, error: null });
-                  const isThai = window.location.pathname === "/th" || window.location.pathname.startsWith("/th/");
                   window.location.href = isThai ? "/th" : "/";
                 }}
                 className="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 py-3 text-sm font-medium hover:bg-primary/90 transition-colors"
               >
-                Go Home
+                {isThai ? "กลับหน้าหลัก" : "Go Home"}
               </button>
             </div>
           </div>
