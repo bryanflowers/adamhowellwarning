@@ -1,48 +1,24 @@
 
-# Fix Article Narration: Include Title in Audio
+# Fix Broken Image in Thai Translation + Reset Thai Audio Cache
 
-## Problem
-The narration for the "Unmasking Adam Howell" article starts from "Introduction: The Predator Behind the Schemes" instead of the article title. This happens because the text extraction in `ArticlePage.tsx` finds the first heading inside the prose `<div>`, which is `<h2>Introduction...</h2>` -- the title and subtitle live in the `<header>` above the prose area.
+## Problem 1: Broken Image
+The cached Thai translation stored in the database contains a hardcoded path `/src/assets/drummond-superdoge-defense.png` which doesn't exist in production builds. Vite transforms asset paths during build, so only the ES6-imported version works. The fix is to delete the cached translation so it regenerates with the correct Vite-processed URL.
 
-## Solution
+## Problem 2: Thai Audio Starts from Wrong Place
+The cached Thai audio was generated before the title-prepending fix was applied. It needs to be deleted so it regenerates starting from the article title.
 
-### 1. Fix text extraction (`src/components/ArticlePage.tsx`, line 79-87)
-Prepend `displayTitle` and `displaySubtitle` to the extracted body text so the narration always begins with the article's title:
+## Steps
 
-```typescript
-useEffect(() => {
-  if (proseRef.current) {
-    const firstHeading = proseRef.current.querySelector("h1, h2, h3, h4, h5, h6");
-    const startNode = (firstHeading || proseRef.current) as HTMLElement;
-    const bodyText = startNode.innerText || startNode.textContent || "";
-    // Prepend title + subtitle so narration starts with the headline
-    const prefix = [displayTitle, displaySubtitle].filter(Boolean).join(". ") + ". ";
-    setArticleText((prefix + bodyText).slice(0, 5000));
-  }
-}, [children, displayTitle, displaySubtitle, translatedHtml]);
-```
+### 1. Delete the cached Thai translation for this article
+Run a database migration to remove the row from `article_translations` where `article_slug = '/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned'` and `language = 'th'`. When the user next visits the Thai page, a fresh translation will be generated with correct image URLs.
 
-### 2. Delete cached audio from the database
-Remove the stale English cache entry so the next "Listen to Article" click generates fresh audio starting from the title. There are 4 rows to clean up (old slug variants + current slug):
+### 2. Delete the cached Thai audio for this article
+Run a database migration to remove the row from `article_audio` where `article_slug = '/th/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned'`. The next "Listen to Article" click will generate fresh audio starting from the article title.
 
-- `/unmasking-adam-howell`
-- `/unmasking-adam-howell-the-serial-scammer-extortionist-and-crypto-fraudster-a-warning-to-investors`
-- `/unmasking-adam-howell-the-serial-scammer-extortionist-and-crypto-fraudster-a-warning-to-investors/`
+### 3. No code changes needed
+The title-prepending fix in `ArticlePage.tsx` was already applied in the previous update, so the regenerated audio will correctly start from the title. The image issue is purely a stale cache problem -- the fresh translation will capture the correct Vite-processed image URL from the rendered DOM.
 
-A database migration will delete these rows. The storage files will remain but become orphaned (harmless, and will be overwritten on regeneration since the edge function uses `upsert: true`).
-
-### 3. Delete stale storage files
-Remove the old MP3 files from the `article-audio` storage bucket so they don't take up space. The edge function will upload fresh ones on next generation.
-
----
-
-## Technical Details
-
-### Files to modify (1):
-- `src/components/ArticlePage.tsx` -- Prepend `displayTitle` and `displaySubtitle` to the TTS text extraction (lines 79-87)
-
-### Database migration (1):
-- Delete rows from `article_audio` where `article_slug` matches the old cached entries for this article
-
-### Note
-This fix applies globally to all articles using `ArticlePage`, so every article's narration will now correctly start with its title. No other articles need individual fixes.
+## Summary
+- 2 database rows deleted (1 translation cache, 1 audio cache)
+- 0 code files modified
+- Both will auto-regenerate correctly on next visit
