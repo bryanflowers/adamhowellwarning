@@ -2,3 +2,6 @@ project_id = "hrmvdwirbrmogwhtglsx"
 
 [functions.generate-suno-music]
 verify_jwt = false
+
+[functions.suno-webhook]
+verify_jwt = false
