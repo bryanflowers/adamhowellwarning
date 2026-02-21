@@ -101,8 +101,6 @@ const ArticlePage = ({
       // Capture English HTML BEFORE showing skeleton (proseRef would be null during skeleton)
       const englishHtml = proseRef.current?.innerHTML || "";
 
-      setTranslating(true);
-
       try {
         // Step 1: Try DB cache directly — check multiple possible slug formats
         const slugVariants = [cacheSlug, articleSlug, `/th${cacheSlug}`];
@@ -129,9 +127,10 @@ const ArticlePage = ({
 
         // Step 2: Not cached — call edge function to generate + cache
         if (!englishHtml) {
-          setTranslating(false);
           return;
         }
+
+        setTranslating(true);
 
         const { data, error } = await supabase.functions.invoke("translate-article", {
           body: {
@@ -200,7 +199,7 @@ const ArticlePage = ({
             )}
             <ShareButtons title={displayTitle} />
           </div>
-          {articleText && <ArticleNarration articleSlug={articleSlug} articleText={articleText} language={lang} />}
+          {articleText && !(lang === "th" && translating) && <ArticleNarration articleSlug={articleSlug} articleText={articleText} language={lang} />}
           {lang === "th" && !translating && translatedHtml && (
             <div className="flex items-center gap-2 mt-4 px-3 py-1.5 bg-muted/50 rounded-md text-xs text-muted-foreground w-fit">
               <Globe className="w-3 h-3" />
