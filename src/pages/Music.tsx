@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Play, Pause, Volume2, VolumeX, Music as MusicIcon, SkipForward, SkipBack } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, Music as MusicIcon, SkipForward, SkipBack, Shuffle } from "lucide-react";
 import Layout from "@/components/Layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ const Music = () => {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(80);
   const [isMuted, setIsMuted] = useState(false);
+  const [shuffleMode, setShuffleMode] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const filteredTracks = activeGenre
@@ -23,9 +24,20 @@ const Music = () => {
 
   const playableTracks = filteredTracks.filter((t) => !!t.audioUrl);
 
+  const getShuffledPool = (pool: MusicTrack[]) => {
+    if (!shuffleMode) return pool;
+    const shuffled = [...pool];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
   const playAll = () => {
     if (playableTracks.length === 0) return;
-    setCurrentTrack(playableTracks[0]);
+    const pool = getShuffledPool(playableTracks);
+    setCurrentTrack(pool[0]);
     setIsPlaying(true);
     setProgress(0);
   };
@@ -54,10 +66,15 @@ const Music = () => {
   const skipNext = () => {
     if (!currentTrack) return;
     const pool = playableTracks.length > 0 ? playableTracks : musicTracks.filter((t) => !!t.audioUrl);
-    const idx = pool.findIndex((t) => t.id === currentTrack.id);
-    if (idx === -1 || pool.length === 0) return;
-    const next = pool[(idx + 1) % pool.length];
-    setCurrentTrack(next);
+    if (pool.length === 0) return;
+    if (shuffleMode) {
+      const randomIdx = Math.floor(Math.random() * pool.length);
+      setCurrentTrack(pool[randomIdx]);
+    } else {
+      const idx = pool.findIndex((t) => t.id === currentTrack.id);
+      if (idx === -1) return;
+      setCurrentTrack(pool[(idx + 1) % pool.length]);
+    }
     setIsPlaying(true);
     setProgress(0);
   };
@@ -65,10 +82,15 @@ const Music = () => {
   const skipPrev = () => {
     if (!currentTrack) return;
     const pool = playableTracks.length > 0 ? playableTracks : musicTracks.filter((t) => !!t.audioUrl);
-    const idx = pool.findIndex((t) => t.id === currentTrack.id);
-    if (idx === -1 || pool.length === 0) return;
-    const prev = pool[(idx - 1 + pool.length) % pool.length];
-    setCurrentTrack(prev);
+    if (pool.length === 0) return;
+    if (shuffleMode) {
+      const randomIdx = Math.floor(Math.random() * pool.length);
+      setCurrentTrack(pool[randomIdx]);
+    } else {
+      const idx = pool.findIndex((t) => t.id === currentTrack.id);
+      if (idx === -1) return;
+      setCurrentTrack(pool[(idx - 1 + pool.length) % pool.length]);
+    }
     setIsPlaying(true);
     setProgress(0);
   };
@@ -163,10 +185,19 @@ const Music = () => {
 
           {/* Play All */}
           {playableTracks.length > 0 && (
-            <div className="flex justify-center mb-8">
+            <div className="flex justify-center items-center gap-3 mb-8">
               <Button onClick={playAll} size="lg" className="gap-2">
                 <Play className="w-5 h-5" />
                 Play All{activeGenre ? ` ${activeGenre}` : ""} ({playableTracks.length} tracks)
+              </Button>
+              <Button
+                variant={shuffleMode ? "default" : "outline"}
+                size="lg"
+                className="gap-2"
+                onClick={() => setShuffleMode(!shuffleMode)}
+              >
+                <Shuffle className="w-5 h-5" />
+                Shuffle {shuffleMode ? "On" : "Off"}
               </Button>
             </div>
           )}
