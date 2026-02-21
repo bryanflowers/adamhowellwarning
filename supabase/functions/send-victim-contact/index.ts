@@ -1,3 +1,5 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -40,55 +42,78 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Store in database (service role bypasses RLS for insert)
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+
+    const dbPromise = supabase
+      .from("victim_contacts")
+      .insert({ name, email, message })
+      .then(({ error: dbErr }) => {
+        if (dbErr) console.error("DB insert error:", dbErr.message);
+        return !dbErr;
+      });
+
+    // Send email via Resend
     const resendKey = Deno.env.get("RESEND_API_KEY");
-    if (!resendKey) {
+    let emailSent = false;
+
+    if (resendKey) {
+      const escapedName = escapeHtml(name);
+      const escapedEmail = escapeHtml(email);
+      const escapedMessage = escapeHtml(message).replace(/\n/g, "<br>");
+
+      const htmlBody = `
+        <h2>New Victim Contact Submission</h2>
+        <p><strong>Name:</strong> ${escapedName}</p>
+        <p><strong>Email:</strong> ${escapedEmail}</p>
+        <hr>
+        <p><strong>Message:</strong></p>
+        <p>${escapedMessage}</p>
+        <hr>
+        <p style="color:#888;font-size:12px;">Submitted at ${new Date().toISOString()}</p>
+      `;
+
+      try {
+        const resendRes = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${resendKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "Victim Contact <onboarding@resend.dev>",
+            to: ["b@bazookaemail.com"],
+            reply_to: email,
+            subject: `Victim Report from ${name}`,
+            html: htmlBody,
+          }),
+        });
+
+        if (resendRes.ok) {
+          await resendRes.json();
+          emailSent = true;
+        } else {
+          const errText = await resendRes.text();
+          console.error("Resend API error:", resendRes.status, errText);
+        }
+      } catch (emailErr) {
+        console.error("Email send error:", emailErr);
+      }
+    } else {
       console.error("RESEND_API_KEY not configured");
-      return new Response(JSON.stringify({ error: "Server configuration error" }), {
+    }
+
+    const dbSaved = await dbPromise;
+
+    if (!dbSaved && !emailSent) {
+      return new Response(JSON.stringify({ error: "Failed to process submission" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-
-    const escapedName = escapeHtml(name);
-    const escapedEmail = escapeHtml(email);
-    const escapedMessage = escapeHtml(message).replace(/\n/g, "<br>");
-
-    const htmlBody = `
-      <h2>New Victim Contact Submission</h2>
-      <p><strong>Name:</strong> ${escapedName}</p>
-      <p><strong>Email:</strong> ${escapedEmail}</p>
-      <hr>
-      <p><strong>Message:</strong></p>
-      <p>${escapedMessage}</p>
-      <hr>
-      <p style="color:#888;font-size:12px;">Submitted at ${new Date().toISOString()}</p>
-    `;
-
-    const resendRes = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${resendKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: "Victim Contact <onboarding@resend.dev>",
-        to: ["b@bazookaemail.com"],
-        reply_to: email,
-        subject: `Victim Report from ${name}`,
-        html: htmlBody,
-      }),
-    });
-
-    if (!resendRes.ok) {
-      const errText = await resendRes.text();
-      console.error("Resend API error:", resendRes.status, errText);
-      return new Response(JSON.stringify({ error: "Failed to send email" }), {
-        status: 502,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    await resendRes.json(); // consume body
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

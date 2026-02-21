@@ -11,7 +11,6 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Verify auth via JWT claims
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -35,7 +34,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Parse body
     let body: Record<string, unknown>;
     try {
       body = await req.json();
@@ -46,13 +44,15 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { action, commentId, status } = body as {
+    const { action, commentId, status, resource } = body as {
       action?: string;
       commentId?: string;
       status?: string;
+      resource?: string;
     };
 
-    // Use service role for admin operations (bypasses RLS)
+    const table = resource === "victim_contacts" ? "victim_contacts" : "comments";
+
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
@@ -60,17 +60,20 @@ Deno.serve(async (req) => {
 
     if (action === "list") {
       const { data, error } = await supabase
-        .from("comments")
+        .from(table)
         .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return new Response(JSON.stringify({ comments: data }), {
+      const key = table === "victim_contacts" ? "contacts" : "comments";
+      return new Response(JSON.stringify({ [key]: data }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     if (action === "update" && commentId && status) {
-      const validStatuses = ["approved", "rejected", "pending"];
+      const validStatuses = table === "victim_contacts"
+        ? ["pending", "reviewed", "archived"]
+        : ["approved", "rejected", "pending"];
       if (!validStatuses.includes(status)) {
         return new Response(JSON.stringify({ error: "Invalid status" }), {
           status: 400,
@@ -78,7 +81,7 @@ Deno.serve(async (req) => {
         });
       }
       const { error } = await supabase
-        .from("comments")
+        .from(table)
         .update({ status })
         .eq("id", commentId);
       if (error) throw error;
@@ -89,7 +92,7 @@ Deno.serve(async (req) => {
 
     if (action === "delete" && commentId) {
       const { error } = await supabase
-        .from("comments")
+        .from(table)
         .delete()
         .eq("id", commentId);
       if (error) throw error;
