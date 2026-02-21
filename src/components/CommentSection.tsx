@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { MessageSquare, Send, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface Comment {
   id: string;
@@ -20,6 +21,7 @@ const CommentSection = ({ articleSlug }: CommentSectionProps) => {
   const [name, setName] = useState("");
   const [text, setText] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const { lang } = useLanguage();
   const queryClient = useQueryClient();
 
   const { data: comments = [], isLoading } = useQuery({
@@ -62,7 +64,7 @@ const CommentSection = ({ articleSlug }: CommentSectionProps) => {
   });
 
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("en-US", {
+    return new Date(dateStr).toLocaleDateString(lang === "th" ? "th-TH" : "en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",

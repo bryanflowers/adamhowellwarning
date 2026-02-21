@@ -14,7 +14,8 @@ const UnmaskingAdamHowell = () => {
     "author": { "@type": "Organization", "name": "Adam Howell Warning" },
     "publisher": { "@type": "Organization", "name": "Adam Howell Warning" },
     "datePublished": "2024-06-15",
-    "dateModified": "2025-01-10",
+    "dateModified": "2026-02-01",
+    "mainEntityOfPage": "https://web-rescu.lovable.app/unmasking-adam-howell",
   };
 
   return (
