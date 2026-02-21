@@ -5,9 +5,9 @@ import { useState, useEffect } from "react";
 const navLinks = [
   { to: "/", label: "Home" },
   { to: "/articles", label: "All Articles" },
-  { to: "/superdoge-rug-pull", label: "SuperDoge Exposé" },
-  { to: "/investigative-report", label: "Investigative Report" },
-  { to: "/superdoge-scam-update", label: "SuperDoge Update" },
+  { to: "/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned", label: "SuperDoge Exposé" },
+  { to: "/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond", label: "Investigative Report" },
+  { to: "/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties", label: "SuperDoge Update" },
   { to: "/keith-shingleton-david-edwards", label: "Associates" },
   { to: "/the-architect-of-deception-and-adam-howells-web-of-accomplices", label: "Web of Accomplices" },
   { to: "/blog", label: "Crypto Scam Blog" },
