@@ -17,7 +17,9 @@ const ArchitectOfDeception = () => {
           "@context": "https://schema.org", "@type": "Article",
           "headline": "The Architect of Deception and Adam Howell's Web of Accomplices",
           "datePublished": "2026-01-22",
+          "dateModified": "2026-02-01",
           "author": { "@type": "Organization", "name": "Adam Howell Warning" },
+          "mainEntityOfPage": "https://web-rescu.lovable.app/the-architect-of-deception-and-adam-howells-web-of-accomplices",
         }}
       />
       <ArticlePage

@@ -16,7 +16,9 @@ const InvestigativeUpdateSuperdoge = () => {
           "@context": "https://schema.org", "@type": "Article",
           "headline": "Investigative Update: Exposing the SuperDoge Scam",
           "datePublished": "2026-01-29",
+          "dateModified": "2026-02-01",
           "author": { "@type": "Organization", "name": "Adam Howell Warning" },
+          "mainEntityOfPage": "https://web-rescu.lovable.app/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties",
         }}
       />
       <ArticlePage

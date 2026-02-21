@@ -31,7 +31,9 @@ const BlogPost = () => {
           "headline": article.title,
           "description": article.metaDescription,
           "datePublished": article.date,
+          "dateModified": article.date,
           "author": { "@type": "Organization", "name": "Adam Howell Warning" },
+          "mainEntityOfPage": `https://web-rescu.lovable.app/blog/${article.slug}`,
         }}
       />
       <ArticlePage
