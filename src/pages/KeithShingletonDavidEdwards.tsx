@@ -1,14 +1,25 @@
 import Layout from "@/components/Layout";
 import ArticlePage from "@/components/ArticlePage";
 import RelatedArticles from "@/components/RelatedArticles";
+import SEOHead from "@/components/SEOHead";
 import davidEdwardsLinkedin from "@/assets/david-edwards-linkedin.png";
 import keithShingletonLinkedin from "@/assets/keith-shingleton-linkedin-full.png";
 
 const KeithShingletonDavidEdwards = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Keith Shingleton, David Edwards & Adam Howell Connections"
+        description="Examining the inner circle and mechanisms behind Adam Howell's alleged scams — from co-authored whitepapers to unverified LinkedIn achievements."
+        ogType="article"
+        jsonLd={{
+          "@context": "https://schema.org", "@type": "Article",
+          "headline": "Deep Dive on Keith Shingleton, David Edwards and Adam Howell",
+          "datePublished": "2026-01-29",
+          "author": { "@type": "Organization", "name": "Adam Howell Warning" },
+        }}
+      />
       <ArticlePage
-        title="Investigative Update: Deep Dive on Keith Shingleton, David Edwards and Connections to Adam Howell's Ventures"
         subtitle="Examining the inner circle and mechanisms behind the alleged scams — from co-authored whitepapers to unverified LinkedIn achievements."
         date="January 29, 2026"
         readTime="18 min read"

@@ -1,12 +1,28 @@
 import Layout from "@/components/Layout";
 import ArticlePage from "@/components/ArticlePage";
 import RelatedArticles from "@/components/RelatedArticles";
+import SEOHead from "@/components/SEOHead";
 import adamHowellPassport from "@/assets/adam-howell-passport.jpeg";
 import andrewDrummondPost from "@/assets/andrew-drummond-post.png";
 
 const UnmaskingAdamHowell = () => {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Unmasking Adam Howell: The Serial Scammer, Extortionist, and Crypto Fraudster",
+    "description": "A comprehensive exposé compiling documented evidence from court records, victim accounts, and public exposes.",
+    "author": { "@type": "Organization", "name": "Adam Howell Warning" },
+    "publisher": { "@type": "Organization", "name": "Adam Howell Warning" },
+  };
+
   return (
     <Layout>
+      <SEOHead
+        title="Unmasking Adam Howell: Serial Scammer & Crypto Fraudster"
+        description="Comprehensive exposé of Adam Howell's crypto fraud, pump-and-dump schemes, SuperDoge rug pull, extortion, and defamation campaigns with court evidence."
+        ogType="article"
+        jsonLd={jsonLd}
+      />
       <ArticlePage
         title="Unmasking Adam Howell: The Serial Scammer, Extortionist, and Crypto Fraudster – A Warning to Investors"
         subtitle="A comprehensive exposé compiling documented evidence from court records, victim accounts, and public exposes to highlight his patterns of deception and failure."

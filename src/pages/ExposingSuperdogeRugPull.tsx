@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import ArticlePage from "@/components/ArticlePage";
 import RelatedArticles from "@/components/RelatedArticles";
+import SEOHead from "@/components/SEOHead";
 import drummondSuperdogeDefense from "@/assets/drummond-superdoge-defense.png";
 import superDogeEdgeNft from "@/assets/superdoge-edge-nft-podcast.jpg";
 import adamHowellCourt from "@/assets/adam-howell-court.png";
@@ -10,8 +11,20 @@ import superDogeCharities from "@/assets/superdoge-charities.png";
 const ExposingSuperdogeRugPull = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Exposing the SuperDoge Rug Pull – Adam Howell's $13M Crypto Scheme"
+        description="Dissecting how SuperDoge operated, the key players involved, the red flags of a classic rug pull, and a conservative estimate of how much developers extracted."
+        ogImage="/og-superdoge-report.png"
+        ogType="article"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": "Exposing the SuperDoge Rug Pull",
+          "datePublished": "2026-01-12",
+          "author": { "@type": "Organization", "name": "Adam Howell Warning" },
+        }}
+      />
       <ArticlePage
-        title="Exposing the SuperDoge Rug Pull: Adam Howell's Latest Crypto Scheme and the Millions Potentially Siphoned"
         subtitle="Dissecting how SuperDoge operated, the key players involved, the red flags of a classic rug pull, and a conservative estimate of how much the developers may have extracted."
         date="January 12, 2026"
         readTime="35 min read"
