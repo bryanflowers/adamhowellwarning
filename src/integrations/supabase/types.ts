@@ -14,7 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      suno_tasks: {
+        Row: {
+          audio_url: string | null
+          created_at: string
+          duration: number | null
+          genre: string
+          id: string
+          status: string
+          task_id: string
+          title: string
+          track_number: number
+          updated_at: string
+        }
+        Insert: {
+          audio_url?: string | null
+          created_at?: string
+          duration?: number | null
+          genre: string
+          id?: string
+          status?: string
+          task_id: string
+          title: string
+          track_number: number
+          updated_at?: string
+        }
+        Update: {
+          audio_url?: string | null
+          created_at?: string
+          duration?: number | null
+          genre?: string
+          id?: string
+          status?: string
+          task_id?: string
+          title?: string
+          track_number?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
