@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import { AlertTriangle, Shield, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { AlertTriangle, Shield, Menu, X, ArrowUp } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -15,6 +15,16 @@ const navLinks = [
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -44,7 +54,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <Link
                 key={link.to}
                 to={link.to}
-                className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-secondary"
+                className={`px-3 py-2 text-sm font-medium transition-colors rounded-md hover:bg-secondary ${
+                  location.pathname === link.to
+                    ? "text-primary bg-secondary"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
               >
                 {link.label}
               </Link>
@@ -65,7 +79,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 key={link.to}
                 to={link.to}
                 onClick={() => setMenuOpen(false)}
-                className="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-secondary"
+                className={`block px-3 py-2 text-sm font-medium transition-colors rounded-md hover:bg-secondary ${
+                  location.pathname === link.to
+                    ? "text-primary bg-secondary"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
               >
                 {link.label}
               </Link>
@@ -76,6 +94,17 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       {/* Main Content */}
       <main className="flex-1">{children}</main>
+
+      {/* Back to Top Button */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className={`fixed bottom-6 right-6 z-50 bg-primary text-primary-foreground p-3 rounded-full shadow-lg transition-all hover:scale-110 ${
+          showBackToTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+        }`}
+        aria-label="Back to top"
+      >
+        <ArrowUp className="w-5 h-5" />
+      </button>
 
       {/* Footer */}
       <footer className="bg-card border-t py-8">
