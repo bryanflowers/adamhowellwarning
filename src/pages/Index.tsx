@@ -7,6 +7,7 @@ import fakeFbMessages from "@/assets/adam-howell-fake-fb-messages.jpg";
 import adamHowellPassport from "@/assets/adam-howell-passport.jpeg";
 import adamHowellRebillChat from "@/assets/adam-howell-rebill-chat.jpeg";
 import adamHowellDmca from "@/assets/adam-howell-dmca-request.jpg";
+import drummondDopecoinComment from "@/assets/drummond-dopecoin-comment.jpeg";
 
 const articles = [
   {
@@ -288,8 +289,8 @@ const Index = () => {
 
             <div className="md:flex md:gap-6 my-8">
               <figure className="md:w-1/3 shrink-0 mb-4 md:mb-0">
-                <img src={adamHowellPassport} alt="Adam Howell passport identification" className="rounded-lg shadow-lg w-full" />
-                <figcaption className="text-sm text-muted-foreground mt-2">Adam Howell — Canadian national, born 2nd March 1982</figcaption>
+                <img src={drummondDopecoinComment} alt="Andrew Drummond commenting on Adam Howell's DopeCoin involvement" className="rounded-lg shadow-lg w-full" />
+                <figcaption className="text-sm text-muted-foreground mt-2">Andrew Drummond confirms Adam Howell's involvement with DopeCoin</figcaption>
               </figure>
               <div>
                 <p>Any prospective engagement with Adam Howell should incorporate the following risk-adjusted contingencies:</p>
