@@ -59,6 +59,13 @@ const articles = [
     tag: "Investigative Update",
     readTime: "15 min read",
   },
+  {
+    slug: "/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond",
+    title: "Investigative Report: Uncovering the Trail of Adam Howell's Ventures in Crypto and Beyond",
+    excerpt: "A comprehensive investigation mapping every venture, failed project, and scam pattern — from DopeCoin to SuperDoge and beyond.",
+    tag: "Investigative Report",
+    readTime: "20 min read",
+  },
 ];
 
 const Articles = () => {
