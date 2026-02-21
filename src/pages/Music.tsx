@@ -186,6 +186,9 @@ const Music = () => {
             <p className="text-muted-foreground max-w-2xl mx-auto">
               50 original AI-generated tracks across multiple genres — each one inspired by the investigative findings on this site.
             </p>
+            <p className="text-xs text-muted-foreground/70 mt-2 max-w-xl mx-auto italic">
+              These songs were created solely to raise awareness about cryptocurrency scams and help protect potential victims. No profit is made from this music.
+            </p>
           </div>
 
           {/* Genre Filters + Playlist Toggle */}
