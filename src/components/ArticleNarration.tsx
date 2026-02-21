@@ -3,14 +3,16 @@ import { Play, Pause, Volume2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface ArticleNarrationProps {
   articleSlug: string;
   articleText: string;
   language?: string;
+  className?: string;
 }
 
-const ArticleNarration = ({ articleSlug, articleText, language = "en" }: ArticleNarrationProps) => {
+const ArticleNarration = ({ articleSlug, articleText, language = "en", className }: ArticleNarrationProps) => {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -92,7 +94,7 @@ const ArticleNarration = ({ articleSlug, articleText, language = "en" }: Article
         size="sm"
         onClick={handlePlay}
         disabled={isLoading}
-        className="gap-2"
+        className={cn("gap-2", className)}
       >
         {isLoading ? (
           <>
