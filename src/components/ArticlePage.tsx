@@ -81,8 +81,10 @@ const ArticlePage = ({
     if (proseRef.current) {
       const firstHeading = proseRef.current.querySelector("h1, h2, h3, h4, h5, h6");
       const startNode = (firstHeading || proseRef.current) as HTMLElement;
-      const bodyText = startNode.innerText || startNode.textContent || "";
-      setArticleText(bodyText.slice(0, 5000));
+    const bodyText = startNode.innerText || startNode.textContent || "";
+      // Prepend title + subtitle so narration starts with the headline
+      const prefix = [displayTitle, displaySubtitle].filter(Boolean).join(". ") + ". ";
+      setArticleText((prefix + bodyText).slice(0, 5000));
     }
   }, [children, displayTitle, displaySubtitle, translatedHtml]);
 
