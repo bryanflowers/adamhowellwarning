@@ -11,6 +11,7 @@ const SuperDogeRugPull = () => {
       <ArticlePage
         title="Exposing the SuperDoge Rug Pull: Adam Howell's Charity-Fueled Crypto Scam and the Millions Siphoned"
         subtitle="Dissecting how SuperDoge operated, the red flags ignored, the unprofessional tactics employed, and the potential legal violations that scream fraud."
+        date="January 27, 2026"
         readTime="45 min read"
       >
         <p>
