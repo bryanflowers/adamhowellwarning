@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Check, X, Trash2, RefreshCw } from "lucide-react";
+import { Shield, Check, X, Trash2, RefreshCw, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import Layout from "@/components/Layout";
+import type { Session } from "@supabase/supabase-js";
 
 interface Comment {
   id: string;
@@ -16,30 +17,53 @@ interface Comment {
 }
 
 const AdminComments = () => {
+  const [session, setSession] = useState<Session | null>(null);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [authenticated, setAuthenticated] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
 
-  const callApi = async (body: Record<string, unknown>) => {
-    const { data, error } = await supabase.functions.invoke("moderate-comments", {
-      body: { ...body, password },
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setAuthLoading(false);
+      if (session) loadComments();
     });
-    if (error) throw error;
-    if (data?.error) throw new Error(data.error);
-    return data;
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setAuthLoading(false);
+      if (session) loadComments();
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const login = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      toast.error("Invalid credentials");
+    }
+    setLoading(false);
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setComments([]);
   };
 
   const loadComments = async () => {
     setLoading(true);
     try {
-      const data = await callApi({ action: "list" });
+      const { data, error } = await supabase.functions.invoke("moderate-comments", {
+        body: { action: "list" },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
       setComments(data.comments || []);
-      setAuthenticated(true);
     } catch {
-      toast.error("Failed to authenticate or load comments.");
-      setAuthenticated(false);
+      toast.error("Failed to load comments.");
     } finally {
       setLoading(false);
     }
@@ -47,7 +71,11 @@ const AdminComments = () => {
 
   const updateStatus = async (commentId: string, status: string) => {
     try {
-      await callApi({ action: "update", commentId, status });
+      const { data, error } = await supabase.functions.invoke("moderate-comments", {
+        body: { action: "update", commentId, status },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
       setComments((prev) =>
         prev.map((c) => (c.id === commentId ? { ...c, status } : c))
       );
@@ -59,7 +87,11 @@ const AdminComments = () => {
 
   const deleteComment = async (commentId: string) => {
     try {
-      await callApi({ action: "delete", commentId });
+      const { data, error } = await supabase.functions.invoke("moderate-comments", {
+        body: { action: "delete", commentId },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
       setComments((prev) => prev.filter((c) => c.id !== commentId));
       toast.success("Comment deleted");
     } catch {
@@ -70,15 +102,25 @@ const AdminComments = () => {
   const filtered = filter === "all" ? comments : comments.filter((c) => c.status === filter);
 
   const statusColor = (s: string) => {
-    if (s === "approved") return "default";
-    if (s === "rejected") return "destructive";
-    return "secondary";
+    if (s === "approved") return "default" as const;
+    if (s === "rejected") return "destructive" as const;
+    return "secondary" as const;
   };
 
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
-  if (!authenticated) {
+  if (authLoading) {
+    return (
+      <Layout>
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!session) {
     return (
       <Layout>
         <div className="min-h-[60vh] flex items-center justify-center">
@@ -87,18 +129,27 @@ const AdminComments = () => {
               <Shield className="w-6 h-6 text-primary" />
               <h1 className="text-xl font-bold text-foreground">Comment Moderation</h1>
             </div>
-            <label htmlFor="admin-pw" className="text-sm font-medium text-foreground block mb-2">Admin Password</label>
+            <label htmlFor="admin-email" className="text-sm font-medium text-foreground block mb-1">Email</label>
+            <input
+              id="admin-email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground mb-3 focus:outline-none focus:ring-2 focus:ring-ring"
+              placeholder="admin@example.com"
+            />
+            <label htmlFor="admin-pw" className="text-sm font-medium text-foreground block mb-1">Password</label>
             <input
               id="admin-pw"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && loadComments()}
+              onKeyDown={(e) => e.key === "Enter" && login()}
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground mb-4 focus:outline-none focus:ring-2 focus:ring-ring"
-              placeholder="Enter admin password"
+              placeholder="Enter password"
             />
-            <Button onClick={loadComments} disabled={!password || loading} className="w-full">
-              {loading ? "Authenticating..." : "Access Panel"}
+            <Button onClick={login} disabled={!email || !password || loading} className="w-full">
+              {loading ? "Signing in..." : "Sign In"}
             </Button>
           </div>
         </div>
@@ -115,9 +166,14 @@ const AdminComments = () => {
               <Shield className="w-6 h-6 text-primary" />
               <h1 className="text-2xl font-bold text-foreground">Comment Moderation</h1>
             </div>
-            <Button variant="outline" size="sm" onClick={loadComments} className="gap-2">
-              <RefreshCw className="w-4 h-4" /> Refresh
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={loadComments} className="gap-2">
+                <RefreshCw className="w-4 h-4" /> Refresh
+              </Button>
+              <Button variant="ghost" size="sm" onClick={logout} className="gap-2">
+                <LogOut className="w-4 h-4" /> Sign Out
+              </Button>
+            </div>
           </div>
 
           {/* Stats */}
@@ -143,7 +199,9 @@ const AdminComments = () => {
 
           {/* Comment list */}
           <div className="space-y-3">
-            {filtered.length === 0 ? (
+            {loading ? (
+              <p className="text-muted-foreground text-sm py-8 text-center">Loading comments...</p>
+            ) : filtered.length === 0 ? (
               <p className="text-muted-foreground text-sm py-8 text-center">No comments in this category.</p>
             ) : (
               filtered.map((c) => (
@@ -158,12 +216,12 @@ const AdminComments = () => {
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
                       {c.status !== "approved" && (
-                        <Button variant="ghost" size="icon" onClick={() => updateStatus(c.id, "approved")} title="Approve" className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50">
+                        <Button variant="ghost" size="icon" onClick={() => updateStatus(c.id, "approved")} title="Approve" className="h-8 w-8 text-primary hover:bg-primary/10">
                           <Check className="w-4 h-4" />
                         </Button>
                       )}
                       {c.status !== "rejected" && (
-                        <Button variant="ghost" size="icon" onClick={() => updateStatus(c.id, "rejected")} title="Reject" className="h-8 w-8 text-orange-600 hover:text-orange-700 hover:bg-orange-50">
+                        <Button variant="ghost" size="icon" onClick={() => updateStatus(c.id, "rejected")} title="Reject" className="h-8 w-8 text-muted-foreground hover:bg-muted">
                           <X className="w-4 h-4" />
                         </Button>
                       )}
