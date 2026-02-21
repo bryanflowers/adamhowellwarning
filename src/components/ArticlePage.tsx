@@ -200,7 +200,7 @@ const ArticlePage = ({
             )}
             <ShareButtons title={displayTitle} />
           </div>
-          {articleText && <ArticleNarration articleSlug={articleSlug} articleText={articleText} />}
+          {articleText && <ArticleNarration articleSlug={articleSlug} articleText={articleText} language={lang} />}
           {lang === "th" && !translating && translatedHtml && (
             <div className="flex items-center gap-2 mt-4 px-3 py-1.5 bg-muted/50 rounded-md text-xs text-muted-foreground w-fit">
               <Globe className="w-3 h-3" />

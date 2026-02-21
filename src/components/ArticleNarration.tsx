@@ -7,9 +7,10 @@ import { toast } from "sonner";
 interface ArticleNarrationProps {
   articleSlug: string;
   articleText: string;
+  language?: string;
 }
 
-const ArticleNarration = ({ articleSlug, articleText }: ArticleNarrationProps) => {
+const ArticleNarration = ({ articleSlug, articleText, language = "en" }: ArticleNarrationProps) => {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -50,7 +51,7 @@ const ArticleNarration = ({ articleSlug, articleText }: ArticleNarrationProps) =
     setIsLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("elevenlabs-tts", {
-        body: { articleSlug, articleText },
+        body: { articleSlug, articleText, language },
       });
 
       if (error) throw error;
@@ -96,22 +97,22 @@ const ArticleNarration = ({ articleSlug, articleText }: ArticleNarrationProps) =
         {isLoading ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
-            Generating…
+            {language === "th" ? "กำลังสร้าง…" : "Generating…"}
           </>
         ) : isPlaying ? (
           <>
             <Pause className="w-4 h-4" />
-            Pause Narration
+            {language === "th" ? "หยุดชั่วคราว" : "Pause Narration"}
           </>
         ) : audioUrl ? (
           <>
             <Play className="w-4 h-4" />
-            Play Narration
+            {language === "th" ? "เล่นเสียง" : "Play Narration"}
           </>
         ) : (
           <>
             <Volume2 className="w-4 h-4" />
-            Listen to Article
+            {language === "th" ? "ฟังบทความ" : "Listen to Article"}
           </>
         )}
       </Button>
