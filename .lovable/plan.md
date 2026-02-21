@@ -1,49 +1,61 @@
 
-# Connect Resend.com for Victim Contact Emails
 
-## Overview
-Replace the current localStorage-based submission in the victim contact form with a backend function that sends an email via Resend.com to **b@bazookaemail.com** every time a victim submits the form.
+# UX Improvements Plan
 
-## What You'll Need
-- A **Resend API key** from [resend.com/api-keys](https://resend.com/api-keys) (free tier supports 100 emails/day)
-- A verified sender domain or use Resend's default `onboarding@resend.dev` for testing
+## 1. Reading Progress Bar on Articles
+Add a thin progress bar at the top of the page that fills as users scroll through long articles. This gives readers a sense of how far they've read -- especially useful for the 20-35 minute articles.
 
-## Steps
+- A thin animated bar fixed to the top of the viewport (below the sticky header)
+- Applies on all article pages (ArticlePage component and Index page)
 
-### 1. Add the Resend API Key as a secret
-- You'll be prompted to paste your Resend API key (starts with `re_...`). This is stored securely and only accessible by backend functions.
+## 2. Estimated Read Progress + "Jump to Section" (Table of Contents)
+Add a collapsible table of contents sidebar/dropdown for long articles like the homepage and the SuperDoge report, letting readers jump to specific sections instead of scrolling endlessly.
 
-### 2. Create the `send-victim-contact` backend function
-A new edge function that:
-- Accepts `name`, `email`, and `message` from the form (no auth required -- public submissions)
-- Validates all fields server-side (length limits, email format via regex)
-- Calls the Resend API (`POST https://api.resend.com/emails`) to send a formatted email to `b@bazookaemail.com`
-- Returns success/error JSON with proper CORS headers
+- A sticky floating "Contents" button on article pages
+- Clicking it shows a dropdown of h2/h3 headings with smooth-scroll links
+- Auto-highlights the current section as you scroll
 
-### 3. Update the victim contact form
-Modify `VictimContactSlideIn.tsx` to:
-- Call the new backend function via `supabase.functions.invoke("send-victim-contact", { body: { name, email, message } })` instead of writing to localStorage
-- Show an error toast if the submission fails
-- Keep the existing success state on success
+## 3. Share Buttons on Articles
+Add social sharing buttons (Twitter/X, Facebook, copy link) to every article page. Investigative content like this benefits from viral sharing.
 
-### 4. Register the function in config
-Add `[functions.send-victim-contact]` with `verify_jwt = false` to `supabase/config.toml`.
+- Positioned at the top of articles near the date/read-time metadata
+- "Copy link" button with a toast confirmation
+- Twitter/X share with pre-filled text
+- Facebook share link
+
+## 4. Smooth Page Transitions
+Add fade-in animations when navigating between pages to make the site feel more polished instead of hard-cutting between routes.
+
+- A simple CSS fade-in animation on the main content area
+- Applied via the Layout component so it works globally
+
+## 5. Image Lightbox on Evidence Photos
+Currently clicking evidence images does nothing. Add a lightbox overlay so users can view photos full-screen with zoom -- critical for reading screenshots and documents.
+
+- Click any article image to open a full-screen overlay
+- Close with X button, Escape key, or clicking the backdrop
+- Simple zoom-in animation
+
+## 6. "Back to Top" Progress Indicator
+Enhance the existing back-to-top button with a circular progress ring showing how far down the page the user is.
+
+- Replace the plain circle button with an SVG ring that fills as you scroll
+- The arrow icon stays in the center
 
 ---
 
 ## Technical Details
 
-**Edge function (`supabase/functions/send-victim-contact/index.ts`)**:
-- CORS headers matching other functions in the project
-- Server-side validation: name (max 100), email (max 255, regex check), message (max 5000)
-- Sends via Resend REST API with `RESEND_API_KEY` secret
-- Email "from" uses `onboarding@resend.dev` (Resend default -- can be changed once a domain is verified)
-- Email "reply-to" is set to the victim's email for easy follow-up
-- HTML-formatted email body with the submission details
+### Files to create:
+- `src/components/ReadingProgressBar.tsx` -- scroll-driven progress bar
+- `src/components/TableOfContents.tsx` -- floating TOC with scroll-spy
+- `src/components/ShareButtons.tsx` -- social sharing component
+- `src/components/ImageLightbox.tsx` -- full-screen image viewer
 
-**Frontend changes**:
-- Remove localStorage logic
-- Add `supabase.functions.invoke` call with error handling
-- Add `sonner` toast for error feedback
+### Files to modify:
+- `src/components/Layout.tsx` -- add ReadingProgressBar, page transition animation
+- `src/components/ArticlePage.tsx` -- add ShareButtons, TableOfContents, ImageLightbox
+- `src/pages/Index.tsx` -- add ReadingProgressBar, ShareButtons for the homepage article
+- `src/index.css` -- add fade-in keyframe animation
 
-**No database table needed** -- emails go straight to your inbox. If you later want to store submissions for record-keeping, a table can be added separately.
+### No database or backend changes required.
