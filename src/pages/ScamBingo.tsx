@@ -113,6 +113,14 @@ const ScamBingo = () => {
       <SEOHead
         title={tr.bingoTitle}
         description={tr.bingoSubtitle}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "Crypto Scam Bingo",
+          "description": "Interactive bingo card game to identify common cryptocurrency scam tactics and warning signs.",
+          "applicationCategory": "EducationalApplication",
+          "provider": { "@type": "Organization", "name": "Adam Howell Warning" },
+        }}
       />
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-2xl">
