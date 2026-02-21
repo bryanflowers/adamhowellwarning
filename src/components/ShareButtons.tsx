@@ -1,5 +1,7 @@
 import { Twitter, Facebook, Link2 } from "lucide-react";
 import { toast } from "sonner";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t } from "@/i18n/translations";
 
 interface ShareButtonsProps {
   title: string;
@@ -7,6 +9,8 @@ interface ShareButtonsProps {
 }
 
 const ShareButtons = ({ title, url }: ShareButtonsProps) => {
+  const { lang } = useLanguage();
+  const tr = t[lang];
   const shareUrl = url || (typeof window !== "undefined" ? window.location.href : "");
 
   const copyLink = async () => {
@@ -26,7 +30,7 @@ const ShareButtons = ({ title, url }: ShareButtonsProps) => {
 
   return (
     <div className="flex items-center gap-2 flex-wrap">
-      <span className="text-xs text-muted-foreground font-medium">Share:</span>
+      <span className="text-xs text-muted-foreground font-medium">{tr.shareLabel}</span>
       <a href={twitterUrl} target="_blank" rel="noopener noreferrer" className={btnClass}>
         <Twitter className="w-3.5 h-3.5" /> X
       </a>

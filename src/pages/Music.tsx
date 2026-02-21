@@ -115,7 +115,7 @@ const Music = () => {
       : (playableTracks.length > 0 ? playableTracks : musicTracks.filter((t) => !!t.audioUrl));
     if (pool.length === 0) return;
     const idx = pool.findIndex((t) => t.id === currentTrack.id);
-    setCurrentTrack(pool[(idx + 1 < 1 ? pool.length - 1 : idx - 1) % pool.length]);
+    setCurrentTrack(pool[(idx - 1 + pool.length) % pool.length]);
     setIsPlaying(true);
     setProgress(0);
   };

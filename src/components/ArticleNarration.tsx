@@ -49,25 +49,12 @@ const ArticleNarration = ({ articleSlug, articleText }: ArticleNarrationProps) =
     // Generate audio
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({ articleSlug, articleText }),
-        }
-      );
+      const { data, error } = await supabase.functions.invoke("elevenlabs-tts", {
+        body: { articleSlug, articleText },
+      });
 
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error || "Failed to generate audio");
-      }
-
-      const data = await response.json();
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
       setAudioUrl(data.audioUrl);
 
       // Auto-play after generation
