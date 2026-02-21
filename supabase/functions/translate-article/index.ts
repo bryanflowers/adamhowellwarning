@@ -12,14 +12,20 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { slug, html, targetLang } = await req.json();
+    const { slug: rawSlug, html, targetLang } = await req.json();
 
-    if (!slug || !html || !targetLang) {
+    if (!rawSlug || !html || !targetLang) {
       return new Response(
         JSON.stringify({ error: "Missing slug, html, or targetLang" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    // Normalize slug — strip /th prefix, ensure leading slash
+    let slug = rawSlug;
+    if (slug.startsWith("/th/")) slug = slug.slice(3);
+    else if (slug === "/th") slug = "/";
+    if (!slug.startsWith("/")) slug = "/" + slug;
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -78,7 +84,7 @@ CRITICAL RULES:
             content: html,
           },
         ],
-        max_tokens: 16000,
+        max_tokens: 32000,
       }),
     });
 

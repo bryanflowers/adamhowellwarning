@@ -13,17 +13,33 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 interface ArticlePageProps {
   title: string;
+  titleTh?: string;
   subtitle?: string;
+  subtitleTh?: string;
   date?: string;
+  dateTh?: string;
   readTime?: string;
+  readTimeTh?: string;
   translatable?: boolean;
   children: React.ReactNode;
 }
 
-const ArticlePage = ({ title, subtitle, date, readTime, translatable = false, children }: ArticlePageProps) => {
+/** Normalize slug for DB cache key — strip /th prefix, ensure leading slash */
+const normalizeSlug = (pathname: string): string => {
+  let slug = pathname.startsWith("/th/") ? pathname.slice(3) : pathname === "/th" ? "/" : pathname;
+  if (!slug.startsWith("/")) slug = "/" + slug;
+  return slug;
+};
+
+const ArticlePage = ({
+  title, titleTh, subtitle, subtitleTh,
+  date, dateTh, readTime, readTimeTh,
+  translatable = false, children,
+}: ArticlePageProps) => {
   const location = useLocation();
   const { lang, localPath } = useLanguage();
   const articleSlug = location.pathname;
+  const cacheSlug = normalizeSlug(articleSlug);
   useReadingProgress();
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
   const proseRef = useRef<HTMLDivElement>(null);
@@ -31,6 +47,12 @@ const ArticlePage = ({ title, subtitle, date, readTime, translatable = false, ch
   const [translatedHtml, setTranslatedHtml] = useState<string | null>(null);
   const [translating, setTranslating] = useState(false);
   const [translationError, setTranslationError] = useState(false);
+
+  // Resolved display values
+  const displayTitle = lang === "th" && titleTh ? titleTh : title;
+  const displaySubtitle = lang === "th" && subtitleTh ? subtitleTh : subtitle;
+  const displayDate = lang === "th" && dateTh ? dateTh : date;
+  const displayReadTime = lang === "th" && readTimeTh ? readTimeTh : readTime;
 
   const handleArticleClick = useCallback((e: MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -57,13 +79,13 @@ const ArticlePage = ({ title, subtitle, date, readTime, translatable = false, ch
   useEffect(() => {
     if (proseRef.current) {
       const bodyText = proseRef.current.innerText || proseRef.current.textContent || "";
-      const header = [title, subtitle].filter(Boolean).join(". ");
+      const header = [displayTitle, displaySubtitle].filter(Boolean).join(". ");
       const fullText = header ? `${header}. ${bodyText}` : bodyText;
       setArticleText(fullText.slice(0, 5000));
     }
-  }, [children, title, subtitle, translatedHtml]);
+  }, [children, displayTitle, displaySubtitle, translatedHtml]);
 
-  // Fetch Thai translation when language is Thai
+  // Fetch Thai translation — try DB cache first (instant), then edge function
   useEffect(() => {
     if (lang !== "th" || !translatable) {
       setTranslatedHtml(null);
@@ -71,28 +93,53 @@ const ArticlePage = ({ title, subtitle, date, readTime, translatable = false, ch
       return;
     }
 
+    let cancelled = false;
+
     const fetchTranslation = async () => {
       setTranslating(true);
       setTranslationError(false);
 
       try {
-        // Get the English HTML from the prose container
-        const tempDiv = document.createElement("div");
+        // Step 1: Try DB cache directly — check multiple possible slug formats
+        const slugVariants = [cacheSlug, articleSlug, `/th${cacheSlug}`];
+        let cachedHtml: string | null = null;
+
+        for (const slug of slugVariants) {
+          const { data } = await supabase
+            .from("article_translations")
+            .select("translated_html")
+            .eq("article_slug", slug)
+            .eq("language", "th")
+            .maybeSingle();
+          if (data?.translated_html) {
+            cachedHtml = data.translated_html;
+            break;
+          }
+        }
+
+        if (!cancelled && cachedHtml) {
+          setTranslatedHtml(cachedHtml);
+          setTranslating(false);
+          return;
+        }
+
+        // Step 2: Not cached — call edge function to generate + cache
         const proseEl = proseRef.current;
         if (!proseEl) {
           setTranslating(false);
           return;
         }
-        // We need to grab the innerHTML before translation replaces it
         const englishHtml = proseEl.innerHTML;
 
         const { data, error } = await supabase.functions.invoke("translate-article", {
           body: {
-            slug: articleSlug,
+            slug: cacheSlug,
             html: englishHtml,
             targetLang: "th",
           },
         });
+
+        if (cancelled) return;
 
         if (error || !data?.translated_html) {
           console.error("Translation error:", error);
@@ -101,17 +148,22 @@ const ArticlePage = ({ title, subtitle, date, readTime, translatable = false, ch
           setTranslatedHtml(data.translated_html);
         }
       } catch (err) {
-        console.error("Translation fetch error:", err);
-        setTranslationError(true);
+        if (!cancelled) {
+          console.error("Translation fetch error:", err);
+          setTranslationError(true);
+        }
       } finally {
-        setTranslating(false);
+        if (!cancelled) setTranslating(false);
       }
     };
 
-    // Small delay to ensure prose content is rendered first
-    const timer = setTimeout(fetchTranslation, 500);
-    return () => clearTimeout(timer);
-  }, [lang, articleSlug]);
+    // Small delay to ensure prose content is rendered (only needed for edge function fallback)
+    const timer = setTimeout(fetchTranslation, 100);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [lang, articleSlug, cacheSlug]);
 
   return (
     <article className="py-12">
@@ -126,25 +178,25 @@ const ArticlePage = ({ title, subtitle, date, readTime, translatable = false, ch
 
         <header className="mb-10">
           <h1 className="text-3xl md:text-5xl font-black leading-tight text-foreground mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
-            {title}
+            {displayTitle}
           </h1>
-          {subtitle && (
-            <p className="text-lg text-muted-foreground leading-relaxed">{subtitle}</p>
+          {displaySubtitle && (
+            <p className="text-lg text-muted-foreground leading-relaxed">{displaySubtitle}</p>
           )}
           <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground flex-wrap">
-            {date && (
+            {displayDate && (
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                {date}
+                {displayDate}
               </span>
             )}
-            {readTime && (
+            {displayReadTime && (
               <span className="flex items-center gap-1">
                 <Clock className="w-4 h-4" />
-                {readTime}
+                {displayReadTime}
               </span>
             )}
-            <ShareButtons title={title} />
+            <ShareButtons title={displayTitle} />
           </div>
           {articleText && <ArticleNarration articleSlug={articleSlug} articleText={articleText} />}
           {lang === "th" && !translating && translatedHtml && (
@@ -160,7 +212,7 @@ const ArticlePage = ({ title, subtitle, date, readTime, translatable = false, ch
           <div className="space-y-4">
             <div className="flex items-center gap-3 text-muted-foreground mb-6">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary" />
-              <span className="text-sm">กำลังแปลบทความ... Translating article...</span>
+              <span className="text-sm">กำลังแปลบทความ... โดยปกติจะใช้เวลา 5-10 วินาที</span>
             </div>
             <Skeleton className="h-6 w-3/4" />
             <Skeleton className="h-4 w-full" />
@@ -186,7 +238,7 @@ const ArticlePage = ({ title, subtitle, date, readTime, translatable = false, ch
 
         {translationError && lang === "th" && (
           <div className="mt-4 p-3 bg-destructive/10 text-destructive text-sm rounded-md">
-            Translation failed. Showing English content instead.
+            การแปลล้มเหลว แสดงเนื้อหาภาษาอังกฤษแทน · Translation failed. Showing English content instead.
           </div>
         )}
 

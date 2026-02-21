@@ -21,9 +21,13 @@ const InvestigativeUpdateSuperdoge = () => {
       />
       <ArticlePage
         title="SuperDoge Scam Update – Anonymous Pitch & Vanished Promises"
+        titleTh="อัปเดตการหลอกลวง SuperDoge – การเสนอขายนิรนามและสัญญาที่หายไป"
         subtitle="A revealing 2021 podcast appearance showcases Howell's tactics — hiding behind anonymity, dragging credible figures, and warning about scams to position himself as trustworthy."
+        subtitleTh="การปรากฏตัวบนพอดแคสต์ปี 2021 ที่เผยให้เห็นกลวิธีของ Howell — ซ่อนตัวอยู่เบื้องหลังนิรนาม ลากบุคคลที่น่าเชื่อถือเข้ามา และเตือนเรื่องหลอกลวงเพื่อวางตำแหน่งตัวเองเป็นคนน่าไว้ใจ"
         date="January 29, 2026"
+        dateTh="29 มกราคม 2569"
         readTime="15 min read"
+        readTimeTh="อ่าน 15 นาที"
         translatable
       >
         <p>

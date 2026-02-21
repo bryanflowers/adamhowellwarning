@@ -27,8 +27,11 @@ const UnmaskingAdamHowell = () => {
       />
       <ArticlePage
         title="Unmasking Adam Howell: The Serial Scammer, Extortionist, and Crypto Fraudster – A Warning to Investors"
+        titleTh="เปิดโปง Adam Howell: นักต้มตุ๋นซ้ำซาก นักรีดไถ และนักฉ้อโกงคริปโต – คำเตือนถึงนักลงทุน"
         subtitle="A comprehensive exposé compiling documented evidence from court records, victim accounts, and public exposes to highlight his patterns of deception and failure."
+        subtitleTh="รายงานเปิดโปงที่ครอบคลุม รวบรวมหลักฐานจากเอกสารศาล คำให้การของเหยื่อ และการเปิดเผยสาธารณะ เพื่อเน้นรูปแบบของการหลอกลวงและความล้มเหลว"
         readTime="15 min read"
+        readTimeTh="อ่าน 15 นาที"
         translatable
       >
         <h2>Introduction: The Predator Behind the Schemes</h2>
