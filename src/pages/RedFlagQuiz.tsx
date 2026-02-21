@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, CheckCircle, XCircle, RotateCcw, Share2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
 
 interface Question {
   id: number;
@@ -136,7 +137,7 @@ const getRating = (score: number, total: number) => {
 
 const RedFlagQuiz = () => {
   const [currentQ, setCurrentQ] = useState(0);
-  const [selected, setSelected] = useState<boolean[]>([]);
+  const [selected, setSelected] = useState<boolean[]>(() => Array(questions[0].options.length).fill(false));
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [totalFlags, setTotalFlags] = useState(0);
@@ -169,14 +170,14 @@ const RedFlagQuiz = () => {
       setFinished(true);
     } else {
       setCurrentQ((c) => c + 1);
-      setSelected([]);
+      setSelected(Array(questions[currentQ + 1].options.length).fill(false));
       setSubmitted(false);
     }
   };
 
   const restart = () => {
     setCurrentQ(0);
-    setSelected([]);
+    setSelected(Array(questions[0].options.length).fill(false));
     setSubmitted(false);
     setScore(0);
     setTotalFlags(0);
@@ -190,6 +191,14 @@ const RedFlagQuiz = () => {
       <Helmet>
         <title>Spot the Red Flag Quiz — Test Your Crypto Scam Detection Skills</title>
         <meta name="description" content="Can you spot the red flags in crypto projects? Take our interactive quiz based on real-world scam scenarios and get your Scam Detector Rating." />
+        <meta property="og:title" content="Spot the Red Flag — Crypto Scam Detection Quiz" />
+        <meta property="og:description" content="Can you spot the red flags in crypto projects? Test your skills with real-world scam scenarios." />
+        <meta property="og:image" content="https://web-rescu.lovable.app/og-adam-howell.png" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Spot the Red Flag — Crypto Scam Detection Quiz" />
+        <meta name="twitter:description" content="Can you spot the red flags in crypto projects? Test your skills with real-world scam scenarios." />
+        <meta name="twitter:image" content="https://web-rescu.lovable.app/og-adam-howell.png" />
       </Helmet>
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-3xl">
@@ -235,6 +244,9 @@ const RedFlagQuiz = () => {
                     <button
                       key={i}
                       onClick={() => handleSelect(i)}
+                      aria-pressed={!!isSelected}
+                      role="checkbox"
+                      aria-checked={!!isSelected}
                       className={`w-full text-left p-4 rounded-lg border-2 transition-all ${borderClass} ${!submitted ? "hover:border-primary/50 cursor-pointer" : ""}`}
                     >
                       <div className="flex items-start gap-3">
@@ -259,7 +271,7 @@ const RedFlagQuiz = () => {
 
               <div className="flex justify-end gap-3">
                 {!submitted ? (
-                  <Button onClick={handleSubmit} disabled={selected.length === 0 || !selected.some(Boolean)}>
+                  <Button onClick={handleSubmit} disabled={!selected.some(Boolean)}>
                     Check Answer
                   </Button>
                 ) : (
@@ -286,8 +298,12 @@ const RedFlagQuiz = () => {
                 <Button
                   onClick={() => {
                     const text = `I scored ${Math.round((score / totalFlags) * 100)}% on the Spot the Red Flag crypto quiz! Rating: ${rating.label}`;
-                    if (navigator.share) navigator.share({ text, url: window.location.href });
-                    else navigator.clipboard.writeText(`${text} ${window.location.href}`);
+                    if (navigator.share) {
+                      navigator.share({ text, url: window.location.href });
+                    } else {
+                      navigator.clipboard.writeText(`${text} ${window.location.href}`);
+                      toast.success("Result copied to clipboard!");
+                    }
                   }}
                   className="gap-2"
                 >

@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, Share2, PartyPopper } from "lucide-react";
+import { toast } from "sonner";
 
 const allSquares = [
   "Anonymous Team",
@@ -30,6 +31,14 @@ const allSquares = [
   "Deleted Website",
   "Pump & Dump Pattern",
   "Threats to Whistleblowers",
+  "Doxxing Threats",
+  "Fake Volume Bots",
+  "Roadmap Copy-Paste",
+  "Whitelist Presale Scam",
+  "Rug Pull Fork",
+  "Missing LinkedIn Profiles",
+  "VPN-Only Team Calls",
+  "Token Tax 20%+",
 ];
 
 const FREE_SPACE_INDEX = 12; // Center of 5x5
@@ -124,8 +133,12 @@ const ScamBingo = () => {
                 <Button
                   onClick={() => {
                     const text = `🎰 BINGO! I spotted ${markedCount} scam red flags on Crypto Scam Bingo!`;
-                    if (navigator.share) navigator.share({ text, url: window.location.href });
-                    else navigator.clipboard.writeText(`${text} ${window.location.href}`);
+                    if (navigator.share) {
+                      navigator.share({ text, url: window.location.href });
+                    } else {
+                      navigator.clipboard.writeText(`${text} ${window.location.href}`);
+                      toast.success("Copied to clipboard!");
+                    }
                   }}
                   className="gap-2"
                 >
@@ -141,15 +154,16 @@ const ScamBingo = () => {
               const isFree = idx === FREE_SPACE_INDEX;
               return (
                 <button
-                  key={idx}
+                  key={text}
                   onClick={() => toggleCell(idx)}
-                  className={`aspect-square rounded-lg border-2 p-1 md:p-2 flex items-center justify-center text-center transition-all text-[10px] sm:text-xs md:text-sm font-medium leading-tight ${
+                  className={`aspect-square rounded-lg border-2 p-1 md:p-2 flex items-center justify-center text-center transition-all duration-200 text-[10px] sm:text-xs md:text-sm font-medium leading-tight ${
                     isFree
                       ? "bg-primary/20 border-primary text-primary cursor-default"
                       : isMarked
-                      ? "bg-primary text-primary-foreground border-primary shadow-md scale-95"
+                      ? "bg-primary text-primary-foreground border-primary shadow-md scale-95 animate-pulse"
                       : "bg-card border-border hover:border-primary/50 hover:bg-secondary cursor-pointer"
                   }`}
+                  style={isMarked && !isFree ? { animationIterationCount: 1, animationDuration: "0.4s" } : undefined}
                 >
                   {text}
                 </button>

@@ -41,7 +41,7 @@ const GlobalSearch = () => {
 
     const tracks: SearchResult[] = musicTracks
       .filter((t) => t.title.toLowerCase().includes(q) || t.description.toLowerCase().includes(q) || t.genre.toLowerCase().includes(q))
-      .map((t) => ({ title: t.title, slug: "/music", type: "music", subtitle: `${t.genre} — ${t.description}` }));
+      .map((t) => ({ title: t.title, slug: `/music?track=${t.id}`, type: "music", subtitle: `${t.genre} — ${t.description}` }));
 
     return [...articles, ...blogs, ...tracks].slice(0, 8);
   }, [query]);
