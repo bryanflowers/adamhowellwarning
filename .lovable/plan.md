@@ -1,38 +1,24 @@
 
 
-# Fix English Audio: Extract Full Article Text for Narration
+# Create Favicon Matching Header Logo
 
-## Problem
-The text extraction in `ArticlePage.tsx` (line 83-84) finds the first `<h2>` heading and reads only **that element's text**. For the "Unmasking Adam Howell" article, the first heading is "Introduction: The Predator Behind the Schemes", so the narration contains only the title prefix plus that one heading -- a few seconds of audio instead of the full article.
+## Current State
+The header uses a Lucide `Shield` icon in the primary color (an orange tone, `hsl(15, 90%, 55%)`). The current favicon is the default `public/favicon.ico`.
 
-## Root Cause (line 83-84)
-```typescript
-const firstHeading = proseRef.current.querySelector("h1, h2, h3, h4, h5, h6");
-const startNode = (firstHeading || proseRef.current) as HTMLElement;
-const bodyText = startNode.innerText || startNode.textContent || "";
-```
-`startNode.innerText` on an `<h2>` returns only that heading's text, not the rest of the article.
+## Plan
 
-## Fix
+### 1. Create an SVG favicon (`public/favicon.svg`)
+Create an SVG file using the same Shield shape from Lucide icons, filled with the primary orange color (`hsl(15, 90%, 55%)` which is approximately `#F26522`). SVG favicons are supported by all modern browsers and will look crisp at any size.
 
-### 1. Update text extraction (`src/components/ArticlePage.tsx`, lines 79-88)
-Use the full prose container for text extraction instead of a single heading:
-
-```typescript
-useEffect(() => {
-  if (proseRef.current) {
-    const bodyText = proseRef.current.innerText || proseRef.current.textContent || "";
-    const prefix = [displayTitle, displaySubtitle].filter(Boolean).join(". ") + ". ";
-    setArticleText((prefix + bodyText).slice(0, 5000));
-  }
-}, [children, displayTitle, displaySubtitle, translatedHtml]);
+### 2. Update `index.html`
+Add a `<link rel="icon">` tag pointing to the new SVG favicon:
+```html
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 ```
 
-This captures the entire article body (up to 5000 chars) and prepends the title.
+## Technical Details
+- The Lucide Shield icon SVG path will be used to create a standalone SVG file
+- The shield will be orange (`#F26522`) on a transparent background
+- The existing `favicon.ico` will be kept as a fallback for older browsers
+- No dependencies or packages needed
 
-### 2. Delete the stale English audio cache
-Remove the cached row from `article_audio` for slug `/unmasking-adam-howell-the-serial-scammer-extortionist-and-crypto-fraudster-a-warning-to-investors` so the next click regenerates with the full article text.
-
-## Impact
-- This fix applies to **all articles** globally, ensuring every article sends its full body text (not just the first heading) to the audio generation service.
-- The 5000-character and 4900-character limits remain in place (client-side and edge function respectively), so very long articles will still be trimmed but will cover significantly more content than before.
