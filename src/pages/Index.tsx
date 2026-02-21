@@ -6,6 +6,7 @@ import { AlertTriangle, FileText, ArrowRight, Shield, Eye, Calendar, Clock, Glob
 import { blogArticles } from "@/data/blogArticles";
 import ShareButtons from "@/components/ShareButtons";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { t, articlesMeta } from "@/i18n/translations";
 import TableOfContents from "@/components/TableOfContents";
 import ImageLightbox from "@/components/ImageLightbox";
@@ -22,6 +23,7 @@ const PROSE_CLASSES = "prose prose-lg max-w-none dark:prose-invert prose-heading
 
 const Index = () => {
   const { lang, localPath } = useLanguage();
+  useReadingProgress();
   const tr = t[lang];
   const localArticles = articlesMeta[lang];
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);

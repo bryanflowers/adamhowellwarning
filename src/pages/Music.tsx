@@ -86,7 +86,7 @@ const Music = () => {
     setProgress(0);
   };
 
-  const togglePlay = () => {
+  const togglePlay = useCallback(() => {
     if (!audioRef.current) return;
     if (isPlaying) {
       audioRef.current.pause();
@@ -94,9 +94,9 @@ const Music = () => {
       audioRef.current.play();
     }
     setIsPlaying(!isPlaying);
-  };
+  }, [isPlaying]);
 
-  const skipNext = () => {
+  const skipNext = useCallback(() => {
     if (!currentTrack) return;
     const pool = shuffleMode && shuffledQueue.length > 0
       ? shuffledQueue
@@ -106,9 +106,9 @@ const Music = () => {
     setCurrentTrack(pool[(idx + 1) % pool.length]);
     setIsPlaying(true);
     setProgress(0);
-  };
+  }, [currentTrack, shuffleMode, shuffledQueue, playableTracks]);
 
-  const skipPrev = () => {
+  const skipPrev = useCallback(() => {
     if (!currentTrack) return;
     const pool = shuffleMode && shuffledQueue.length > 0
       ? shuffledQueue
@@ -118,7 +118,36 @@ const Music = () => {
     setCurrentTrack(pool[(idx - 1 + pool.length) % pool.length]);
     setIsPlaying(true);
     setProgress(0);
-  };
+  }, [currentTrack, shuffleMode, shuffledQueue, playableTracks]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in an input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      
+      switch (e.code) {
+        case "Space":
+          e.preventDefault();
+          if (currentTrack) togglePlay();
+          break;
+        case "ArrowRight":
+          e.preventDefault();
+          skipNext();
+          break;
+        case "ArrowLeft":
+          e.preventDefault();
+          skipPrev();
+          break;
+        case "KeyM":
+          e.preventDefault();
+          setIsMuted(prev => !prev);
+          break;
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentTrack, isPlaying, togglePlay, skipNext, skipPrev]);
 
   useEffect(() => {
     if (!audioRef.current || !currentTrack) return;
