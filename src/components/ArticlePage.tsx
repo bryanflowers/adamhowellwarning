@@ -44,13 +44,15 @@ const ArticlePage = ({ title, subtitle, date, readTime, children }: ArticlePageP
     };
   }, [handleArticleClick]);
 
-  // Extract plain text from the prose content for TTS
+  // Extract plain text from the prose content for TTS, prepending title & subtitle
   useEffect(() => {
     if (proseRef.current) {
-      const text = proseRef.current.innerText || proseRef.current.textContent || "";
-      setArticleText(text.slice(0, 5000));
+      const bodyText = proseRef.current.innerText || proseRef.current.textContent || "";
+      const header = [title, subtitle].filter(Boolean).join(". ");
+      const fullText = header ? `${header}. ${bodyText}` : bodyText;
+      setArticleText(fullText.slice(0, 5000));
     }
-  }, [children]);
+  }, [children, title, subtitle]);
 
   return (
     <article className="py-12">
