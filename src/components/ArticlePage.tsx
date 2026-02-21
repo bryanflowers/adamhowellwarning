@@ -79,10 +79,7 @@ const ArticlePage = ({
   // Extract plain text from the prose content for TTS
   useEffect(() => {
     if (proseRef.current) {
-      const firstHeading = proseRef.current.querySelector("h1, h2, h3, h4, h5, h6");
-      const startNode = (firstHeading || proseRef.current) as HTMLElement;
-    const bodyText = startNode.innerText || startNode.textContent || "";
-      // Prepend title + subtitle so narration starts with the headline
+      const bodyText = proseRef.current.innerText || proseRef.current.textContent || "";
       const prefix = [displayTitle, displaySubtitle].filter(Boolean).join(". ") + ". ";
       setArticleText((prefix + bodyText).slice(0, 5000));
     }
