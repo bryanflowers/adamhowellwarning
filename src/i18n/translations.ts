@@ -67,6 +67,9 @@ export const t = {
     playAll: "Play All",
     shuffleOn: "On",
     shuffleOff: "Off",
+    // New pages
+    timeline: "Timeline",
+    glossary: "Glossary & FAQ",
     // Footer trust pages
     disclaimer: "Disclaimer",
     privacyPolicy: "Privacy Policy",
@@ -140,6 +143,9 @@ export const t = {
     playAll: "เล่นทั้งหมด",
     shuffleOn: "เปิด",
     shuffleOff: "ปิด",
+    // New pages
+    timeline: "ไทม์ไลน์",
+    glossary: "อภิธานศัพท์และคำถาม",
     // Footer trust pages
     disclaimer: "ข้อจำกัดความรับผิดชอบ",
     privacyPolicy: "นโยบายความเป็นส่วนตัว",

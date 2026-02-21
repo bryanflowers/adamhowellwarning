@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      anonymous_tips: {
+        Row: {
+          created_at: string
+          id: string
+          status: string
+          tip_text: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          status?: string
+          tip_text: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          status?: string
+          tip_text?: string
+        }
+        Relationships: []
+      }
       article_audio: {
         Row: {
           article_slug: string
@@ -83,6 +104,33 @@ export type Database = {
           created_at?: string
           id?: string
           status?: string
+        }
+        Relationships: []
+      }
+      newsletter_subscribers: {
+        Row: {
+          confirmation_token: string
+          confirmed: boolean
+          confirmed_at: string | null
+          created_at: string
+          email: string
+          id: string
+        }
+        Insert: {
+          confirmation_token?: string
+          confirmed?: boolean
+          confirmed_at?: string | null
+          created_at?: string
+          email: string
+          id?: string
+        }
+        Update: {
+          confirmation_token?: string
+          confirmed?: boolean
+          confirmed_at?: string | null
+          created_at?: string
+          email?: string
+          id?: string
         }
         Relationships: []
       }

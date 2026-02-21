@@ -54,6 +54,7 @@ const ScrollProgressButton = ({ show }: { show: boolean }) => {
 const navLinksConfig = [
   { path: "/", labelKey: "home" as const },
   { path: "/articles", labelKey: "allArticles" as const },
+  { path: "/timeline", labelKey: "timeline" as const },
   { path: "/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned", labelKey: "superdogeExpose" as const },
   { path: "/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond", labelKey: "investigativeReport" as const },
   { path: "/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties", labelKey: "superdogeUpdate" as const },
@@ -62,6 +63,7 @@ const navLinksConfig = [
   { path: "/music", labelKey: "music" as const },
   { path: "/quiz", labelKey: "quiz" as const },
   { path: "/bingo", labelKey: "bingo" as const },
+  { path: "/glossary", labelKey: "glossary" as const },
   { path: "/blog", labelKey: "cryptoScamBlog" as const },
 ];
 
@@ -217,6 +219,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <Link to={localPath("/about")} className="hover:text-primary transition-colors">
               {tr.about}
             </Link>
+            <span aria-hidden="true">|</span>
+            <a
+              href={`https://hrmvdwirbrmogwhtglsx.supabase.co/functions/v1/rss-feed`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors"
+            >
+              RSS Feed
+            </a>
           </div>
         </div>
       </footer>
