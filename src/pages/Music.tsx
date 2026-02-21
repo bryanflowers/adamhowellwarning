@@ -105,17 +105,17 @@ const Music = () => {
   return (
     <Layout>
       <Helmet>
-        <title>The Soundtrack of Deception – 20 Investigative Tracks | Adam Howell Warning</title>
-        <meta name="description" content="Listen to 20 original AI-generated songs across Hip-Hop, Rock, Jazz, and more — each inspired by the investigative findings into Adam Howell's crypto fraud." />
+        <title>The Soundtrack of Deception – 50 Investigative Tracks | Adam Howell Warning</title>
+        <meta name="description" content="Listen to 50 original AI-generated songs across Hip-Hop, Rock, Jazz, and more — each inspired by the investigative findings into Adam Howell's crypto fraud." />
         <link rel="canonical" href="https://web-rescu.lovable.app/music" />
-        <meta property="og:title" content="The Soundtrack of Deception – 20 Investigative Tracks" />
-        <meta property="og:description" content="20 original songs across multiple genres, each inspired by investigative findings into Adam Howell's crypto scams." />
+        <meta property="og:title" content="The Soundtrack of Deception – 50 Investigative Tracks" />
+        <meta property="og:description" content="50 original songs across multiple genres, each inspired by investigative findings into Adam Howell's crypto scams." />
         <meta property="og:image" content="https://web-rescu.lovable.app/og-adam-howell.png" />
         <meta property="og:url" content="https://web-rescu.lovable.app/music" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="The Soundtrack of Deception – 20 Investigative Tracks" />
-        <meta name="twitter:description" content="20 original songs across multiple genres, each inspired by investigative findings into Adam Howell's crypto scams." />
+        <meta name="twitter:title" content="The Soundtrack of Deception – 50 Investigative Tracks" />
+        <meta name="twitter:description" content="50 original songs across multiple genres, each inspired by investigative findings into Adam Howell's crypto scams." />
         <meta name="twitter:image" content="https://web-rescu.lovable.app/og-adam-howell.png" />
       </Helmet>
       <audio
@@ -136,7 +136,7 @@ const Music = () => {
               </h1>
             </div>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              20 original AI-generated tracks across multiple genres — each one inspired by the investigative findings on this site.
+              50 original AI-generated tracks across multiple genres — each one inspired by the investigative findings on this site.
             </p>
           </div>
 
