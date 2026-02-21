@@ -30,7 +30,7 @@ const App = () => (
           <Route path="/investigative-report" element={<InvestigativeReport />} />
           <Route path="/superdoge-scam-update" element={<SuperDogeScamUpdate />} />
           <Route path="/keith-shingleton-david-edwards" element={<KeithShingletonDavidEdwards />} />
-          <Route path="/architect-of-deception" element={<ArchitectOfDeception />} />
+          <Route path="/the-architect-of-deception-and-adam-howells-web-of-accomplices" element={<ArchitectOfDeception />} />
           <Route path="/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned" element={<ExposingSuperdogeRugPull />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
