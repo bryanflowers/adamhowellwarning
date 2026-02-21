@@ -1,174 +1,137 @@
 
 
-# Full SEO Audit -- Adam Howell Warning Site
+# Full Bug Check and Code Quality Audit
 
-## Summary of Findings
+## Summary
 
-After a thorough review of the codebase, here are the SEO issues grouped by severity.
-
----
-
-## CRITICAL Issues
-
-### 1. No Sitemap
-There is no `sitemap.xml` file. Search engines rely on sitemaps to discover and index pages. With 6 investigative articles, 40 blog posts, and several interactive pages, a sitemap is essential.
-
-**Fix**: Generate a `public/sitemap.xml` listing all pages including `/th` variants.
-
-### 2. Most Pages Have No `<Helmet>` Meta Tags
-Only 3 pages (Music, Quiz, Bingo) use `react-helmet-async`. The following pages have **zero** per-page meta tags:
-
-- `/` (Index -- the most important page)
-- `/unmasking-adam-howell`
-- `/exposing-the-superdoge-rug-pull-...`
-- `/investigative-report-uncovering-...`
-- `/investigative-update-exposing-...`
-- `/keith-shingleton-david-edwards`
-- `/the-architect-of-deception-...`
-- `/articles`
-- `/blog` (listing page)
-- `/blog/:slug` (all 40 blog posts)
-
-These all fall back to the generic `index.html` meta: *"Lovable Generated Project"* as the description.
-
-**Fix**: Add `<Helmet>` with unique `<title>`, `<meta name="description">`, and Open Graph tags to every page.
-
-### 3. No Canonical URLs
-Only the Music page has a `<link rel="canonical">`. Every other page is missing canonicals. With `/th` duplicates for every route, search engines will see duplicate content without canonical signals.
-
-**Fix**: Add canonical links to all pages pointing to the preferred (English) version.
-
-### 4. No `hreflang` Tags for Thai/English
-The site has two language versions (`/` and `/th/`) but no `hreflang` annotations. Google cannot determine which version to show Thai or English users.
-
-**Fix**: Add `<link rel="alternate" hreflang="en" href="...">` and `<link rel="alternate" hreflang="th" href="...">` on every page.
+The codebase is generally well-structured and functional. No critical runtime errors were found. Below are all issues organized by severity.
 
 ---
 
-## HIGH Issues
+## BUGS (Things that are broken or will break)
 
-### 5. No Structured Data (JSON-LD)
-Zero structured data across the entire site. Adding `Article` schema to investigative pages and blog posts would enable rich results in Google (author, date, headline).
+### 1. `moderate-comments` edge function uses deprecated `getClaims()` API
+**File:** `supabase/functions/moderate-comments/index.ts` (line 29)
+**Issue:** `supabase.auth.getClaims(token)` is not a standard Supabase JS method. This likely fails silently or throws, potentially blocking admin access.
+**Fix:** Replace with `supabase.auth.getUser(token)` which is the correct method.
 
-**Fix**: Add JSON-LD `Article` schema to `ArticlePage` and `BlogPost` components.
+### 2. `comments` table has overly permissive INSERT RLS policy
+**Issue:** The `comments` table allows `INSERT ... WITH CHECK (true)` for `{public}` role. This means anyone (even without authentication) can insert comments with any `status` value, including `"approved"`, bypassing moderation entirely.
+**Fix:** Add a constraint so inserts always set `status = 'pending'`: `WITH CHECK (status = 'pending')`.
 
-### 6. Blog Post Pages Have No Meta Tags
-The `BlogPost.tsx` component renders articles but never sets `<title>`, description, or OG tags. Each blog article already has `title`, `metaDescription`, and `heroImage` in the data -- they just aren't wired to `<Helmet>`.
+### 3. `victim_contacts` table has overly permissive INSERT RLS policy
+**Issue:** Same problem -- `WITH CHECK (true)` allows inserting rows with any `status`, though the edge function uses service role anyway. Still a direct-access vulnerability.
+**Fix:** Restrict to `WITH CHECK (status = 'pending')`.
 
-**Fix**: Add `<Helmet>` to `BlogPost.tsx` using article data fields.
+### 4. `RelatedArticles` component doesn't use localized paths
+**File:** `src/components/RelatedArticles.tsx` (lines 39-42)
+**Issue:** Links are hardcoded (e.g., `/blog/slug`, `/unmasking-adam-howell`) without `localPath()`. When viewing Thai pages (`/th/...`), related article links will navigate to English versions, breaking the user's language context.
+**Fix:** Accept `localPath` as a prop or use `useLanguage()` hook internally.
 
-### 7. Blog Cards Have No Hero Images
-The blog data has a `heroImage` field and 40 images were generated, but neither `Blog.tsx` (listing) nor `BlogPost.tsx` (detail) display them. Missing images hurt click-through rates and social sharing.
+### 5. `skipPrev` in Music page has wrong logic
+**File:** `src/pages/Music.tsx` (line 118)
+**Issue:** The expression `(idx + 1 < 1 ? pool.length - 1 : idx - 1)` -- `idx + 1 < 1` is always false for valid array indices, so this always evaluates to `idx - 1`. When `idx === 0`, it becomes `-1 % pool.length` which equals `-1` in JavaScript (not the last element). The track list will error or play the wrong track.
+**Fix:** Use `(idx - 1 + pool.length) % pool.length`.
 
-**Fix**: Wire `heroImage` into blog cards and blog post headers.
+### 6. `ArticleNarration` uses raw `fetch()` instead of Supabase client
+**File:** `src/components/ArticleNarration.tsx` (lines 53-62)
+**Issue:** Uses `import.meta.env.VITE_SUPABASE_URL` and manual headers instead of `supabase.functions.invoke()`. This creates maintenance risk and duplicates auth logic.
+**Fix:** Use `supabase.functions.invoke("elevenlabs-tts", { body: {...} })`.
 
-### 8. Generic `index.html` Meta Description
-The default description is *"Lovable Generated Project"* and the author is *"Lovable"*. These appear on every page without per-page Helmet overrides.
-
-**Fix**: Update `index.html` with proper defaults: a real site description, correct author name, and remove "Lovable" branding.
-
----
-
-## MEDIUM Issues
-
-### 9. Missing `alt` Text on Some Images
-Some images in investigative articles have good alt text, but the blog articles render via `dangerouslySetInnerHTML` with no images inside. The hero images (once wired) will need descriptive alt text.
-
-### 10. `robots.txt` Has No Sitemap Reference
-The `robots.txt` allows all crawlers but doesn't point to a sitemap:
-```
-Sitemap: https://web-rescu.lovable.app/sitemap.xml
-```
-
-### 11. No OG Images for Most Pages
-Only Music and Quiz pages set OG images (both use the same generic `og-adam-howell.png`). Blog posts should use their individual hero images as OG images for better social sharing.
-
-### 12. `og:url` Missing on All Pages Except Music
-The `og:url` property is only set on the Music page. Every page should declare its canonical URL via `og:url`.
-
-### 13. No 404 Page SEO
-The `NotFound.tsx` page has no `<Helmet>` and doesn't set a `noindex` meta tag, meaning Google could index a 404 page.
+### 7. `CommentSection` doesn't refetch after successful submission
+**File:** `src/components/CommentSection.tsx` (line 52-56)
+**Issue:** After a comment is submitted, `queryClient.invalidateQueries` is never called. The comment count shown won't update. (Though comments are moderated, the pending count in admin won't auto-refresh either.)
+**Fix:** Add `queryClient.invalidateQueries({ queryKey: ["comments", articleSlug] })` in `onSuccess`.
 
 ---
 
-## LOW Issues
+## SECURITY ISSUES
 
-### 14. No `lang` Attribute Switching
-The `<html lang="en">` in `index.html` is static. When viewing `/th` pages, the lang attribute should be `th`.
+### 8. Admin page has no route protection or `noindex`
+**File:** `src/pages/AdminComments.tsx`
+**Issue:** The `/admin/comments` route is publicly discoverable (it's even in the sitemap if someone finds it). While it requires login to see data, it should have `noindex` meta and ideally not be in the sitemap.
+**Fix:** Add `<SEOHead noindex />` and remove from `sitemap.xml`.
 
-### 15. ScamBingo Missing OG/Twitter Tags
-The Bingo page only has `title` and `description` in Helmet -- no OG or Twitter card tags.
+### 9. No rate limiting on comment or victim contact submission
+**Issue:** The `comments` table and `send-victim-contact` edge function have no rate limiting. A bot could spam thousands of entries.
+**Fix:** Consider adding rate limiting in the edge function or a database trigger.
 
-### 16. Same OG Image for Everything
-Every page that does have OG tags uses the same `og-adam-howell.png`. Individual OG images per article would improve social click-through.
-
----
-
-## Implementation Plan
-
-### Step 1: Fix `index.html` defaults
-- Update `<meta name="description">` to a real site description
-- Update `<meta name="author">` 
-- Remove "Lovable Generated Project" references
-
-### Step 2: Create an SEO component
-Build a reusable `<SEOHead>` component wrapping `<Helmet>` that handles:
-- Title
-- Description
-- Canonical URL
-- OG tags (title, description, image, url, type)
-- Twitter card tags
-- hreflang (en + th)
-- JSON-LD structured data (optional)
-- lang attribute on `<html>`
-
-### Step 3: Add `<SEOHead>` to every page
-- **Index**: Custom title, description, OG image
-- **Each investigative article** (6 pages): Unique title/description from article data
-- **Articles listing**: Custom title/description
-- **Blog listing**: Custom title/description
-- **BlogPost** (40 articles): Dynamic title/description/heroImage from `blogArticles` data
-- **Music, Quiz, Bingo**: Consolidate existing Helmet into `<SEOHead>`
-- **NotFound**: Add `noindex` meta
-
-### Step 4: Wire hero images into blog
-- Display `heroImage` in `Blog.tsx` cards
-- Display `heroImage` as header image in `BlogPost.tsx`
-- Use hero images as OG images for social sharing
-
-### Step 5: Create `sitemap.xml`
-- Static file listing all English and Thai routes
-- Include all 6 investigative articles, 40 blog posts, and utility pages
-- Add `Sitemap:` directive to `robots.txt`
-
-### Step 6: Add JSON-LD structured data
-- `Article` schema for investigative pages and blog posts
-- `WebSite` schema on the homepage with `SearchAction`
+### 10. Leaked password protection is disabled
+**Issue:** Flagged by the database linter. Accounts can use passwords found in known data breaches.
+**Fix:** Enable leaked password protection in auth settings.
 
 ---
 
-## Technical Details
+## CODE QUALITY ISSUES
 
-### Files to create:
-- `src/components/SEOHead.tsx` -- reusable SEO component
-- `public/sitemap.xml` -- static sitemap
+### 11. Duplicate `articles` array in `Index.tsx`
+**File:** `src/pages/Index.tsx` (lines 20-63)
+**Issue:** The `articles` array is defined but never used -- the page uses `localArticles` from `articlesMeta` instead. Dead code.
+**Fix:** Remove the unused `articles` array.
 
-### Files to modify:
-- `index.html` -- fix default meta tags
-- `public/robots.txt` -- add Sitemap directive
-- `src/pages/Index.tsx` -- add SEOHead
-- `src/pages/UnmaskingAdamHowell.tsx` -- add SEOHead
-- `src/pages/ExposingSuperdogeRugPull.tsx` -- add SEOHead
-- `src/pages/InvestigativeReportUncovering.tsx` -- add SEOHead
-- `src/pages/InvestigativeUpdateSuperdoge.tsx` -- add SEOHead
-- `src/pages/KeithShingletonDavidEdwards.tsx` -- add SEOHead
-- `src/pages/ArchitectOfDeception.tsx` -- add SEOHead
-- `src/pages/Articles.tsx` -- add SEOHead
-- `src/pages/Blog.tsx` -- add SEOHead
-- `src/pages/BlogPost.tsx` -- add SEOHead + wire hero image
-- `src/pages/Music.tsx` -- migrate to SEOHead
-- `src/pages/RedFlagQuiz.tsx` -- migrate to SEOHead
-- `src/pages/ScamBingo.tsx` -- migrate to SEOHead
-- `src/pages/NotFound.tsx` -- add noindex
-- `src/components/ArticlePage.tsx` -- accept optional JSON-LD prop
+### 12. Duplicate `ReadingProgressBar` and `ScrollProgressButton`
+**Files:** `src/components/ReadingProgressBar.tsx` + `src/components/Layout.tsx` (lines 11-52)
+**Issue:** Both track scroll progress independently with separate scroll listeners. `ReadingProgressBar` shows a top bar, and `ScrollProgressButton` shows a circular indicator with the same data. Two scroll listeners for the same data is wasteful.
+**Fix:** Consider combining into a single scroll context or hook.
+
+### 13. `TableOfContents` headings are scanned once on mount (empty dependency array)
+**File:** `src/components/TableOfContents.tsx` (line 29)
+**Issue:** The `useEffect` runs once with `[]` deps. If content loads lazily or changes, headings won't update.
+**Fix:** Low priority since content is static, but could be improved with a MutationObserver or content-dependent dep.
+
+### 14. `GlobalSearch` variable shadowing
+**File:** `src/components/GlobalSearch.tsx` (lines 46-48)
+**Issue:** The `filter` callback uses `.filter((t) => ...)` and `.map((t) => ...)` which shadows the imported `t` (translations object) from line 8. This works but is confusing and could cause bugs if someone refactors.
+**Fix:** Rename the callback parameters (e.g., `track` instead of `t`).
+
+### 15. Index page has two separate `<article>` elements with duplicated prose classes
+**File:** `src/pages/Index.tsx` (lines 156-282, 286-406)
+**Issue:** The same massive Tailwind prose class string is duplicated across two `<article>` blocks. This should be a shared constant or component.
+**Fix:** Extract the prose class string into a constant.
+
+### 16. `ShareButtons` component is not localized
+**File:** `src/components/ShareButtons.tsx` (line 29)
+**Issue:** The "Share:" label is hardcoded in English. The translations file has `shareLabel` but it's not used.
+**Fix:** Use `useLanguage()` and `tr.shareLabel`.
+
+### 17. `elevenlabs-tts` uses old `serve()` import pattern
+**File:** `supabase/functions/elevenlabs-tts/index.ts` (line 1)
+**Issue:** Uses `serve` from `https://deno.land/std@0.168.0/http/server.ts` which is the old pattern. The `moderate-comments` and `send-victim-contact` functions use the newer `Deno.serve()` pattern. Inconsistency.
+**Fix:** Migrate to `Deno.serve()` for consistency.
+
+### 18. `generate-suno-music` also uses old `serve()` pattern
+**File:** `supabase/functions/generate-suno-music/index.ts` (line 1)
+**Fix:** Same as above -- migrate to `Deno.serve()`.
+
+---
+
+## Recommended Fix Priority
+
+| Priority | Issue | Effort |
+|----------|-------|--------|
+| 1 | Fix `getClaims()` in moderate-comments (Bug 1) | Small |
+| 2 | Fix RLS INSERT policies for comments and victim_contacts (Bugs 2-3) | Small |
+| 3 | Fix `skipPrev` math in Music.tsx (Bug 5) | Small |
+| 4 | Fix RelatedArticles missing localization (Bug 4) | Small |
+| 5 | Add `noindex` to admin page, remove from sitemap (Security 8) | Small |
+| 6 | Remove dead `articles` array in Index.tsx (Quality 11) | Small |
+| 7 | Fix ShareButtons localization (Quality 16) | Small |
+| 8 | Standardize edge function serve patterns (Quality 17-18) | Medium |
+| 9 | Refactor ArticleNarration to use supabase client (Bug 6) | Medium |
+| 10 | Add comment query invalidation (Bug 7) | Small |
+| 11 | Fix GlobalSearch variable shadowing (Quality 14) | Small |
+| 12 | Extract duplicate prose classes (Quality 15) | Small |
+
+---
+
+## What's Working Well
+
+- SEO implementation (SEOHead, sitemap, hreflang, JSON-LD) is solid
+- Error boundary properly catches React errors
+- Language toggle with URL-based routing works correctly
+- Comment moderation flow via edge function is well-architected
+- Image lightbox, table of contents, and reading progress are polished
+- Proper input sanitization on comment and victim contact forms
+- Audio visualizer with Web Audio API is correctly implemented
+- Theme persistence with next-themes is properly configured
 
