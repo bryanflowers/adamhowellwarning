@@ -101,13 +101,13 @@ const Music = () => {
         <link rel="canonical" href="https://web-rescu.lovable.app/music" />
         <meta property="og:title" content="The Soundtrack of Deception – 20 Investigative Tracks" />
         <meta property="og:description" content="20 original songs across multiple genres, each inspired by investigative findings into Adam Howell's crypto scams." />
-        <meta property="og:image" content="https://web-rescu.lovable.app/og-music.png" />
+        <meta property="og:image" content="https://web-rescu.lovable.app/og-adam-howell.png" />
         <meta property="og:url" content="https://web-rescu.lovable.app/music" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="The Soundtrack of Deception – 20 Investigative Tracks" />
         <meta name="twitter:description" content="20 original songs across multiple genres, each inspired by investigative findings into Adam Howell's crypto scams." />
-        <meta name="twitter:image" content="https://web-rescu.lovable.app/og-music.png" />
+        <meta name="twitter:image" content="https://web-rescu.lovable.app/og-adam-howell.png" />
       </Helmet>
       <audio
         ref={audioRef}
