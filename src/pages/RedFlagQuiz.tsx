@@ -195,6 +195,14 @@ const RedFlagQuiz = () => {
       <SEOHead
         title="Spot the Red Flag Quiz – Crypto Scam Detection"
         description="Can you spot the red flags in crypto projects? Take our interactive quiz based on real-world scam scenarios and get your Scam Detector Rating."
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Quiz",
+          "name": "Spot the Red Flag – Crypto Scam Detection Quiz",
+          "description": "Interactive quiz testing your ability to identify crypto scam warning signs based on real-world scenarios.",
+          "educationalAlignment": { "@type": "AlignmentObject", "alignmentType": "educationalSubject", "targetName": "Cryptocurrency Fraud Prevention" },
+          "provider": { "@type": "Organization", "name": "Adam Howell Warning" },
+        }}
       />
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-3xl">

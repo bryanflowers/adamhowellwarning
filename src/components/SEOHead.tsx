@@ -52,6 +52,8 @@ const SEOHead = ({
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={fullOgImage} />
+      <meta property="og:locale" content={lang === "th" ? "th_TH" : "en_US"} />
+      <meta property="og:locale:alternate" content={lang === "th" ? "en_US" : "th_TH"} />
       {jsonLd && (
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       )}

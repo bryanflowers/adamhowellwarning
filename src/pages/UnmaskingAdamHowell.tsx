@@ -13,6 +13,8 @@ const UnmaskingAdamHowell = () => {
     "description": "A comprehensive exposé compiling documented evidence from court records, victim accounts, and public exposes.",
     "author": { "@type": "Organization", "name": "Adam Howell Warning" },
     "publisher": { "@type": "Organization", "name": "Adam Howell Warning" },
+    "datePublished": "2024-06-15",
+    "dateModified": "2025-01-10",
   };
 
   return (

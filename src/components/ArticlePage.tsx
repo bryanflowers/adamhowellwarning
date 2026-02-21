@@ -7,6 +7,7 @@ import TableOfContents from "@/components/TableOfContents";
 import ImageLightbox from "@/components/ImageLightbox";
 import ArticleNarration from "@/components/ArticleNarration";
 import { useLanguage } from "@/hooks/useLanguage";
+
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -21,7 +22,7 @@ interface ArticlePageProps {
 
 const ArticlePage = ({ title, subtitle, date, readTime, translatable = false, children }: ArticlePageProps) => {
   const location = useLocation();
-  const { lang } = useLanguage();
+  const { lang, localPath } = useLanguage();
   const articleSlug = location.pathname;
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
   const proseRef = useRef<HTMLDivElement>(null);
@@ -115,11 +116,11 @@ const ArticlePage = ({ title, subtitle, date, readTime, translatable = false, ch
     <article className="py-12">
       <div className="container mx-auto px-4 max-w-4xl">
         <Link
-          to="/"
+          to={localPath("/")}
           className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors mb-8 text-sm font-medium"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to all articles
+          {lang === "th" ? "กลับไปบทความทั้งหมด" : "Back to all articles"}
         </Link>
 
         <header className="mb-10">
