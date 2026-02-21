@@ -184,6 +184,14 @@ const Music = () => {
         title="The Soundtrack of Deception – 50 Investigative Tracks"
         description="Listen to 50 original AI-generated songs across Hip-Hop, Rock, Jazz, and more — each inspired by the investigative findings into Adam Howell's crypto fraud."
         ogImage="/og-music.png"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "MusicPlaylist",
+          "name": "The Soundtrack of Deception – 50 Investigative Tracks",
+          "description": "50 original AI-generated songs inspired by investigative findings into Adam Howell's crypto fraud.",
+          "numTracks": 50,
+          "provider": { "@type": "Organization", "name": "Adam Howell Warning" },
+        }}
       />
       <audio
         ref={audioRef}

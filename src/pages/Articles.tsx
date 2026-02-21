@@ -37,6 +37,21 @@ const Articles = () => {
       <SEOHead
         title={tr.articlesTitle}
         description={tr.articlesSubtitle}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": tr.articlesTitle,
+          "description": tr.articlesSubtitle,
+          "mainEntity": {
+            "@type": "ItemList",
+            "itemListElement": articles.map((article, index) => ({
+              "@type": "ListItem",
+              "position": index + 1,
+              "name": article.title,
+              "url": `https://web-rescu.lovable.app${article.slug}`,
+            })),
+          },
+        }}
       />
       <section className="py-16 md:py-20">
         <div className="container mx-auto px-4">

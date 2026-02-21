@@ -11,6 +11,8 @@ interface SEOHeadProps {
   ogType?: string;
   noindex?: boolean;
   jsonLd?: Record<string, unknown>;
+  publishedTime?: string;
+  author?: string;
 }
 
 const SEOHead = ({
@@ -20,6 +22,8 @@ const SEOHead = ({
   ogType = "website",
   noindex = false,
   jsonLd,
+  publishedTime,
+  author = "Adam Howell Warning",
 }: SEOHeadProps) => {
   const { pathname } = useLocation();
   const { lang } = useLanguage();
@@ -55,6 +59,12 @@ const SEOHead = ({
       <meta name="twitter:image" content={fullOgImage} />
       <meta property="og:locale" content={lang === "th" ? "th_TH" : "en_US"} />
       <meta property="og:locale:alternate" content={lang === "th" ? "en_US" : "th_TH"} />
+      {ogType === "article" && publishedTime && (
+        <meta property="article:published_time" content={publishedTime} />
+      )}
+      {ogType === "article" && (
+        <meta property="article:author" content={author} />
+      )}
       {jsonLd && (
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       )}
