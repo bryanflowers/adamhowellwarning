@@ -96,8 +96,12 @@ const ArticlePage = ({
     let cancelled = false;
 
     const fetchTranslation = async () => {
-      setTranslating(true);
       setTranslationError(false);
+
+      // Capture English HTML BEFORE showing skeleton (proseRef would be null during skeleton)
+      const englishHtml = proseRef.current?.innerHTML || "";
+
+      setTranslating(true);
 
       try {
         // Step 1: Try DB cache directly — check multiple possible slug formats
@@ -124,12 +128,10 @@ const ArticlePage = ({
         }
 
         // Step 2: Not cached — call edge function to generate + cache
-        const proseEl = proseRef.current;
-        if (!proseEl) {
+        if (!englishHtml) {
           setTranslating(false);
           return;
         }
-        const englishHtml = proseEl.innerHTML;
 
         const { data, error } = await supabase.functions.invoke("translate-article", {
           body: {

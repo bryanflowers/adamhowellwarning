@@ -60,6 +60,8 @@ const Index = () => {
     }
     let cancelled = false;
     const fetchTranslation = async () => {
+      // Capture English HTML BEFORE showing skeleton
+      const englishHtml = proseRef.current?.innerHTML || "";
       setTranslating(true);
       try {
         // Step 1: Try DB cache directly (instant)
@@ -77,9 +79,7 @@ const Index = () => {
         }
 
         // Step 2: Fall back to edge function
-        const proseEl = proseRef.current;
-        if (!proseEl) { setTranslating(false); return; }
-        const englishHtml = proseEl.innerHTML;
+        if (!englishHtml) { setTranslating(false); return; }
 
         const { data, error } = await supabase.functions.invoke("translate-article", {
           body: { slug: "/", html: englishHtml, targetLang: "th" },
