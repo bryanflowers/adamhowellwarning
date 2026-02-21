@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import ArticlePage from "@/components/ArticlePage";
+import RelatedArticles from "@/components/RelatedArticles";
 
 const InvestigativeReport = () => {
   return (
@@ -74,6 +75,8 @@ const InvestigativeReport = () => {
         <p>
           He's never finished a project fully, always pivoting amid complaints. This isn't just bad business—it's a predatory cycle. Stay vigilant; the crypto space is full of Howells.
         </p>
+
+        <RelatedArticles currentSlug="/investigative-report" />
       </ArticlePage>
     </Layout>
   );

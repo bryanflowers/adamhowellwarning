@@ -11,6 +11,8 @@ import InvestigativeReport from "./pages/InvestigativeReport";
 import SuperDogeScamUpdate from "./pages/SuperDogeScamUpdate";
 import KeithShingletonDavidEdwards from "./pages/KeithShingletonDavidEdwards";
 import ArchitectOfDeception from "./pages/ArchitectOfDeception";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,8 @@ const App = () => (
           <Route path="/superdoge-scam-update" element={<SuperDogeScamUpdate />} />
           <Route path="/keith-shingleton-david-edwards" element={<KeithShingletonDavidEdwards />} />
           <Route path="/architect-of-deception" element={<ArchitectOfDeception />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

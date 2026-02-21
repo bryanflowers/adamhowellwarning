@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import ArticlePage from "@/components/ArticlePage";
+import RelatedArticles from "@/components/RelatedArticles";
 
 const SuperDogeRugPull = () => {
   return (
@@ -109,6 +110,7 @@ const SuperDogeRugPull = () => {
         <p>
           SuperDoge wasn't a failed project—it was a calculated scam by Adam Howell, using charity as cover to siphon millions. Victims: Trace wallets, join class actions. Society: Demand transparency in crypto. Howell's history warns: Anonymity + hype = red flag. Let's expose these rugs to protect the next wave of investors.
         </p>
+        <RelatedArticles currentSlug="/superdoge-rug-pull" />
       </ArticlePage>
     </Layout>
   );

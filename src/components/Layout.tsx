@@ -10,6 +10,7 @@ const navLinks = [
   { to: "/superdoge-scam-update", label: "SuperDoge Update" },
   { to: "/keith-shingleton-david-edwards", label: "Associates" },
   { to: "/architect-of-deception", label: "Web of Accomplices" },
+  { to: "/blog", label: "Crypto Scam Blog" },
 ];
 
 const Layout = ({ children }: { children: React.ReactNode }) => {

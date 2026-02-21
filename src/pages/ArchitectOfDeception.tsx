@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import ArticlePage from "@/components/ArticlePage";
+import RelatedArticles from "@/components/RelatedArticles";
 
 const ArchitectOfDeception = () => {
   return (
@@ -59,6 +60,7 @@ const ArchitectOfDeception = () => {
             </a>
           </p>
         </blockquote>
+        <RelatedArticles currentSlug="/architect-of-deception" />
       </ArticlePage>
     </Layout>
   );
