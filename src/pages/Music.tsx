@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { Play, Pause, Volume2, VolumeX, Music as MusicIcon, SkipForward, SkipBack } from "lucide-react";
 import Layout from "@/components/Layout";
 import { Badge } from "@/components/ui/badge";
@@ -94,6 +95,20 @@ const Music = () => {
 
   return (
     <Layout>
+      <Helmet>
+        <title>The Soundtrack of Deception – 20 Investigative Tracks | Adam Howell Warning</title>
+        <meta name="description" content="Listen to 20 original AI-generated songs across Hip-Hop, Rock, Jazz, and more — each inspired by the investigative findings into Adam Howell's crypto fraud." />
+        <link rel="canonical" href="https://web-rescu.lovable.app/music" />
+        <meta property="og:title" content="The Soundtrack of Deception – 20 Investigative Tracks" />
+        <meta property="og:description" content="20 original songs across multiple genres, each inspired by investigative findings into Adam Howell's crypto scams." />
+        <meta property="og:image" content="https://web-rescu.lovable.app/og-music.png" />
+        <meta property="og:url" content="https://web-rescu.lovable.app/music" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="The Soundtrack of Deception – 20 Investigative Tracks" />
+        <meta name="twitter:description" content="20 original songs across multiple genres, each inspired by investigative findings into Adam Howell's crypto scams." />
+        <meta name="twitter:image" content="https://web-rescu.lovable.app/og-music.png" />
+      </Helmet>
       <audio
         ref={audioRef}
         onTimeUpdate={handleTimeUpdate}
