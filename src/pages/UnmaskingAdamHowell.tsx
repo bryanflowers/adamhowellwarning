@@ -15,7 +15,7 @@ const UnmaskingAdamHowell = () => {
     "publisher": { "@type": "Organization", "name": "Adam Howell Warning" },
     "datePublished": "2024-06-15",
     "dateModified": "2026-02-01",
-    "mainEntityOfPage": "https://web-rescu.lovable.app/unmasking-adam-howell",
+    "mainEntityOfPage": "https://web-rescu.lovable.app/unmasking-adam-howell-the-serial-scammer-extortionist-and-crypto-fraudster-a-warning-to-investors",
   };
 
   return (
@@ -151,7 +151,7 @@ const UnmaskingAdamHowell = () => {
           Adam Howell is not an innovator but a predator who preys on trust, hype, and greed in the crypto space. His repeated failures—from multimillion rug pulls like SuperDoge to extortionate demands—have devastated partners and investors alike. With a fresh defamation conviction and flight to Dubai, he's a flight risk embodying the dangers of unregulated markets. Angel investors: Scrutinize any pitch involving Howell; his history of blowing up partnerships and siphoning funds makes him a toxic liability. The public must stay vigilant—report suspicions to authorities, and remember: If it sounds too good to be true, it likely is with Howell involved.
         </p>
 
-        <RelatedArticles currentSlug="/unmasking-adam-howell" />
+        <RelatedArticles currentSlug="/unmasking-adam-howell-the-serial-scammer-extortionist-and-crypto-fraudster-a-warning-to-investors" />
       </ArticlePage>
     </Layout>
   );

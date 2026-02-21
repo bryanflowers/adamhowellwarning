@@ -42,7 +42,8 @@ const PageLoader = () => (
 const AppRoutes = () => (
   <>
     <Route index element={<Index />} />
-    <Route path="unmasking-adam-howell" element={<UnmaskingAdamHowell />} />
+      <Route path="unmasking-adam-howell-the-serial-scammer-extortionist-and-crypto-fraudster-a-warning-to-investors" element={<UnmaskingAdamHowell />} />
+      <Route path="unmasking-adam-howell" element={<Navigate to="unmasking-adam-howell-the-serial-scammer-extortionist-and-crypto-fraudster-a-warning-to-investors" replace />} />
     <Route path="superdoge-rug-pull" element={<Navigate to="exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned" replace />} />
     <Route path="investigative-report" element={<Navigate to="investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond" replace />} />
     <Route path="superdoge-scam-update" element={<Navigate to="investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties" replace />} />

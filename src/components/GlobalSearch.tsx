@@ -8,7 +8,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { t } from "@/i18n/translations";
 
 const investigativeArticles = [
-  { slug: "/unmasking-adam-howell", title: "Unmasking Adam Howell", type: "article" as const },
+  { slug: "/unmasking-adam-howell-the-serial-scammer-extortionist-and-crypto-fraudster-a-warning-to-investors", title: "Unmasking Adam Howell", type: "article" as const },
   { slug: "/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned", title: "Exposing the SuperDoge Rug Pull", type: "article" as const },
   { slug: "/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond", title: "Investigative Report: Uncovering the Trail", type: "article" as const },
   { slug: "/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties", title: "Investigative Update: SuperDoge Scam", type: "article" as const },
