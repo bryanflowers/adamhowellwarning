@@ -1,13 +1,25 @@
 import Layout from "@/components/Layout";
 import ArticlePage from "@/components/ArticlePage";
 import RelatedArticles from "@/components/RelatedArticles";
+import SEOHead from "@/components/SEOHead";
 import adamHowellHeadshot from "@/assets/adam-howell-headshot-suit.png";
 
 const InvestigativeUpdateSuperdoge = () => {
   return (
     <Layout>
+      <SEOHead
+        title="SuperDoge Scam Update – Anonymous Pitch & Vanished Promises"
+        description="A revealing 2021 podcast appearance showcases Howell's tactics — hiding behind anonymity, dragging credible figures, and warning about scams to position himself as trustworthy."
+        ogImage="/og-superdoge-scam-update.png"
+        ogType="article"
+        jsonLd={{
+          "@context": "https://schema.org", "@type": "Article",
+          "headline": "Investigative Update: Exposing the SuperDoge Scam",
+          "datePublished": "2026-01-29",
+          "author": { "@type": "Organization", "name": "Adam Howell Warning" },
+        }}
+      />
       <ArticlePage
-        title="Investigative Update: Exposing the SuperDoge Scam – Adam Howell's Anonymous Pitch, Vanished Promises, and Inner Circle Ties"
         subtitle="A revealing 2021 podcast appearance showcases Howell's tactics — hiding behind anonymity, dragging credible figures, and warning about scams to position himself as trustworthy."
         date="January 29, 2026"
         readTime="15 min read"

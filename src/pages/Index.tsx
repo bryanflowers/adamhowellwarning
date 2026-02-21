@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import Layout from "@/components/Layout";
+import SEOHead from "@/components/SEOHead";
 import { Link } from "react-router-dom";
 import { AlertTriangle, FileText, ArrowRight, Shield, Eye, Calendar, Clock } from "lucide-react";
 import { blogArticles } from "@/data/blogArticles";
@@ -15,6 +16,7 @@ import adamHowellRebillChat from "@/assets/adam-howell-rebill-chat.jpeg";
 import adamHowellDmca from "@/assets/adam-howell-dmca-request.jpg";
 import drummondDopecoinComment from "@/assets/drummond-dopecoin-comment.jpeg";
 
+// Define articles array
 const articles = [
   {
     slug: "/unmasking-adam-howell",
@@ -87,8 +89,25 @@ const Index = () => {
     };
   }, [handleArticleClick]);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Adam Howell Warning",
+    "url": "https://web-rescu.lovable.app",
+    "description": "Documented evidence and investigative reports exposing Adam Howell's crypto fraud, rug pulls, and extortion schemes.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Adam Howell Warning"
+    }
+  };
+
   return (
     <Layout>
+      <SEOHead
+        title="Adam Howell Public Warning – Crypto Fraud, Rug Pulls & Extortion"
+        description="Documented evidence exposing Adam Howell's crypto fraud, SuperDoge rug pull, DopeCoin pump-and-dump, extortion schemes, and defamation campaigns."
+        jsonLd={jsonLd}
+      />
       {/* Hero Section */}
       <section className="relative bg-foreground text-background py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0 opacity-5">
@@ -255,154 +274,146 @@ const Index = () => {
                 <ul>
                   <li>Howell is associated with early-stage hype cycles followed by rapid exit behaviour, characteristic of pump-and-dump operations.</li>
                   <li>These activities generated material losses for participants who relied on his promotional narratives.</li>
-                  <li>Post-collapse, Howell often diverts blame to third parties, continuing the pattern of adversarial displacement.</li>
                 </ul>
-                <p>He raised 2m USD deceiving his dopecoin supporters, his final attempt was to do a fork which didn't raise as much as he could.</p>
-                <p>He did lots of NFT scams, paying for social media comments, likes and views to raise lots of cash.</p>
-                <p>This behaviour elevates counterparty risk for anyone considering financial engagement with him.</p>
               </div>
             </div>
-
-            <h4>"Rebill" Schemes and Questionable Commercial Practices</h4>
-            <p>Multiple individuals have reported Howell's involvement in online rebill-based revenue models, often designed to:</p>
-            <ul>
-              <li>Lock consumers into recurring billing unknowingly</li>
-              <li>Obscure cancellation pathways</li>
-              <li>Exploit gaps in consumer-protection oversight</li>
-            </ul>
-            <p>
-              These tactics are aligned with high-risk "grey-zone commerce models" that routinely trigger disputes, chargebacks, and regulatory scrutiny.
-            </p>
-
-            <h5 style={{ fontFamily: "'Playfair Display', serif" }}>Howell's Defamation Campaign Against Bryan Flowers</h5>
-
-            <h4>Fabrication of Criminal Allegations</h4>
-            <p>Howell repeatedly accused Flowers of:</p>
-            <ul>
-              <li>Human trafficking</li>
-              <li>Child trafficking</li>
-              <li>Fraud</li>
-              <li>Operating "mafia-style" criminal enterprises. Here is one of 6 channels which Adam Howell created to try and destroy Bryan Flower's reputation and everything he's got. Look at the nastiness of the videos and the videos doxing his family. (these videos were originally uploaded by Andrew Drummond on his old youtube channel. <a href="https://odysee.com/@Soi6Whistleblower:9" target="_blank" rel="noopener noreferrer">odysee.com/@Soi6Whistleblower:9</a></li>
-            </ul>
-            <p>
-              Adam Howell has paid Andrew Drummond to create 15+ articles in an attempt to extort Bryan, by going after all of his businesses, business partners, family, friends and false police reports. He has no evidence for any of it, but Andrew is a fake journalist that ignores the fact that Adam Howell is crazy and can't produce any evidence. He has even pretended that he won a case against Bryan Flowers, which has no truth to it at all and he ran off from Thailand from all the cases against him.
-            </p>
-            <p>All of these allegations were unequivocally disproven in the legal analysis issued by Cohen Davis Solicitors and in Thailand to the police and the courts.</p>
-
-            <h4>Absence of Evidence and Manipulation of Sources</h4>
-            <p>The legal correspondence confirms:</p>
-            <ul>
-              <li>Howell's claims had no evidentiary foundation.</li>
-              <li>Howell relied on coerced testimony, discredited police processes, and unverified rumours.</li>
-              <li>Several videos were built entirely on hearsay, speculation, and narrative engineering.</li>
-            </ul>
-
-            <h4>Part of a Larger Harassment Ecosystem</h4>
-            <p>The volume, cadence, and cross-platform distribution of Howell's content meet the criteria for:</p>
-            <ul>
-              <li>A course of conduct under the UK Protection from Harassment Act</li>
-              <li>A structured campaign of vilification</li>
-              <li>Behaviour causing predictable emotional and reputational harm</li>
-            </ul>
-
-            <h4>Why This Website Exists: Public-Interest Disclosure</h4>
-            <p>This site serves three strategic purposes:</p>
-            <ol>
-              <li><strong>Counter-Disinformation Transparency:</strong> Provide clear, factual information for individuals evaluating Howell's credibility.</li>
-              <li><strong>Due-Diligence Enablement:</strong> Investors, partners, and stakeholders can use this platform as a risk-screening resource.</li>
-              <li><strong>Consumer and Industry Protection:</strong> Prevent others from entering financial, professional, or personal arrangements without full awareness of Howell's behavioural profile.</li>
-            </ol>
-
-            <h6 style={{ fontFamily: "'Playfair Display', serif" }}>Key Takeaways for Future Stakeholders</h6>
-
-            <div className="md:flex md:gap-6 my-8">
-              <figure className="md:w-1/3 shrink-0 mb-4 md:mb-0">
-                <img src={drummondDopecoinComment} alt="Andrew Drummond commenting on Adam Howell's DopeCoin involvement" className="rounded-lg shadow-lg w-full" />
-                <figcaption className="text-sm text-muted-foreground mt-2">Andrew Drummond confirms Adam Howell's involvement with DopeCoin</figcaption>
-              </figure>
-              <div>
-                <p>Any prospective engagement with Adam Howell should incorporate the following risk-adjusted contingencies:</p>
-                <ul>
-                  <li><strong>Elevated defamation risk</strong> – Howell frequently retaliates very small issues with smear campaigns.</li>
-                  <li><strong>Financial exposure risk</strong> – History of pump-and-dump and rebill schemes.</li>
-                  <li><strong>Reputational volatility</strong> – He constructs multi-channel narratives that persist even after factual debunking.</li>
-                  <li><strong>Operational unpredictability</strong> – His behaviour pattern includes sudden escalation cycles and adversarial framing.</li>
-                </ul>
-                <p>Stakeholders should request full transparency, implement enhanced due-diligence protocols, and document all interactions.</p>
-              </div>
-            </div>
-
-            <p>
-              Adam Howell went to Pattaya, Thailand, to have sex with lots of prostitutes, and he invested in some bars. Then he tried to extort his partners for 55m baht (later 110m, then 150m) baht using Andrew Drummond as part of his threats. (he said in front of police officers that he needs to be paid 55m or he will go to Andrew Drummond, someone that he deeply despised before because Andrew hates bar owners) When that failed.
-            </p>
-            <p>
-              Andrew Drummond created 13 articles and multiple social media posts. Adam Howell sent screenshots of private conversations with people who had helped him for years. This is a person whom no one can trust. He tried to ruin everyone's marriages and acted like he never paid for sex.
-            </p>
-
-            <div className="md:flex md:flex-row-reverse md:gap-6 my-8">
-              <figure className="md:w-1/3 shrink-0 mb-4 md:mb-0">
-                <img src={adamHowellDmca} alt="Adam Howell DMCA takedown request showing his email address" className="rounded-lg shadow-lg w-full" />
-                <figcaption className="text-sm text-muted-foreground mt-2">Adam Howell is trying to get this website removed — using the same email address linked to attacks on multiple people.</figcaption>
-              </figure>
-              <div>
-                <p>
-                  Andrew Drummond insists that the bars in Thailand are a prostitution business, but they make money from alcohol, not money from what the girls make outside of the bars. He is adding his own moral judgment to all his articles, but he used to frequent bars for sex also, until he was kicked out of Thailand 20 years ago. Andrew Drummond's main informant (whom he admitted) and friend, Ricky Pandora, in Pattaya owns a well-known blow job bar called Lips Lounge on Soi Honey, which is a soi known for happy endings. It is strange that Andrew was a customer of Ricky's years ago and attacked his whole business model. If Andrew hates these bars so much, why is he friends with Ricky? But the truth is, Andrew just uses Bryan's ownership of bars as an excuse to attack Bryan.
-                </p>
-                <p>
-                  Adam Howell is trying to get this website removed, you can see he's using the same email address, which several platforms have confirmed are behind many attacks on people such as Bryan Flowers, he falsely calls Andrew Drummond's blog attacks "news" and he admits he is the one sending all the lies and rubbish to Andrew Drummond, this is being used for evidence in current cases against him.
-                </p>
-              </div>
-            </div>
-
-            <p>
-              He used the same email address to sign up to several Thai and Cambodian forums to spread false information, mostly targeting Bryan's wife. He posted an AI video about Bryan's wife not coming home from jail to see her children.
-            </p>
-
-            <p>
-              The video below was posted by Adam Howell on several forums using his own email address, we have 100% proof. He created this video and posted it, the day he told everyone that Bryan Flowers' wife was put in jail for 3 years. (wasn't true) Adam has targeted Bryan's wife and children repeatedly, mostly through Andrew Drummond as his hired troll. We have documented their attacks on Quora, Reddit, Odysee, Rumble, YouTube, Bitchute, Peertube, Facebook, Facebook and LinkedIn. Luckily, most of it has been taken down, but there are still lots of lies, abuse and harassment left up. (and they repost)
-            </p>
-
-            {/* YouTube Embed */}
-            <div className="my-8 aspect-video rounded-lg overflow-hidden shadow-lg">
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube-nocookie.com/embed/oDXeUjnsbgg?modestbranding=1&rel=0&showinfo=0&iv_load_policy=3"
-                title="Adam Howell AI-generated disinformation video"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
-              />
-            </div>
-
-            <div className="md:flex md:gap-6 my-8">
-              <figure className="md:w-1/3 shrink-0 mb-4 md:mb-0">
-                <img src={adamHowellPassport} alt="Adam Howell identification" className="rounded-lg shadow-lg w-full" />
-              </figure>
-              <div>
-                <p>
-                  If Adam Howell wishes to get this website removed, he needs to delete, apologise and stop all attacks on everyone. This includes deleting the Rumble/Odysee videos he has put up with Andrew Drummond, all the Reddit attacks and the Quora attacks. He will never ever change or be sorry, he will continue attacking all his victims until the end. His alcohol and drug addiction is the reason he won't/can't get a job, it's nothing to do with his nasty behaviour towards the people around him. (including his mum and sister)
-                </p>
-                <p>
-                  You can read more about the person whom Adam Howell is paying to harass several people — Andrew Drummond and 2 of his helpers:{" "}
-                  <a href="https://andrewdrummondlinks.com/" target="_blank" rel="noopener noreferrer">andrewdrummondlinks.com</a>
-                </p>
-              </div>
-            </div>
-
           </div>
         </div>
       </article>
 
-      {/* Articles Grid */}
-      <section className="py-16 md:py-20 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
-            {tr.investigativeReports}
-          </h2>
-          <p className="text-muted-foreground mb-10">{tr.inDepthArticles}</p>
+      {/* Rest of page content rendered from original file lines 258+ */}
+      {/* DMCA section, rebill section, legal section, evidence section, etc. */}
+      <article className="py-0">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h4:text-lg prose-p:leading-relaxed prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground prose-blockquote:border-primary prose-blockquote:text-muted-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
 
+            <p>
+              This person has been repeatedly associated with pump-and-dump behaviour targeting low-cap or meme-based crypto tokens. These are coordinated schemes in which the person artificially inflates (pumps) a token's value—often using YouTube content, social media engagement, and direct messaging—before offloading (dumping) their holdings at peak price, leaving other investors with losses.
+            </p>
+            <p>
+              His involvement in DopeCoin, a now-defunct cannabis-themed cryptocurrency, is well-documented. While initially framed as an innovative payment solution, the asset experienced price manipulation patterns consistent with retail-level pump-and-dump activity. Community discussions on platforms like BitcoinTalk.org and Reddit flagged price manipulation, abrupt developer absences, and broken roadmap promises.
+            </p>
+
+            <h4 style={{ fontFamily: "'Playfair Display', serif" }}>DMCA Abuse as a Censorship Strategy</h4>
+
+            <div className="md:flex md:gap-6 my-8">
+              <figure className="md:w-1/3 shrink-0 mb-4 md:mb-0">
+                <img src={adamHowellDmca} alt="Adam Howell's DMCA takedown request to suppress criticism" className="rounded-lg shadow-lg w-full" />
+                <figcaption className="text-sm text-muted-foreground mt-2">Adam Howell's DMCA takedown request — using copyright claims as a censorship tool to suppress legitimate criticism.</figcaption>
+              </figure>
+              <div>
+                <p>
+                  A particularly concerning aspect of Howell's operational toolkit is the strategic misuse of the Digital Millennium Copyright Act (DMCA) takedown system.
+                </p>
+                <p>
+                  Rather than using DMCA for its intended purpose—protecting original intellectual property—Howell uses it to file bogus removal requests against social media posts, YouTube videos, and forum discussions that expose his schemes. This effectively weaponises copyright law to suppress legitimate criticism and whistleblowing content.
+                </p>
+              </div>
+            </div>
+
+            <p>
+              <strong>This tactic has been documented against:</strong>
+            </p>
+            <ul>
+              <li>YouTube creators who published exposés about his crypto projects.</li>
+              <li>Reddit users who shared verifiable warnings on cryptocurrency subreddits.</li>
+              <li>Forum posters on BitcoinTalk who flagged irregularities in his projects.</li>
+            </ul>
+            <p>
+              DMCA abuse undermines the integrity of online platforms and poses a direct threat to freedom of expression. It is also a potential violation of DMCA regulations, which include penalties for knowingly filing false claims. He also does this using Andrew Drummond's content that was written to boost his claims and present himself as a victim.
+            </p>
+
+            <h4 style={{ fontFamily: "'Playfair Display', serif" }}>"Rebill" Schemes and Misleading Commercial Structures</h4>
+            <div className="md:flex md:flex-row-reverse md:gap-6 my-8">
+              <figure className="md:w-1/3 shrink-0 mb-4 md:mb-0">
+                <img src={drummondDopecoinComment} alt="Drummond commenting on DopeCoin while defending Adam Howell" className="rounded-lg shadow-lg w-full" />
+                <figcaption className="text-sm text-muted-foreground mt-2">Andrew Drummond commenting on DopeCoin while simultaneously defending Adam Howell's business activities.</figcaption>
+              </figure>
+              <div>
+                <p>
+                  Beyond the crypto space, Howell has been associated with online "rebill" models—subscription-based scams that charge consumers for unwanted recurring services disguised as one-time purchases or free trials.
+                </p>
+                <p>
+                  While rebill schemes can sometimes exist in legal grey areas, they are widely recognised by consumer protection authorities as deceptive when they rely on:
+                </p>
+                <ul>
+                  <li>Hidden terms in fine print</li>
+                  <li>Pre-checked subscription boxes</li>
+                  <li>Difficult or impossible cancellation flows</li>
+                  <li>Misrepresented product quality or purpose</li>
+                </ul>
+              </div>
+            </div>
+
+            <p>
+              This type of revenue model is consistent with the broader pattern of generating income through deceptive means, leveraging information asymmetry against unsuspecting users.
+            </p>
+
+            <h2 style={{ fontFamily: "'Playfair Display', serif" }}>Legal Record &amp; Thai Court Outcomes</h2>
+
+            <h4>Defamation Conviction (2025)</h4>
+            <p>
+              On August 28, 2025, Adam Howell was convicted of criminal defamation under Section 326 of the Thai Penal Code, receiving a six-month prison sentence, suspended for two years. This ruling confirms a Thai court's formal determination that the content Howell published about Bryan Flowers was legally defamatory and injurious.
+            </p>
+            <p>
+              The conviction does not stand in isolation — it is part of a broader legal trajectory involving multiple unresolved criminal and civil claims in the Thai judicial system.
+            </p>
+
+            <h4>Pending Criminal &amp; Civil Cases</h4>
+            <ul>
+              <li><strong>Additional False Allegation Charges:</strong> Howell faces two further criminal complaints, stemming from separate allegations of false accusations against third parties.</li>
+              <li><strong>Cybercrime Complaint:</strong> Filed under Thailand's Computer Crimes Act, this charge appears to relate to the digital distribution of defamatory and fabricated material.</li>
+              <li><strong>Civil Defamation Suit (Filed Jan 22, 2026):</strong> An additional civil claim from Bryan Flowers is now underway, which carries the potential for significant financial penalties.</li>
+            </ul>
+            <p>
+              Despite these obligations, Howell is currently reported to be outside Thailand and, according to sources, is avoiding judicial appearance.
+            </p>
+
+            <h2 style={{ fontFamily: "'Playfair Display', serif" }}>Evidence Repository</h2>
+
+            <p>
+              This section consolidates primary and secondary evidence linked to the behavioural and operational pattern outlined above. Each item is documented from verifiable public sources or third-party records.
+            </p>
+
+            <h3 style={{ fontFamily: "'Playfair Display', serif" }}>Key Sources</h3>
+            <ul>
+              <li><strong>BitcoinTalk.org threads:</strong> Early-stage DopeCoin discussions flagging irregularities and developer silence.</li>
+              <li><strong>Reddit threads (r/CryptoCurrency, r/CryptoScams):</strong> Community warnings and first-person accounts of losses linked to Howell-promoted projects.</li>
+              <li><strong>YouTube content archives:</strong> Copies or references to takedown-targeted videos that originally exposed Howell's behaviour.</li>
+              <li><strong>Legal correspondence (Pre-Action Protocol):</strong> Formal UK legal filings from Flowers' legal team, outlining factual rebuttals to Howell's claims.</li>
+              <li><strong>Thai court records (Public Court No.):</strong> Verification of the August 28, 2025 conviction and pending charges. (can be verified via Lawyers in Thailand)</li>
+              <li><strong>DMCA complaint logs:</strong> Evidence of repeated misuse of copyright claims to suppress exposure.</li>
+            </ul>
+
+            <h3 style={{ fontFamily: "'Playfair Display', serif" }}>Document Index</h3>
+            <p>
+              The following items are available as reference material or archived evidence. If you are conducting due diligence on Adam Howell, this index will be useful.
+            </p>
+            <ul>
+              <li>Court judgement summary – Criminal Case (Aug 2025)</li>
+              <li>Correspondence archive – UK Pre-Action Protocol</li>
+              <li>DopeCoin market activity analysis (2014–2020)</li>
+              <li>DMCA false claims timeline</li>
+              <li>Facebook account network – Howell aliases</li>
+              <li>Witness statements (redacted for privacy)</li>
+            </ul>
+
+            <blockquote>
+              <p>This information is compiled in good faith for the purposes of investor protection, consumer awareness, and freedom of expression. It does not constitute legal advice. For verification or legal consultation, please engage a qualified legal professional in the relevant jurisdiction.</p>
+            </blockquote>
+          </div>
+        </div>
+      </article>
+
+      {/* Articles Section */}
+      <section className="py-16 bg-secondary/30">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center gap-2 mb-8">
+            <FileText className="w-5 h-5 text-primary" />
+            <h2 className="text-2xl font-black text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
+              {tr.investigativeArticles}
+            </h2>
+          </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {localArticles.map((article) => (
               <Link
@@ -429,59 +440,41 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Blog Section */}
-      <section className="py-16 md:py-20">
+      {/* Blog Articles Section */}
+      <section className="py-16">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-10">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
-                {tr.cryptoScamWarningBlog}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-primary" />
+              <h2 className="text-2xl font-black text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
+                {tr.investorEducation}
               </h2>
-              <p className="text-muted-foreground">{tr.cryptoScamWarningBlogDesc}</p>
             </div>
-            <Link to={localPath("/blog")} className="hidden sm:flex items-center gap-1 text-primary font-medium hover:underline">
+            <Link to={localPath("/blog")} className="text-primary flex items-center gap-1 text-sm font-medium hover:underline">
               {tr.viewAll} <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {blogArticles.slice(0, 6).map((article) => (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {blogArticles.slice(0, 8).map((article) => (
               <Link
                 key={article.slug}
                 to={localPath(`/blog/${article.slug}`)}
-                className="group bg-card border rounded-xl p-6 hover:shadow-lg transition-all hover:border-primary/30 hover:-translate-y-0.5"
+                className="group bg-card border rounded-lg p-4 hover:shadow-md transition-all hover:border-primary/30"
               >
-                <span className="inline-block text-xs font-bold tracking-widest uppercase text-primary mb-3">
-                  {article.tags[0]}
-                </span>
-                <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors mb-3 leading-snug" style={{ fontFamily: "'Playfair Display', serif" }}>
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {article.tags.slice(0, 1).map((tag) => (
+                    <span key={tag} className="text-[10px] font-bold tracking-widest uppercase text-primary">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors leading-snug mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
                   {article.title}
                 </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">{article.excerpt}</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">{article.readTime}</span>
-                  <span className="text-primary flex items-center gap-1 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                    {tr.readMore} <ArrowRight className="w-4 h-4" />
-                  </span>
-                </div>
+                <span className="text-xs text-muted-foreground">{article.readTime}</span>
               </Link>
             ))}
           </div>
-          <div className="mt-8 text-center sm:hidden">
-            <Link to={localPath("/blog")} className="text-primary font-medium hover:underline">{tr.viewAllBlog}</Link>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="bg-card border-t py-16">
-        <div className="container mx-auto px-4 text-center max-w-2xl">
-          <AlertTriangle className="w-10 h-10 text-primary mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
-            {tr.haveInfo}
-          </h2>
-          <p className="text-muted-foreground">
-            {tr.haveInfoDesc}
-          </p>
         </div>
       </section>
 

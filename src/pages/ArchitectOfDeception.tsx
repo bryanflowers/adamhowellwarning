@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import ArticlePage from "@/components/ArticlePage";
 import RelatedArticles from "@/components/RelatedArticles";
+import SEOHead from "@/components/SEOHead";
 import adamHowellAiPhoto from "@/assets/adam-howell-ai-photo.png";
 import adamHowellRebillChat from "@/assets/adam-howell-rebill-chat.jpeg";
 import kanokrat from "@/assets/kanokrat.jpg";
@@ -8,8 +9,18 @@ import kanokrat from "@/assets/kanokrat.jpg";
 const ArchitectOfDeception = () => {
   return (
     <Layout>
+      <SEOHead
+        title="The Architect of Deception – Adam Howell's Web of Accomplices"
+        description="Key enablers like Andrew Drummond and Kanokrat form the backbone of Adam Howell's extortion tactics, turning personal grudges into profitable smear operations."
+        ogType="article"
+        jsonLd={{
+          "@context": "https://schema.org", "@type": "Article",
+          "headline": "The Architect of Deception and Adam Howell's Web of Accomplices",
+          "datePublished": "2026-01-22",
+          "author": { "@type": "Organization", "name": "Adam Howell Warning" },
+        }}
+      />
       <ArticlePage
-        title="The Architect of Deception and Adam Howells Web of Accomplices"
         subtitle="Key enablers like Andrew Drummond and Kanokrat form the backbone of his extortion tactics, turning personal grudges into potentially profitable smear operations."
         date="January 22, 2026"
         readTime="12 min read"

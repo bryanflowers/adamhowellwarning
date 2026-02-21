@@ -1,14 +1,25 @@
 import Layout from "@/components/Layout";
 import ArticlePage from "@/components/ArticlePage";
 import RelatedArticles from "@/components/RelatedArticles";
+import SEOHead from "@/components/SEOHead";
 import adamHowellSuitPortrait from "@/assets/adam-howell-suit-portrait.png";
 import adamHowellRebillConfession from "@/assets/adam-howell-rebill-confession.jpeg";
 
 const InvestigativeReportUncovering = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Investigative Report: Adam Howell's Crypto Ventures Trail"
+        description="Mapping out Adam Howell's history through public records, forum archives, crypto news sites, social media, and whistleblower accounts."
+        ogType="article"
+        jsonLd={{
+          "@context": "https://schema.org", "@type": "Article",
+          "headline": "Investigative Report: Uncovering Adam Howell's Ventures",
+          "datePublished": "2026-01-28",
+          "author": { "@type": "Organization", "name": "Adam Howell Warning" },
+        }}
+      />
       <ArticlePage
-        title="Investigative Report: Uncovering the Trail of Adam Howell's Ventures in Crypto and Beyond"
         subtitle="Mapping out Adam Howell's history through public records, forum archives, crypto news sites, social media, and whistleblower accounts."
         date="January 28, 2026"
         readTime="20 min read"
