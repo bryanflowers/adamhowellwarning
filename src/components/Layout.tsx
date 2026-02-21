@@ -3,6 +3,7 @@ import { AlertTriangle, Shield, Menu, X, ArrowUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import VictimContactSlideIn from "@/components/VictimContactSlideIn";
 import ReadingProgressBar from "@/components/ReadingProgressBar";
+import GlobalSearch from "@/components/GlobalSearch";
 
 const ScrollProgressButton = ({ show }: { show: boolean }) => {
   const [progress, setProgress] = useState(0);
@@ -57,6 +58,8 @@ const navLinks = [
   { to: "/the-architect-of-deception-and-adam-howells-web-of-accomplices", label: "Web of Accomplices" },
   { to: "/blog", label: "Crypto Scam Blog" },
   { to: "/music", label: "Music" },
+  { to: "/quiz", label: "Quiz" },
+  { to: "/bingo", label: "Bingo" },
 ];
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -110,6 +113,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 {link.label}
               </Link>
             ))}
+            <GlobalSearch />
           </nav>
 
           {/* Mobile menu button */}

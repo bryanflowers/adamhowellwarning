@@ -20,6 +20,8 @@ const Articles = lazy(() => import("./pages/Articles"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const Music = lazy(() => import("./pages/Music"));
+const RedFlagQuiz = lazy(() => import("./pages/RedFlagQuiz"));
+const ScamBingo = lazy(() => import("./pages/ScamBingo"));
 const AdminComments = lazy(() => import("./pages/AdminComments"));
 
 const queryClient = new QueryClient();
@@ -54,6 +56,8 @@ const App = () => (
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/music" element={<Music />} />
+              <Route path="/quiz" element={<RedFlagQuiz />} />
+              <Route path="/bingo" element={<ScamBingo />} />
               <Route path="/admin/comments" element={<AdminComments />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

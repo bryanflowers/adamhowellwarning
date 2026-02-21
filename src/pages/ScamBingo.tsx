@@ -1,0 +1,172 @@
+import { useState, useMemo } from "react";
+import { Helmet } from "react-helmet-async";
+import Layout from "@/components/Layout";
+import { Button } from "@/components/ui/button";
+import { RotateCcw, Share2, PartyPopper } from "lucide-react";
+
+const allSquares = [
+  "Anonymous Team",
+  "Locked Telegram",
+  '"100x Guaranteed"',
+  "Celebrity Endorsement",
+  "No Audit",
+  "Unlocked Liquidity",
+  "Countdown Timer Pressure",
+  "Dev Wallet 30%+",
+  '"Not Financial Advice"',
+  "Fake Partnership",
+  "Copy-Paste Whitepaper",
+  "Honeypot Contract",
+  '"To the Moon"',
+  "Bot-Filled Discord",
+  "Paid Influencer Shill",
+  "Unrealistic Roadmap",
+  "DMCA Takedowns on Critics",
+  "Charity Wallet Never Used",
+  "Team Fled Country",
+  "Fake Audit Report",
+  "Rebill Scheme",
+  "Multiple Failed Projects",
+  "Deleted Website",
+  "Pump & Dump Pattern",
+  "Threats to Whistleblowers",
+];
+
+const FREE_SPACE_INDEX = 12; // Center of 5x5
+
+const shuffle = (arr: string[]) => {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+};
+
+const checkBingo = (marked: boolean[]): boolean => {
+  // Rows
+  for (let r = 0; r < 5; r++) {
+    if ([0, 1, 2, 3, 4].every((c) => marked[r * 5 + c])) return true;
+  }
+  // Cols
+  for (let c = 0; c < 5; c++) {
+    if ([0, 1, 2, 3, 4].every((r) => marked[r * 5 + c])) return true;
+  }
+  // Diagonals
+  if ([0, 6, 12, 18, 24].every((i) => marked[i])) return true;
+  if ([4, 8, 12, 16, 20].every((i) => marked[i])) return true;
+  return false;
+};
+
+const ScamBingo = () => {
+  const [seed, setSeed] = useState(0);
+  const board = useMemo(() => {
+    const shuffled = shuffle(allSquares);
+    const result = shuffled.slice(0, 25);
+    result[FREE_SPACE_INDEX] = "FREE SPACE 🎯";
+    return result;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seed]);
+
+  const [marked, setMarked] = useState<boolean[]>(() => {
+    const init = Array(25).fill(false);
+    init[FREE_SPACE_INDEX] = true;
+    return init;
+  });
+
+  const hasBingo = checkBingo(marked);
+  const markedCount = marked.filter(Boolean).length;
+
+  const toggleCell = (idx: number) => {
+    if (idx === FREE_SPACE_INDEX) return;
+    setMarked((prev) => {
+      const next = [...prev];
+      next[idx] = !next[idx];
+      return next;
+    });
+  };
+
+  const reset = () => {
+    setSeed((s) => s + 1);
+    const init = Array(25).fill(false);
+    init[FREE_SPACE_INDEX] = true;
+    setMarked(init);
+  };
+
+  return (
+    <Layout>
+      <Helmet>
+        <title>Crypto Scam Bingo — Spot the Tactics | Adam Howell Warning</title>
+        <meta name="description" content="Play Crypto Scam Bingo! Click squares as you spot common scam tactics in real crypto projects. How many can you find?" />
+      </Helmet>
+      <section className="py-12 md:py-16">
+        <div className="container mx-auto px-4 max-w-2xl">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+              Crypto Scam Bingo
+            </h1>
+            <p className="text-muted-foreground max-w-lg mx-auto">
+              Click squares as you spot these common scam tactics in real crypto projects. Get 5 in a row for BINGO!
+            </p>
+          </div>
+
+          {hasBingo && (
+            <div className="bg-primary/10 border-2 border-primary rounded-xl p-6 mb-6 text-center animate-scale-in">
+              <PartyPopper className="w-12 h-12 text-primary mx-auto mb-3" />
+              <h2 className="text-2xl font-black text-primary mb-2">🎉 BINGO! 🎉</h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                You found a full line of scam tactics! Unfortunately, that means this project is probably a scam.
+              </p>
+              <div className="flex justify-center gap-3">
+                <Button onClick={reset} variant="outline" className="gap-2">
+                  <RotateCcw className="w-4 h-4" /> New Card
+                </Button>
+                <Button
+                  onClick={() => {
+                    const text = `🎰 BINGO! I spotted ${markedCount} scam red flags on Crypto Scam Bingo!`;
+                    if (navigator.share) navigator.share({ text, url: window.location.href });
+                    else navigator.clipboard.writeText(`${text} ${window.location.href}`);
+                  }}
+                  className="gap-2"
+                >
+                  <Share2 className="w-4 h-4" /> Share
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-5 gap-1.5 md:gap-2 mb-6">
+            {board.map((text, idx) => {
+              const isMarked = marked[idx];
+              const isFree = idx === FREE_SPACE_INDEX;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => toggleCell(idx)}
+                  className={`aspect-square rounded-lg border-2 p-1 md:p-2 flex items-center justify-center text-center transition-all text-[10px] sm:text-xs md:text-sm font-medium leading-tight ${
+                    isFree
+                      ? "bg-primary/20 border-primary text-primary cursor-default"
+                      : isMarked
+                      ? "bg-primary text-primary-foreground border-primary shadow-md scale-95"
+                      : "bg-card border-border hover:border-primary/50 hover:bg-secondary cursor-pointer"
+                  }`}
+                >
+                  {text}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">{markedCount}/25 spotted</span>
+            <Button onClick={reset} variant="outline" size="sm" className="gap-2">
+              <RotateCcw className="w-4 h-4" /> Shuffle Card
+            </Button>
+          </div>
+        </div>
+      </section>
+    </Layout>
+  );
+};
+
+export default ScamBingo;
