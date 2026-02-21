@@ -40,7 +40,7 @@ const articles = [
     readTime: "18 min read",
   },
   {
-    slug: "/architect-of-deception",
+    slug: "/the-architect-of-deception-and-adam-howells-web-of-accomplices",
     title: "The Architect of Deception and Adam Howell's Web of Accomplices",
     excerpt: "Key enablers like Andrew Drummond and Kanokrat form the backbone of extortion tactics, turning personal grudges into profitable smear operations.",
     tag: "Network Analysis",

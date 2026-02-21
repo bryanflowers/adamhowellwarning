@@ -78,7 +78,7 @@ const ArchitectOfDeception = () => {
           </a>
         </p>
 
-        <RelatedArticles currentSlug="/architect-of-deception" />
+        <RelatedArticles currentSlug="/the-architect-of-deception-and-adam-howells-web-of-accomplices" />
       </ArticlePage>
     </Layout>
   );

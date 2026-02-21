@@ -13,7 +13,7 @@ const caseStudyArticles = [
   { slug: "/investigative-report", title: "Adam Howell's Ventures in Crypto and Beyond", tag: "Investigation" },
   { slug: "/superdoge-scam-update", title: "SuperDoge Scam Update: Anonymous Pitch & Vanished Promises", tag: "Update" },
   { slug: "/keith-shingleton-david-edwards", title: "Keith Shingleton, David Edwards & Adam Howell Connections", tag: "Associates" },
-  { slug: "/architect-of-deception", title: "The Architect of Deception: Adam Howell's Web of Accomplices", tag: "Network" },
+  { slug: "/the-architect-of-deception-and-adam-howells-web-of-accomplices", title: "The Architect of Deception: Adam Howell's Web of Accomplices", tag: "Network" },
 ];
 
 const RelatedArticles = ({ currentSlug, maxItems = 6 }: RelatedArticlesProps) => {

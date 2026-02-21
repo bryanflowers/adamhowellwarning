@@ -9,7 +9,7 @@ const navLinks = [
   { to: "/investigative-report", label: "Investigative Report" },
   { to: "/superdoge-scam-update", label: "SuperDoge Update" },
   { to: "/keith-shingleton-david-edwards", label: "Associates" },
-  { to: "/architect-of-deception", label: "Web of Accomplices" },
+  { to: "/the-architect-of-deception-and-adam-howells-web-of-accomplices", label: "Web of Accomplices" },
   { to: "/blog", label: "Crypto Scam Blog" },
 ];
 
