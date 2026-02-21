@@ -1,10 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import CommentSection from "@/components/CommentSection";
 import ShareButtons from "@/components/ShareButtons";
 import TableOfContents from "@/components/TableOfContents";
 import ImageLightbox from "@/components/ImageLightbox";
+import ArticleNarration from "@/components/ArticleNarration";
 
 interface ArticlePageProps {
   title: string;
@@ -18,6 +19,8 @@ const ArticlePage = ({ title, subtitle, date, readTime, children }: ArticlePageP
   const location = useLocation();
   const articleSlug = location.pathname;
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
+  const proseRef = useRef<HTMLDivElement>(null);
+  const [articleText, setArticleText] = useState("");
 
   const handleArticleClick = useCallback((e: MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -40,6 +43,14 @@ const ArticlePage = ({ title, subtitle, date, readTime, children }: ArticlePageP
       container?.removeEventListener("click", handleArticleClick as EventListener);
     };
   }, [handleArticleClick]);
+
+  // Extract plain text from the prose content for TTS
+  useEffect(() => {
+    if (proseRef.current) {
+      const text = proseRef.current.innerText || proseRef.current.textContent || "";
+      setArticleText(text.slice(0, 5000));
+    }
+  }, [children]);
 
   return (
     <article className="py-12">
@@ -74,10 +85,11 @@ const ArticlePage = ({ title, subtitle, date, readTime, children }: ArticlePageP
             )}
             <ShareButtons title={title} />
           </div>
+          {articleText && <ArticleNarration articleSlug={articleSlug} articleText={articleText} />}
           <div className="h-1 w-24 bg-primary mt-6 rounded-full" />
         </header>
 
-        <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h4:text-lg prose-p:leading-relaxed prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground prose-blockquote:border-primary prose-blockquote:text-muted-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
+        <div ref={proseRef} className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h4:text-lg prose-p:leading-relaxed prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground prose-blockquote:border-primary prose-blockquote:text-muted-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
           {children}
         </div>
 

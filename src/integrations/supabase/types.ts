@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      article_audio: {
+        Row: {
+          article_slug: string
+          audio_url: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          article_slug: string
+          audio_url: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          article_slug?: string
+          audio_url?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
       comments: {
         Row: {
           article_slug: string
