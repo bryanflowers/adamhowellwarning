@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Play, Pause, Volume2, VolumeX, Music as MusicIcon, SkipForward, SkipBack, Shuffle } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, Music as MusicIcon, SkipForward, SkipBack, Shuffle, Heart, ListMusic } from "lucide-react";
 import Layout from "@/components/Layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { musicTracks, allGenres, type MusicTrack } from "@/data/musicTracks";
+import AudioVisualizer from "@/components/AudioVisualizer";
+import { useFavorites } from "@/hooks/useFavorites";
 
 const Music = () => {
   const [activeGenre, setActiveGenre] = useState<string | null>(null);
@@ -16,12 +18,17 @@ const Music = () => {
   const [volume, setVolume] = useState(80);
   const [isMuted, setIsMuted] = useState(false);
   const [shuffleMode, setShuffleMode] = useState(false);
+  const [showPlaylist, setShowPlaylist] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { favorites, toggle, isFavorite } = useFavorites();
 
-  const filteredTracks = activeGenre
+  const baseTracks = showPlaylist
+    ? musicTracks.filter((t) => favorites.includes(t.id))
+    : activeGenre
     ? musicTracks.filter((t) => t.genre === activeGenre)
     : musicTracks;
 
+  const filteredTracks = baseTracks;
   const playableTracks = filteredTracks.filter((t) => !!t.audioUrl);
 
   const getShuffledPool = (pool: MusicTrack[]) => {
@@ -162,25 +169,36 @@ const Music = () => {
             </p>
           </div>
 
-          {/* Genre Filters */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {/* Genre Filters + Playlist Toggle */}
+          <div className="flex flex-wrap justify-center gap-2 mb-4">
             <Button
-              variant={activeGenre === null ? "default" : "outline"}
+              variant={!showPlaylist && activeGenre === null ? "default" : "outline"}
               size="sm"
-              onClick={() => setActiveGenre(null)}
+              onClick={() => { setActiveGenre(null); setShowPlaylist(false); }}
             >
               All Genres
             </Button>
             {allGenres.map((genre) => (
               <Button
                 key={genre}
-                variant={activeGenre === genre ? "default" : "outline"}
+                variant={!showPlaylist && activeGenre === genre ? "default" : "outline"}
                 size="sm"
-                onClick={() => setActiveGenre(genre)}
+                onClick={() => { setActiveGenre(genre); setShowPlaylist(false); }}
               >
                 {genre}
               </Button>
             ))}
+          </div>
+          <div className="flex justify-center mb-8">
+            <Button
+              variant={showPlaylist ? "default" : "outline"}
+              size="sm"
+              className="gap-2"
+              onClick={() => setShowPlaylist(!showPlaylist)}
+            >
+              <ListMusic className="w-4 h-4" />
+              My Playlist ({favorites.length})
+            </Button>
           </div>
 
           {/* Play All */}
@@ -188,7 +206,7 @@ const Music = () => {
             <div className="flex justify-center items-center gap-3 mb-8">
               <Button onClick={playAll} size="lg" className="gap-2">
                 <Play className="w-5 h-5" />
-                Play All{activeGenre ? ` ${activeGenre}` : ""} ({playableTracks.length} tracks)
+                Play All{showPlaylist ? " Playlist" : activeGenre ? ` ${activeGenre}` : ""} ({playableTracks.length} tracks)
               </Button>
               <Button
                 variant={shuffleMode ? "default" : "outline"}
@@ -202,41 +220,58 @@ const Music = () => {
             </div>
           )}
 
+          {showPlaylist && favorites.length === 0 && (
+            <p className="text-center text-muted-foreground py-8">
+              No favorites yet. Click the ♥ icon on any track to add it to your playlist.
+            </p>
+          )}
+
           {/* Track Grid */}
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredTracks.map((track) => {
               const isActive = currentTrack?.id === track.id;
               const hasAudio = !!track.audioUrl;
               return (
-                <button
+                <div
                   key={track.id}
-                  onClick={() => playTrack(track)}
-                  disabled={!hasAudio}
-                  className={`text-left p-4 rounded-lg border transition-all ${
+                  className={`relative text-left p-4 rounded-lg border transition-all ${
                     isActive
                       ? "border-primary bg-primary/10 shadow-md"
                       : "border-border bg-card hover:border-primary/50 hover:shadow-sm"
-                  } ${!hasAudio ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                  } ${!hasAudio ? "opacity-50" : ""}`}
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <Badge variant="secondary" className="text-xs">
-                      {track.genre}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">{track.duration}</span>
-                  </div>
-                  <h3 className="font-bold text-sm mb-1 flex items-center gap-2">
-                    {isActive && isPlaying ? (
-                      <Pause className="w-4 h-4 text-primary shrink-0" />
-                    ) : (
-                      <Play className="w-4 h-4 text-muted-foreground shrink-0" />
+                  <button
+                    onClick={() => playTrack(track)}
+                    disabled={!hasAudio}
+                    className={`w-full text-left ${!hasAudio ? "cursor-not-allowed" : "cursor-pointer"}`}
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <Badge variant="secondary" className="text-xs">
+                        {track.genre}
+                      </Badge>
+                      <span className="text-xs text-muted-foreground">{track.duration}</span>
+                    </div>
+                    <h3 className="font-bold text-sm mb-1 flex items-center gap-2">
+                      {isActive && isPlaying ? (
+                        <Pause className="w-4 h-4 text-primary shrink-0" />
+                      ) : (
+                        <Play className="w-4 h-4 text-muted-foreground shrink-0" />
+                      )}
+                      {track.title}
+                    </h3>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{track.description}</p>
+                    {!hasAudio && (
+                      <p className="text-xs text-destructive mt-1">Generating...</p>
                     )}
-                    {track.title}
-                  </h3>
-                  <p className="text-xs text-muted-foreground line-clamp-2">{track.description}</p>
-                  {!hasAudio && (
-                    <p className="text-xs text-destructive mt-1">Generating...</p>
-                  )}
-                </button>
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); toggle(track.id); }}
+                    className="absolute top-3 right-3 p-1 rounded-full hover:bg-secondary transition-colors"
+                    aria-label={isFavorite(track.id) ? "Remove from playlist" : "Add to playlist"}
+                  >
+                    <Heart className={`w-4 h-4 ${isFavorite(track.id) ? "fill-primary text-primary" : "text-muted-foreground"}`} />
+                  </button>
+                </div>
               );
             })}
           </div>
@@ -247,7 +282,6 @@ const Music = () => {
       {currentTrack && (
         <div className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t shadow-lg backdrop-blur-sm">
           <div className="container mx-auto px-4 py-3">
-            {/* Progress bar */}
             <Slider
               value={[progress]}
               max={duration || 100}
@@ -257,6 +291,7 @@ const Music = () => {
             />
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3 min-w-0">
+                <AudioVisualizer audioElement={audioRef.current} isPlaying={isPlaying} />
                 <div className="min-w-0">
                   <p className="font-semibold text-sm truncate">{currentTrack.title}</p>
                   <p className="text-xs text-muted-foreground">{currentTrack.genre}</p>
