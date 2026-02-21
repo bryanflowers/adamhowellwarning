@@ -1,61 +1,54 @@
 
 
-# UX Improvements Plan
+# Update Music Tracks with Generated Audio URLs
 
-## 1. Reading Progress Bar on Articles
-Add a thin progress bar at the top of the page that fills as users scroll through long articles. This gives readers a sense of how far they've read -- especially useful for the 20-35 minute articles.
+## What happened
+All 50 songs were successfully generated via Suno AI -- every track has a completed audio URL stored in the database. However, the frontend data file (`src/data/musicTracks.ts`) was never updated with the URLs for tracks 21-50. Those 30 tracks still have empty `audioUrl: ""` strings, making them appear as "Generating..." and unplayable.
 
-- A thin animated bar fixed to the top of the viewport (below the sticky header)
-- Applies on all article pages (ArticlePage component and Index page)
+## What needs to change
 
-## 2. Estimated Read Progress + "Jump to Section" (Table of Contents)
-Add a collapsible table of contents sidebar/dropdown for long articles like the homepage and the SuperDoge report, letting readers jump to specific sections instead of scrolling endlessly.
+**Single file update**: `src/data/musicTracks.ts`
 
-- A sticky floating "Contents" button on article pages
-- Clicking it shows a dropdown of h2/h3 headings with smooth-scroll links
-- Auto-highlights the current section as you scroll
+Update tracks 21-50 with their audio URLs and actual durations from the database:
 
-## 3. Share Buttons on Articles
-Add social sharing buttons (Twitter/X, Facebook, copy link) to every article page. Investigative content like this benefits from viral sharing.
+| # | Title | Audio URL | Duration (sec) |
+|---|-------|-----------|-----------------|
+| 21 | Phantom Wallet | `...1b3bc0cc...mp3` | 154.92 |
+| 22 | Burner Phones | `...231067e9...mp3` | 174.96 |
+| 23 | Fake Audits | `...8529a643...mp3` | 71.28 |
+| 24 | Offshore Ghosts | `...88a35a8d...mp3` | 106.64 |
+| 25 | Screenshot Confessions | `...060fcdffd...mp3` | 188.88 |
+| 26 | Liquidity Drain | `...494046a4...mp3` | 240 |
+| 27 | Double Life | `...8d000f35...mp3` | 212.96 |
+| 28 | Telegram Lies | `...be15481a...mp3` | 234.12 |
+| 29 | The Whistleblower | `...9af93c00...mp3` | 132.68 |
+| 30 | Counterfeit Charity | `...fbb387dd...mp3` | 172.88 |
+| 31 | Blockchain Burial | `...8b25b5ef...mp3` | 180.76 |
+| 32 | Ponzi Sunrise | `...afce7a7f...mp3` | 101.2 |
+| 33 | Influencer Bait | `...8cb7697c...mp3` | 86.68 |
+| 34 | Court Date | `...37de0eda...mp3` | 99.8 |
+| 35 | Proxy Warfare | `...75889927...mp3` | 206.96 |
+| 36 | Gaslit Investors | `...9666d96d...mp3` | 178.76 |
+| 37 | DMCA Silencer | `...e90d41c1...mp3` | 104 |
+| 38 | Passport Shuffle | `...519e7123...mp3` | 100.48 |
+| 39 | Dead Token Walking | `...8bd1eba6...mp3` | 156.84 |
+| 40 | The Enablers | `...b8de8317...mp3` | 120 |
+| 41 | Airdrop Mirage | `...c83257cc...mp3` | 240 |
+| 42 | Warrant Incoming | `...483e0594...mp3` | 234.88 |
+| 43 | Smart Contract Trap | `...0380cbf9...mp3` | 191 |
+| 44 | Victim Voices | `...0ee9ff9c...mp3` | 167 |
+| 45 | Rug Pulled Twice | `...2df9c519...mp3` | 159 |
+| 46 | The Laundromat | `...267e340b...mp3` | 180.4 |
+| 47 | False Prophet | `...7b3a4b57...mp3` | 152 (actual: 171) |
+| 48 | Coded Confession | `...224a26e2...mp3` | 197 |
+| 49 | Meltdown Monday | `...d0d03f0b...mp3` | 152.8 |
+| 50 | Justice Will Find You | `...267a69a8...mp3` | 149.8 |
 
-- Positioned at the top of articles near the date/read-time metadata
-- "Copy link" button with a toast confirmation
-- Twitter/X share with pre-filled text
-- Facebook share link
+## Result
+All 50 tracks will be immediately playable. The "Generating..." labels will disappear and "Play All" will include all tracks.
 
-## 4. Smooth Page Transitions
-Add fade-in animations when navigating between pages to make the site feel more polished instead of hard-cutting between routes.
+## Technical details
+- Each track entry gets its `audioUrl` populated with the full `https://tempfile.aiquickdraw.com/r/...mp3` URL from the database
+- Each track's `formatDuration()` call gets updated to the actual duration returned by Suno (some differ from the placeholder estimates)
+- No other files, database changes, or backend work needed
 
-- A simple CSS fade-in animation on the main content area
-- Applied via the Layout component so it works globally
-
-## 5. Image Lightbox on Evidence Photos
-Currently clicking evidence images does nothing. Add a lightbox overlay so users can view photos full-screen with zoom -- critical for reading screenshots and documents.
-
-- Click any article image to open a full-screen overlay
-- Close with X button, Escape key, or clicking the backdrop
-- Simple zoom-in animation
-
-## 6. "Back to Top" Progress Indicator
-Enhance the existing back-to-top button with a circular progress ring showing how far down the page the user is.
-
-- Replace the plain circle button with an SVG ring that fills as you scroll
-- The arrow icon stays in the center
-
----
-
-## Technical Details
-
-### Files to create:
-- `src/components/ReadingProgressBar.tsx` -- scroll-driven progress bar
-- `src/components/TableOfContents.tsx` -- floating TOC with scroll-spy
-- `src/components/ShareButtons.tsx` -- social sharing component
-- `src/components/ImageLightbox.tsx` -- full-screen image viewer
-
-### Files to modify:
-- `src/components/Layout.tsx` -- add ReadingProgressBar, page transition animation
-- `src/components/ArticlePage.tsx` -- add ShareButtons, TableOfContents, ImageLightbox
-- `src/pages/Index.tsx` -- add ReadingProgressBar, ShareButtons for the homepage article
-- `src/index.css` -- add fade-in keyframe animation
-
-### No database or backend changes required.
