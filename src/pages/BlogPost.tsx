@@ -25,6 +25,7 @@ const BlogPost = () => {
         description={article.metaDescription}
         ogImage={heroImg}
         ogType="article"
+        publishedTime={article.date}
         jsonLd={{
           "@context": "https://schema.org",
           "@type": "Article",
