@@ -67,6 +67,10 @@ export const t = {
     playAll: "Play All",
     shuffleOn: "On",
     shuffleOff: "Off",
+    // Footer trust pages
+    disclaimer: "Disclaimer",
+    privacyPolicy: "Privacy Policy",
+    about: "About",
   },
   th: {
     banner: "คำเตือนสาธารณะ: แจ้งเตือนนักลงทุนและพาร์ทเนอร์",
@@ -136,6 +140,10 @@ export const t = {
     playAll: "เล่นทั้งหมด",
     shuffleOn: "เปิด",
     shuffleOff: "ปิด",
+    // Footer trust pages
+    disclaimer: "ข้อจำกัดความรับผิดชอบ",
+    privacyPolicy: "นโยบายความเป็นส่วนตัว",
+    about: "เกี่ยวกับ",
   },
 };
 
