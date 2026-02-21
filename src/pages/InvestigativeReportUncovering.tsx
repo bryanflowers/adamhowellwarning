@@ -20,6 +20,7 @@ const InvestigativeReportUncovering = () => {
         }}
       />
       <ArticlePage
+        title="Investigative Report: Adam Howell's Crypto Ventures Trail"
         subtitle="Mapping out Adam Howell's history through public records, forum archives, crypto news sites, social media, and whistleblower accounts."
         date="January 28, 2026"
         readTime="20 min read"

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Helmet } from "react-helmet-async";
+import SEOHead from "@/components/SEOHead";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -192,18 +192,10 @@ const RedFlagQuiz = () => {
 
   return (
     <Layout>
-      <Helmet>
-        <title>Spot the Red Flag Quiz — Test Your Crypto Scam Detection Skills</title>
-        <meta name="description" content="Can you spot the red flags in crypto projects? Take our interactive quiz based on real-world scam scenarios and get your Scam Detector Rating." />
-        <meta property="og:title" content="Spot the Red Flag — Crypto Scam Detection Quiz" />
-        <meta property="og:description" content="Can you spot the red flags in crypto projects? Test your skills with real-world scam scenarios." />
-        <meta property="og:image" content="https://web-rescu.lovable.app/og-adam-howell.png" />
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Spot the Red Flag — Crypto Scam Detection Quiz" />
-        <meta name="twitter:description" content="Can you spot the red flags in crypto projects? Test your skills with real-world scam scenarios." />
-        <meta name="twitter:image" content="https://web-rescu.lovable.app/og-adam-howell.png" />
-      </Helmet>
+      <SEOHead
+        title="Spot the Red Flag Quiz – Crypto Scam Detection"
+        description="Can you spot the red flags in crypto projects? Take our interactive quiz based on real-world scam scenarios and get your Scam Detector Rating."
+      />
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="text-center mb-10">
