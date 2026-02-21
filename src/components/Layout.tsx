@@ -57,10 +57,10 @@ const navLinks = [
   { to: "/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties", label: "SuperDoge Update" },
   { to: "/keith-shingleton-david-edwards", label: "Associates" },
   { to: "/the-architect-of-deception-and-adam-howells-web-of-accomplices", label: "Web of Accomplices" },
-  { to: "/blog", label: "Crypto Scam Blog" },
   { to: "/music", label: "Music" },
   { to: "/quiz", label: "Quiz" },
   { to: "/bingo", label: "Bingo" },
+  { to: "/blog", label: "Crypto Scam Blog" },
 ];
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
