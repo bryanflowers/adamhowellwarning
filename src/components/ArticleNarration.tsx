@@ -68,7 +68,7 @@ const ArticleNarration = ({ articleSlug, articleText, language = "en" }: Article
       }, 100);
     } catch (err) {
       console.error("TTS error:", err);
-      toast.error("Failed to generate audio narration");
+      toast.error(language === "th" ? "ไม่สามารถสร้างเสียงบรรยายได้" : "Failed to generate audio narration");
     } finally {
       setIsLoading(false);
     }
@@ -84,7 +84,7 @@ const ArticleNarration = ({ articleSlug, articleText, language = "en" }: Article
         onEnded={() => setIsPlaying(false)}
         onError={() => {
           setIsPlaying(false);
-          toast.error("Audio playback failed");
+          toast.error(language === "th" ? "เล่นเสียงไม่สำเร็จ" : "Audio playback failed");
         }}
       />
       <Button

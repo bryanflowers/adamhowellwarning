@@ -116,7 +116,7 @@ const GlobalSearch = () => {
       {query.length >= 2 && (
         <div className="absolute top-full right-0 mt-2 w-80 md:w-96 bg-card border rounded-lg shadow-xl z-[60] max-h-80 overflow-y-auto">
           {results.length === 0 ? (
-            <p className="p-4 text-sm text-muted-foreground text-center">No results found</p>
+            <p className="p-4 text-sm text-muted-foreground text-center">{lang === "th" ? "ไม่พบผลลัพธ์" : "No results found"}</p>
           ) : (
             results.map((r, i) => (
               <Link

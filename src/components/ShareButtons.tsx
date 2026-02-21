@@ -16,9 +16,9 @@ const ShareButtons = ({ title, url }: ShareButtonsProps) => {
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
-      toast.success("Link copied to clipboard");
+      toast.success(lang === "th" ? "คัดลอกลิงก์แล้ว" : "Link copied to clipboard");
     } catch {
-      toast.error("Failed to copy link");
+      toast.error(lang === "th" ? "ไม่สามารถคัดลอกลิงก์ได้" : "Failed to copy link");
     }
   };
 
@@ -38,7 +38,7 @@ const ShareButtons = ({ title, url }: ShareButtonsProps) => {
         <Facebook className="w-3.5 h-3.5" /> Facebook
       </a>
       <button onClick={copyLink} className={btnClass}>
-        <Link2 className="w-3.5 h-3.5" /> Copy Link
+        <Link2 className="w-3.5 h-3.5" /> {lang === "th" ? "คัดลอกลิงก์" : "Copy Link"}
       </button>
     </div>
   );
