@@ -190,7 +190,7 @@ const Music = () => {
         onTimeUpdate={handleTimeUpdate}
         onEnded={skipNext}
         onError={() => {
-          toast.error("Track failed to load, skipping...");
+          toast.error(lang === "th" ? "ไม่สามารถโหลดเพลงได้ กำลังข้ามไป..." : "Track failed to load, skipping...");
           skipNext();
         }}
         crossOrigin="anonymous"
@@ -273,7 +273,7 @@ const Music = () => {
 
           {showPlaylist && favorites.length === 0 && (
             <p className="text-center text-muted-foreground py-8">
-              No favorites yet. Click the ♥ icon on any track to add it to your playlist.
+              {lang === "th" ? "ยังไม่มีเพลงโปรด คลิกไอคอน ♥ บนเพลงใดก็ได้เพื่อเพิ่มในเพลย์ลิสต์ของคุณ" : "No favorites yet. Click the ♥ icon on any track to add it to your playlist."}
             </p>
           )}
 

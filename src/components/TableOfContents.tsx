@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { List, X } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface Heading {
   id: string;
@@ -11,6 +12,7 @@ const TableOfContents = () => {
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [activeId, setActiveId] = useState<string>("");
   const [open, setOpen] = useState(false);
+  const { lang } = useLanguage();
 
   useEffect(() => {
     const elements = document.querySelectorAll(".prose h2, .prose h3");
@@ -47,11 +49,11 @@ const TableOfContents = () => {
   if (headings.length < 3) return null;
 
   return (
-    <div className="fixed bottom-24 left-4 z-40">
+    <div className="fixed bottom-40 left-4 z-40">
       {open ? (
         <div className="bg-card border rounded-xl shadow-xl p-4 w-72 max-h-[60vh] overflow-y-auto animate-scale-in">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-bold text-foreground">Contents</span>
+            <span className="text-sm font-bold text-foreground">{lang === "th" ? "สารบัญ" : "Contents"}</span>
             <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground">
               <X className="w-4 h-4" />
             </button>

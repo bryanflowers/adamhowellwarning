@@ -60,6 +60,19 @@ const VictimContactSlideIn = () => {
   const { lang } = useLanguage();
   const s = t[lang];
 
+  // Escape key to close modal
+  useEffect(() => {
+    if (!formOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setFormOpen(false);
+        handleDismiss();
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [formOpen]);
+
   useEffect(() => {
     if (dismissed) return;
     const alreadyDismissed = sessionStorage.getItem("victim-cta-dismissed");
@@ -82,6 +95,12 @@ const VictimContactSlideIn = () => {
     const trimmedEmail = email.trim().slice(0, 255);
     const trimmedMessage = message.trim().slice(0, 5000);
     if (!trimmedName || !trimmedEmail || !trimmedMessage) return;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      toast.error(lang === "th" ? "กรุณากรอกอีเมลที่ถูกต้อง" : "Please enter a valid email address");
+      return;
+    }
 
     setSending(true);
     try {
