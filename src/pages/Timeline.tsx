@@ -127,13 +127,15 @@ const Timeline = () => {
         jsonLd={{
           "@context": "https://schema.org",
           "@type": "WebPage",
-          name: "Investigation Timeline",
-          description: "Chronological timeline of key events in Adam Howell's documented fraud history.",
+          name: lang === "th" ? "ไทม์ไลน์การสืบสวน" : "Investigation Timeline",
+          description: lang === "th"
+            ? "ลำดับเหตุการณ์สำคัญในประวัติการฉ้อโกงที่ถูกบันทึกไว้ของ Adam Howell"
+            : "Chronological timeline of key events in Adam Howell's documented fraud history.",
           breadcrumb: {
             "@type": "BreadcrumbList",
             itemListElement: [
-              { "@type": "ListItem", position: 1, name: "Home", item: "https://web-rescu.lovable.app" },
-              { "@type": "ListItem", position: 2, name: "Timeline", item: "https://web-rescu.lovable.app/timeline" },
+              { "@type": "ListItem", position: 1, name: lang === "th" ? "หน้าแรก" : "Home", item: `https://web-rescu.lovable.app${lang === "th" ? "/th" : ""}` },
+              { "@type": "ListItem", position: 2, name: lang === "th" ? "ไทม์ไลน์" : "Timeline", item: `https://web-rescu.lovable.app${lang === "th" ? "/th" : ""}/timeline` },
             ],
           },
         }}
