@@ -35,6 +35,30 @@ export type Database = {
         }
         Relationships: []
       }
+      article_translations: {
+        Row: {
+          article_slug: string
+          created_at: string
+          id: string
+          language: string
+          translated_html: string
+        }
+        Insert: {
+          article_slug: string
+          created_at?: string
+          id?: string
+          language: string
+          translated_html: string
+        }
+        Update: {
+          article_slug?: string
+          created_at?: string
+          id?: string
+          language?: string
+          translated_html?: string
+        }
+        Relationships: []
+      }
       comments: {
         Row: {
           article_slug: string
