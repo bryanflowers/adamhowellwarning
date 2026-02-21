@@ -1,96 +1,83 @@
 
 
-# Store Victim Contact Submissions with Admin Moderation and Email
+# Code Review and Improvements: Quiz, Bingo, and Music Features
 
-## Overview
+## Issues Found
 
-Currently, victim contact submissions only send an email via Resend. This plan adds database storage so every submission is persisted, reviewable, and manageable from the existing admin panel -- while still sending the email notification.
+### Quiz (RedFlagQuiz.tsx)
+1. **Bug: `selected` is initialized as `[]` (empty array)** -- Checking `selected[i]` on an uninitialized index returns `undefined` (falsy), which works by accident but is fragile. Should initialize to `Array(4).fill(false)`.
+2. **Bug: `selected.length === 0` check is wrong** -- After toggling, `selected` is a sparse array so `.length` can be > 0 even if nothing is checked. The `!selected.some(Boolean)` part saves it, but the first condition is misleading.
+3. **No keyboard accessibility** -- Option buttons lack `aria-pressed` or `role="checkbox"` attributes for screen readers.
+4. **Missing OG meta tags** -- No Open Graph or Twitter Card tags for social sharing of quiz results.
+
+### Bingo (ScamBingo.tsx)
+1. **Bug: Only 25 squares but `allSquares` has exactly 25 items** -- `shuffle(allSquares).slice(0, 25)` just shuffles and returns the same 25. The FREE SPACE then overwrites one, meaning one tactic always gets dropped. This is fine, but if you ever want variety between cards, you'd need more than 25 items.
+2. **No share feedback** -- `navigator.clipboard.writeText()` has no success toast so users don't know it worked.
+3. **No animation on cell toggle** -- Marking a cell could feel more satisfying with a brief animation.
+4. **`key={idx}` on shuffled items** -- Using index as key means React reuses DOM nodes incorrectly after shuffle. Should use the text content as key.
+
+### Music (Music.tsx)
+1. **Bug: Audio visualizer breaks on track switch** -- `MediaElementAudioSourceNode` can only be created once per `<audio>` element. The `AudioVisualizer` guards with `initialized` state, but if the component unmounts and remounts, a new `AudioContext` is attempted on an already-connected element, silently failing.
+2. **No error handling for broken audio URLs** -- If an audio URL 404s, there's no user feedback. Should listen for `onerror` on the `<audio>` element.
+3. **Now-playing bar overlaps page content** -- The fixed bottom bar covers the last tracks in the grid. Needs bottom padding on the page when a track is playing.
+4. **`getShuffledPool` is called on every render** -- It creates a new shuffle each call. When used in `skipNext`/`skipPrev`, shuffle mode picks a random track rather than following a pre-shuffled order, which means you can hear the same track twice before hearing all tracks.
+5. **Mobile: time display hidden** -- The time/volume controls are `hidden sm:block`, so mobile users can't see progress time or control volume.
+6. **Missing `crossOrigin` on audio element** -- The AudioVisualizer uses `createMediaElementSource` which requires CORS headers on the audio files. If the CDN doesn't set them, the visualizer shows nothing. Adding `crossOrigin="anonymous"` would make this explicit.
+
+### Global Search (GlobalSearch.tsx)
+1. **Music search links all go to `/music`** -- Clicking a music result navigates to `/music` but doesn't auto-play or highlight the track.
+2. **No debounce on search** -- Filtering on every keystroke across 50+ tracks and articles is fine for now but not scalable.
 
 ---
 
-## What Changes
+## Proposed Improvements
 
-### 1. New Database Table: `victim_contacts`
+### 1. Quiz Fixes
+- Initialize `selected` state as `Array(question.options.length).fill(false)` and reset it properly on next question.
+- Add `aria-pressed` to option buttons.
+- Add OG meta tags for sharing.
+- Add a toast when "Share Result" copies to clipboard (vs. native share).
 
-A migration will create a table to store all submissions:
+### 2. Bingo Fixes
+- Add more squares (5-10 extra) so each card has genuine variety.
+- Use text content as React key instead of index.
+- Add a toast on clipboard copy for share feedback.
+- Add a subtle pulse/pop animation on cell toggle using Tailwind.
 
-```text
-victim_contacts
-  id           uuid (PK, auto-generated)
-  name         text (not null)
-  email        text (not null)
-  message      text (not null)
-  status       text (default 'pending') -- pending / reviewed / archived
-  created_at   timestamptz (default now())
-```
+### 3. Music Player Fixes
+- Add `pb-24` bottom padding to the track grid when a track is playing, so the now-playing bar doesn't cover content.
+- Add `onError` handler on the `<audio>` element to show a toast and skip to next track.
+- Pre-shuffle the playlist into state so skip next/prev follows a consistent order instead of re-randomizing.
+- Add `crossOrigin="anonymous"` to the audio element for the visualizer.
+- Show elapsed time on mobile (move it outside the `hidden sm:` wrapper).
 
-RLS policies:
-- **INSERT**: Allow anyone (public submissions, no auth required)
-- **SELECT / UPDATE / DELETE**: No public access (all admin operations go through the edge function with service role)
-
-### 2. Update Edge Function: `send-victim-contact`
-
-After validating input and before sending the Resend email, the function will **insert the submission into the `victim_contacts` table** using the service role client. The email is still sent to `b@bazookaemail.com` as before. If the DB insert fails, the function will still attempt the email (and vice versa) so neither blocks the other.
-
-### 3. Update Edge Function: `moderate-comments`
-
-Expand this function to also handle victim contact moderation actions. It will accept a `resource` field (`"comments"` or `"victim_contacts"`) to determine which table to operate on. The same auth pattern (JWT verification) protects these actions. Supported actions for victim contacts:
-- **list**: Fetch all victim contacts ordered by date
-- **update**: Change status (pending / reviewed / archived)
-- **delete**: Remove a submission
-
-### 4. Update Admin Page: `AdminComments.tsx`
-
-Add a **tab switcher** (Comments | Victim Reports) at the top of the admin panel. When "Victim Reports" is selected, the page shows submissions from `victim_contacts` with:
-- Filter stats: All / Pending / Reviewed / Archived
-- Each card shows name, email (clickable mailto link), date, status badge, and message
-- Action buttons: Mark Reviewed, Archive, Delete
-- Same login flow already in place
+### 4. Global Search
+- When clicking a music result, navigate to `/music?track={id}` and auto-play that track on the Music page.
 
 ---
 
 ## Technical Details
 
-### Database Migration SQL
+### Files to modify
 
-```sql
-CREATE TABLE public.victim_contacts (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name text NOT NULL,
-  email text NOT NULL,
-  message text NOT NULL,
-  status text NOT NULL DEFAULT 'pending',
-  created_at timestamptz NOT NULL DEFAULT now()
-);
+| File | Changes |
+|------|---------|
+| `src/pages/RedFlagQuiz.tsx` | Fix `selected` init, add aria attributes, add OG meta, add clipboard toast |
+| `src/pages/ScamBingo.tsx` | Add 5-10 new squares, use text as key, add share toast, add toggle animation |
+| `src/pages/Music.tsx` | Add bottom padding when playing, add audio error handler, fix shuffle to use pre-shuffled queue, add crossOrigin, show time on mobile |
+| `src/components/AudioVisualizer.tsx` | No changes needed -- the guard logic is sufficient |
+| `src/components/GlobalSearch.tsx` | Update music results to link with `?track=` param |
 
-ALTER TABLE public.victim_contacts ENABLE ROW LEVEL SECURITY;
+### New squares for Bingo (examples)
+- "Doxxing Threats"
+- "Fake Volume Bots"
+- "Roadmap Copy-Paste"
+- "Whitelist Presale Scam"
+- "Rug Pull Fork"
+- "Missing LinkedIn Profiles"
+- "VPN-Only Team Calls"
+- "Token Tax 20%+"
 
-CREATE POLICY "Anyone can submit victim contacts"
-  ON public.victim_contacts
-  FOR INSERT
-  TO anon, authenticated
-  WITH CHECK (true);
-```
-
-No public SELECT policy -- admin reads go through the edge function with service role key.
-
-### Edge Function Changes
-
-**`send-victim-contact/index.ts`**: Add a Supabase service role client insert before the Resend call. Both operations run independently so a failure in one does not block the other.
-
-**`moderate-comments/index.ts`**: Add a `resource` parameter. When `resource === "victim_contacts"`, operate on that table instead of `comments`. Default to `"comments"` for backward compatibility.
-
-### Admin UI Changes
-
-**`AdminComments.tsx`**: Add Tabs component (from existing shadcn/ui) to toggle between Comments and Victim Reports. The victim reports tab reuses the same card layout pattern but displays name, email, message, and uses the status values `pending / reviewed / archived`.
-
-### Files Modified
-
-| File | Change |
-|------|--------|
-| `supabase/migrations/` | New migration for `victim_contacts` table |
-| `supabase/functions/send-victim-contact/index.ts` | Add DB insert alongside email |
-| `supabase/functions/moderate-comments/index.ts` | Add `resource` parameter for victim contacts |
-| `src/pages/AdminComments.tsx` | Add tabbed view for victim reports |
-| `src/integrations/supabase/types.ts` | Auto-updated after migration |
+### Shuffle queue approach for Music
+Instead of calling `Math.random()` on each skip, store a `shuffledQueue` in state when shuffle mode is toggled on or when "Play All" is pressed. `skipNext`/`skipPrev` then follow that queue in order, wrapping around at the end.
 
