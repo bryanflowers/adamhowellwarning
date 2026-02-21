@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import CommentSection from "@/components/CommentSection";
 
 interface ArticlePageProps {
   title: string;
@@ -10,6 +11,9 @@ interface ArticlePageProps {
 }
 
 const ArticlePage = ({ title, subtitle, date, readTime, children }: ArticlePageProps) => {
+  const location = useLocation();
+  const articleSlug = location.pathname;
+
   return (
     <article className="py-12">
       <div className="container mx-auto px-4 max-w-4xl">
@@ -48,6 +52,8 @@ const ArticlePage = ({ title, subtitle, date, readTime, children }: ArticlePageP
         <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h4:text-lg prose-p:leading-relaxed prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground prose-blockquote:border-primary prose-blockquote:text-muted-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
           {children}
         </div>
+
+        <CommentSection articleSlug={articleSlug} />
       </div>
     </article>
   );

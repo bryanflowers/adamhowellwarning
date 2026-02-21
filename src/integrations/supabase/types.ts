@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      comments: {
+        Row: {
+          article_slug: string
+          author_name: string
+          comment_text: string
+          created_at: string
+          id: string
+          status: string
+        }
+        Insert: {
+          article_slug: string
+          author_name: string
+          comment_text: string
+          created_at?: string
+          id?: string
+          status?: string
+        }
+        Update: {
+          article_slug?: string
+          author_name?: string
+          comment_text?: string
+          created_at?: string
+          id?: string
+          status?: string
+        }
+        Relationships: []
+      }
       suno_tasks: {
         Row: {
           audio_url: string | null

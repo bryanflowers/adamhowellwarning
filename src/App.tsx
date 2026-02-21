@@ -16,6 +16,7 @@ import Articles from "./pages/Articles";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Music from "./pages/Music";
+import AdminComments from "./pages/AdminComments";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/music" element={<Music />} />
+          <Route path="/admin/comments" element={<AdminComments />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
