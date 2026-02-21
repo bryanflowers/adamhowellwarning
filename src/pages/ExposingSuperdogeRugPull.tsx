@@ -25,6 +25,7 @@ const ExposingSuperdogeRugPull = () => {
         }}
       />
       <ArticlePage
+        title="Exposing the SuperDoge Rug Pull – Adam Howell's $13M Crypto Scheme"
         subtitle="Dissecting how SuperDoge operated, the key players involved, the red flags of a classic rug pull, and a conservative estimate of how much the developers may have extracted."
         date="January 12, 2026"
         readTime="35 min read"

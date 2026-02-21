@@ -20,6 +20,7 @@ const InvestigativeUpdateSuperdoge = () => {
         }}
       />
       <ArticlePage
+        title="SuperDoge Scam Update – Anonymous Pitch & Vanished Promises"
         subtitle="A revealing 2021 podcast appearance showcases Howell's tactics — hiding behind anonymity, dragging credible figures, and warning about scams to position himself as trustworthy."
         date="January 29, 2026"
         readTime="15 min read"

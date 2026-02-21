@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { t, articlesMeta } from "@/i18n/translations";
+import SEOHead from "@/components/SEOHead";
 
 const Articles = () => {
   const { lang, localPath } = useLanguage();
@@ -11,6 +12,10 @@ const Articles = () => {
 
   return (
     <Layout>
+      <SEOHead
+        title={tr.articlesTitle}
+        description={tr.articlesSubtitle}
+      />
       <section className="py-16 md:py-20">
         <div className="container mx-auto px-4">
           <h1 className="text-3xl md:text-5xl font-black mb-4 text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>

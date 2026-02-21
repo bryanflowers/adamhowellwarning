@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Helmet } from "react-helmet-async";
+import SEOHead from "@/components/SEOHead";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, Share2, PartyPopper } from "lucide-react";
@@ -110,10 +110,10 @@ const ScamBingo = () => {
 
   return (
     <Layout>
-      <Helmet>
-        <title>{tr.bingoTitle} | Adam Howell Warning</title>
-        <meta name="description" content={tr.bingoSubtitle} />
-      </Helmet>
+      <SEOHead
+        title={tr.bingoTitle}
+        description={tr.bingoSubtitle}
+      />
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-2xl">
           <div className="text-center mb-8">

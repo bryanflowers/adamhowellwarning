@@ -20,6 +20,7 @@ const KeithShingletonDavidEdwards = () => {
         }}
       />
       <ArticlePage
+        title="Keith Shingleton, David Edwards & Adam Howell Connections"
         subtitle="Examining the inner circle and mechanisms behind the alleged scams — from co-authored whitepapers to unverified LinkedIn achievements."
         date="January 29, 2026"
         readTime="18 min read"
