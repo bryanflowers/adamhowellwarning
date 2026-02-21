@@ -1,106 +1,75 @@
 
 
-# Bug Check, Code Quality, and SEO Improvements (Round 3)
+# Fix ElevenLabs TTS: Upgrade to v3 for Thai + Clear Thai Audio Cache
 
-The previous two rounds fixed the major issues. This audit found 7 remaining items -- mostly localization gaps and one wrong SEO URL.
+## Problem
+The edge function uses `eleven_multilingual_v2` for Thai, but ElevenLabs v3 (`eleven_v3`) is required for proper Thai support. All cached Thai audio was generated with v2 and needs to be deleted and regenerated. Additionally, the text extraction should start from the first heading tag.
 
----
+## Changes
 
-## Bugs Found
+### Step 1: Update the edge function to use v3 for Thai
+**File:** `supabase/functions/elevenlabs-tts/index.ts`
 
-### 1. BUG (MEDIUM): Wrong `mainEntityOfPage` URL in ExposingSuperdogeRugPull.tsx
-Line 26 has `mainEntityOfPage` set to a **truncated, incorrect slug**:
-`exposing-the-superdoge-rug-pull-adam-howells-13m-crypto-scheme`
+- Change Thai model from `eleven_multilingual_v2` to `eleven_v3`
+- Add `language_code: "tha"` to the request body when Thai (v3 uses ISO 639-3 codes)
+- Keep English on `eleven_turbo_v2_5` (unchanged)
 
-The actual route is:
-`exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned`
+### Step 2: Extract text starting from the heading tag
+**File:** `src/components/ArticlePage.tsx`
 
-This tells Google the main page lives at a URL that returns a 404.
+Update the text extraction `useEffect` (lines 80-87) to find the first `<h1>`-`<h6>` element in `proseRef` and start reading from there, rather than prepending the title/subtitle manually. This ensures TTS reads from the actual article heading.
 
-**Fix:** Correct the slug to match the actual route.
+### Step 3: Delete all 7 Thai audio cache entries
+Delete from both the `article_audio` database table and the `article-audio` storage bucket:
 
-### 2. BUG (LOW): UnmaskingAdamHowell.tsx missing `mainEntityOfPage` in JSON-LD
-All other investigative articles now have `mainEntityOfPage`, but this one was missed.
+**Database rows to delete (article_slug):**
+- `/th`
+- `/th/unmasking-adam-howell`
+- `/th/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned`
+- `/th/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond`
+- `/th/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties`
+- `/th/keith-shingleton-david-edwards`
+- `/th/the-architect-of-deception-and-adam-howells-web-of-accomplices`
 
-**Fix:** Add `"mainEntityOfPage": "https://web-rescu.lovable.app/unmasking-adam-howell"` to the JSON-LD object.
+**Storage files to delete:**
+- `th.mp3`
+- `th_unmasking-adam-howell.mp3`
+- `th_exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned.mp3`
+- `th_investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond.mp3`
+- `th_investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties.mp3`
+- `th_keith-shingleton-david-edwards.mp3`
+- `th_the-architect-of-deception-and-adam-howells-web-of-accomplices.mp3`
 
-### 3. BUG (LOW): Comment dates always show English locale
-`CommentSection.tsx` line 65 hardcodes `"en-US"`. Thai users see English-formatted dates in comments.
-
-**Fix:** Import `useLanguage` and use `"th-TH"` locale when `lang === "th"`.
-
-### 4. BUG (LOW): ErrorBoundary "Go Home" always links to `/`
-Line 40 uses `window.location.href = "/"`. Thai users hitting an error get sent to the English homepage.
-
-**Fix:** Check `window.location.pathname` for `/th` prefix and redirect to `/th` accordingly.
-
-### 5. BUG (LOW): VictimContactSlideIn is English-only
-All text in the "Were You Affected?" slide-in and the contact form is hardcoded in English. Thai visitors see English CTA and form labels.
-
-**Fix:** Import `useLanguage` and add Thai translations for all text strings.
-
-### 6. BUG (LOW): RelatedArticles heading is English-only
-Line 38-39: "Related Articles & Warnings" is hardcoded.
-
-**Fix:** Import `useLanguage` and show "บทความที่เกี่ยวข้อง" when Thai.
+Thai audio will be regenerated on-demand using v3 when users click "Listen to Article" on Thai pages.
 
 ---
 
-## SEO Improvements
+## Technical Details
 
-### 7. SEO (MEDIUM): Sitemap `lastmod` dates are stale
-All blog posts show `2024-10-01`. Investigative articles show dates from 2024. The JSON-LD `dateModified` values were updated to `2026-02-01`. Google may see conflicting freshness signals between the sitemap and the on-page schema.
+### Edge function change (key diff):
+```text
+// Before:
+const modelId = isThai ? "eleven_multilingual_v2" : "eleven_turbo_v2_5";
 
-**Fix:** Update all sitemap `lastmod` dates to `2026-02-21` (today) to match reality.
+// After:
+const modelId = isThai ? "eleven_v3" : "eleven_turbo_v2_5";
 
----
+// Add to request body for Thai:
+language_code: isThai ? "tha" : undefined,
+```
 
-## No other issues found
-- The `/th` prefix detection fix from the last round is correctly implemented
-- All 15 audio files are cached
-- All JSON-LD schemas (except the two items above) are complete
-- Navigation, Layout, SEOHead, ArticlePage, and ArticleNarration are working correctly
-- The 404 page uses Layout and localized paths
-- PROSE_CLASSES is properly extracted to constants
+### Text extraction change:
+```text
+// Before: prepends title + subtitle manually
+const header = [displayTitle, displaySubtitle].filter(Boolean).join(". ");
+const fullText = header ? `${header}. ${bodyText}` : bodyText;
 
----
+// After: find first heading in prose and read from there
+const firstHeading = proseRef.current.querySelector("h1, h2, h3, h4, h5, h6");
+const startNode = firstHeading || proseRef.current;
+const bodyText = startNode.innerText || startNode.textContent || "";
+```
 
-## Implementation Plan
-
-### Step 1: Fix wrong mainEntityOfPage URL
-**File:** `src/pages/ExposingSuperdogeRugPull.tsx` (line 26)
-Change the slug to the correct full route.
-
-### Step 2: Add mainEntityOfPage to UnmaskingAdamHowell
-**File:** `src/pages/UnmaskingAdamHowell.tsx` (line 9-18)
-Add the field to the JSON-LD object.
-
-### Step 3: Localize comment dates
-**File:** `src/components/CommentSection.tsx`
-Import `useLanguage`, pass locale to `toLocaleDateString`.
-
-### Step 4: Fix ErrorBoundary home redirect
-**File:** `src/components/ErrorBoundary.tsx` (line 40)
-Detect `/th` prefix and redirect accordingly.
-
-### Step 5: Localize VictimContactSlideIn
-**File:** `src/components/VictimContactSlideIn.tsx`
-Import `useLanguage`, add Thai text for all strings (CTA title, description, button, form labels, confirmation).
-
-### Step 6: Localize RelatedArticles heading
-**File:** `src/components/RelatedArticles.tsx` (line 38-39)
-Show Thai heading when `lang === "th"`.
-
-### Step 7: Update sitemap dates
-**File:** `public/sitemap.xml`
-Update all `lastmod` values to `2026-02-21`.
-
-### Files to modify (7 files):
-- `src/pages/ExposingSuperdogeRugPull.tsx` -- 1-line URL fix
-- `src/pages/UnmaskingAdamHowell.tsx` -- Add 1 field to JSON-LD
-- `src/components/CommentSection.tsx` -- Localize dates
-- `src/components/ErrorBoundary.tsx` -- Fix redirect
-- `src/components/VictimContactSlideIn.tsx` -- Add Thai translations
-- `src/components/RelatedArticles.tsx` -- Localize heading
-- `public/sitemap.xml` -- Update dates
-
+### Files modified:
+- `supabase/functions/elevenlabs-tts/index.ts` -- Switch to `eleven_v3` model for Thai
+- `src/components/ArticlePage.tsx` -- Start text extraction from heading tag
