@@ -18,7 +18,7 @@ const caseStudyArticles = [
 ];
 
 const RelatedArticles = ({ currentSlug, maxItems = 6 }: RelatedArticlesProps) => {
-  const { localPath } = useLanguage();
+  const { lang, localPath } = useLanguage();
 
   // Mix case studies and blog articles, excluding current
   const blogLinks = blogArticles
@@ -36,7 +36,7 @@ const RelatedArticles = ({ currentSlug, maxItems = 6 }: RelatedArticlesProps) =>
   return (
     <div className="mt-16 pt-10 border-t border-border">
       <h3 className="text-xl font-bold mb-6 text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
-        Related Articles & Warnings
+        {lang === "th" ? "บทความที่เกี่ยวข้องและคำเตือน" : "Related Articles & Warnings"}
       </h3>
       <div className="grid gap-3 sm:grid-cols-2">
         {allLinks.map((link) => (
