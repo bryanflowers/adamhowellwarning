@@ -176,7 +176,7 @@ const Index = () => {
               articleSlug={lang === "th" ? "/th" : "/"}
               articleText={lang === "th" ? "ประวัติพฤติกรรมของ Adam Howell วันเกิด 2 มีนาคม 1982 คำเตือนเกี่ยวกับ Adam Howell ชาวแคนาดา" : "Conduct Profile of Adam Howell. Warning about Adam Howell, a Canadian national with a documented history of online harassment, reputational attacks, fabricated allegations, and financially motivated disinformation campaigns."}
               language={lang}
-              className="border-background/30 text-background hover:bg-background/10 hover:text-background"
+              className="border-primary/50 text-primary hover:bg-primary/10 hover:text-primary"
             />
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-lg px-4 py-2">
