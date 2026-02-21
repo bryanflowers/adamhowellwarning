@@ -14,7 +14,7 @@ const articles = [
   },
   {
     title: "Unmasking Adam Howell: The Serial Scammer, Extortionist, and Crypto Fraudster",
-    slug: "/unmasking-adam-howell",
+    slug: "/unmasking-adam-howell-the-serial-scammer-extortionist-and-crypto-fraudster-a-warning-to-investors",
     date: "2024-11-22",
     description: "A comprehensive exposé compiling documented evidence from court records, victim accounts, and public exposés.",
   },

@@ -9,7 +9,7 @@ interface RelatedArticlesProps {
 }
 
 const caseStudyArticles = [
-  { slug: "/unmasking-adam-howell", title: "Unmasking Adam Howell: Serial Scammer & Crypto Fraudster", tag: "Case Study" },
+  { slug: "/unmasking-adam-howell-the-serial-scammer-extortionist-and-crypto-fraudster-a-warning-to-investors", title: "Unmasking Adam Howell: Serial Scammer & Crypto Fraudster", tag: "Case Study" },
   { slug: "/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned", title: "SuperDoge Rug Pull: Charity-Fueled Crypto Scam Exposed", tag: "Case Study" },
   { slug: "/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond", title: "Adam Howell's Ventures in Crypto and Beyond", tag: "Investigation" },
   { slug: "/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties", title: "SuperDoge Scam Update: Anonymous Pitch & Vanished Promises", tag: "Update" },
