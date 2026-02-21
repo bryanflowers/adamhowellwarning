@@ -67,13 +67,15 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           text: trimmedText,
           model_id: modelId,
-          ...(isThai && { language_code: "tha" }),
-          voice_settings: {
-            stability: 0.6,
-            similarity_boost: 0.75,
-            style: 0.3,
-            use_speaker_boost: true,
-          },
+          // v3 auto-detects language, no language_code needed
+          ...(!isThai && {
+            voice_settings: {
+              stability: 0.6,
+              similarity_boost: 0.75,
+              style: 0.3,
+              use_speaker_boost: true,
+            },
+          }),
         }),
       }
     );
