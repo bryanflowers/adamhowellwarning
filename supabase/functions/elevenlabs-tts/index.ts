@@ -46,8 +46,11 @@ Deno.serve(async (req) => {
       throw new Error("ELEVENLABS_API_KEY is not configured");
     }
 
+    // Log text length for debugging
+    console.log(`TTS request: slug=${articleSlug}, lang=${lang}, text length=${articleText.length}`);
     // Trim text to ~5000 chars for ElevenLabs limit
     const trimmedText = articleText.slice(0, 4900);
+    console.log(`Trimmed text first 200 chars: ${trimmedText.slice(0, 200)}`);
 
     // Language-specific config:
     // Thai → eleven_multilingual_v2 (supports Thai), Alice voice (good multilingual)
