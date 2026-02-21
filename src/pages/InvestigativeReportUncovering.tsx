@@ -21,9 +21,13 @@ const InvestigativeReportUncovering = () => {
       />
       <ArticlePage
         title="Investigative Report: Adam Howell's Crypto Ventures Trail"
+        titleTh="รายงานสืบสวน: ตามรอยกิจการคริปโตของ Adam Howell"
         subtitle="Mapping out Adam Howell's history through public records, forum archives, crypto news sites, social media, and whistleblower accounts."
+        subtitleTh="แผนที่กิจกรรมของ Adam Howell ผ่านบันทึกสาธารณะ ฟอรัม เว็บข่าวคริปโต โซเชียลมีเดีย และคำให้การของผู้แจ้งเบาะแส"
         date="January 28, 2026"
+        dateTh="28 มกราคม 2569"
         readTime="20 min read"
+        readTimeTh="อ่าน 20 นาที"
         translatable
       >
         <p>

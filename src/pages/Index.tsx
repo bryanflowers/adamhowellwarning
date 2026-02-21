@@ -52,15 +52,31 @@ const Index = () => {
     };
   }, [handleArticleClick]);
 
-  // Translate Index page prose when in Thai
+  // Translate Index page prose when in Thai — try DB cache first
   useEffect(() => {
     if (lang !== "th") {
       setTranslatedHtml(null);
       return;
     }
+    let cancelled = false;
     const fetchTranslation = async () => {
       setTranslating(true);
       try {
+        // Step 1: Try DB cache directly (instant)
+        const { data: cached } = await supabase
+          .from("article_translations")
+          .select("translated_html")
+          .eq("article_slug", "/")
+          .eq("language", "th")
+          .maybeSingle();
+
+        if (!cancelled && cached?.translated_html) {
+          setTranslatedHtml(cached.translated_html);
+          setTranslating(false);
+          return;
+        }
+
+        // Step 2: Fall back to edge function
         const proseEl = proseRef.current;
         if (!proseEl) { setTranslating(false); return; }
         const englishHtml = proseEl.innerHTML;
@@ -69,19 +85,20 @@ const Index = () => {
           body: { slug: "/", html: englishHtml, targetLang: "th" },
         });
 
+        if (cancelled) return;
         if (error || !data?.translated_html) {
           console.error("Index translation error:", error);
         } else {
           setTranslatedHtml(data.translated_html);
         }
       } catch (err) {
-        console.error("Index translation fetch error:", err);
+        if (!cancelled) console.error("Index translation fetch error:", err);
       } finally {
-        setTranslating(false);
+        if (!cancelled) setTranslating(false);
       }
     };
-    const timer = setTimeout(fetchTranslation, 500);
-    return () => clearTimeout(timer);
+    const timer = setTimeout(fetchTranslation, 100);
+    return () => { cancelled = true; clearTimeout(timer); };
   }, [lang]);
 
   const jsonLd = {
@@ -141,17 +158,17 @@ const Index = () => {
               <span className="text-primary font-semibold text-sm tracking-widest uppercase">{tr.publicWarning}</span>
             </div>
             <h1 className="text-4xl md:text-6xl font-black leading-[1.1] mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Conduct Profile of Adam Howell – Birthdate 2nd of March 1982
+              {lang === "th" ? "ประวัติพฤติกรรมของ Adam Howell – วันเกิด 2 มีนาคม 1982" : "Conduct Profile of Adam Howell – Birthdate 2nd of March 1982"}
             </h1>
             <p className="text-lg md:text-xl opacity-80 leading-relaxed max-w-2xl mb-4">
-              Warning about Adam Howell (Canadian)
+              {lang === "th" ? "คำเตือนเกี่ยวกับ Adam Howell (ชาวแคนาดา)" : "Warning about Adam Howell (Canadian)"}
             </p>
             <div className="flex items-center gap-4 text-sm opacity-60 mb-4 flex-wrap">
-              <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> November 22, 2026</span>
-              <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> 25 min read</span>
+              <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> {lang === "th" ? "22 พฤศจิกายน 2569" : "November 22, 2026"}</span>
+              <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {lang === "th" ? "อ่าน 25 นาที" : "25 min read"}</span>
             </div>
             <div className="mb-8">
-              <ShareButtons title="Conduct Profile of Adam Howell – Birthdate 2nd of March 1982" />
+              <ShareButtons title={lang === "th" ? "ประวัติพฤติกรรมของ Adam Howell" : "Conduct Profile of Adam Howell – Birthdate 2nd of March 1982"} />
             </div>
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-lg px-4 py-2">
@@ -176,7 +193,7 @@ const Index = () => {
         <div className="container mx-auto px-4 max-w-4xl py-12">
           <div className="flex items-center gap-3 text-muted-foreground mb-6">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary" />
-            <span className="text-sm">กำลังแปลบทความ... Translating article...</span>
+            <span className="text-sm">กำลังแปลบทความ... โดยปกติจะใช้เวลา 5-10 วินาที</span>
           </div>
           <Skeleton className="h-6 w-3/4 mb-4" />
           <Skeleton className="h-4 w-full mb-2" />

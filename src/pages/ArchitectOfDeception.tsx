@@ -22,9 +22,13 @@ const ArchitectOfDeception = () => {
       />
       <ArticlePage
         title="The Architect of Deception – Adam Howell's Web of Accomplices"
+        titleTh="สถาปนิกแห่งการหลอกลวง – เครือข่ายผู้สมรู้ร่วมคิดของ Adam Howell"
         subtitle="Key enablers like Andrew Drummond and Kanokrat form the backbone of his extortion tactics, turning personal grudges into potentially profitable smear operations."
+        subtitleTh="ผู้สนับสนุนหลักอย่าง Andrew Drummond และ Kanokrat เป็นแกนหลักของกลยุทธ์รีดไถ เปลี่ยนความแค้นส่วนตัวให้เป็นปฏิบัติการใส่ร้ายที่อาจทำกำไรได้"
         date="January 22, 2026"
+        dateTh="22 มกราคม 2569"
         readTime="12 min read"
+        readTimeTh="อ่าน 12 นาที"
         translatable
       >
         <figure className="my-8">

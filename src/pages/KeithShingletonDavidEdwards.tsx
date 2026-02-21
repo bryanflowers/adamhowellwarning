@@ -21,9 +21,13 @@ const KeithShingletonDavidEdwards = () => {
       />
       <ArticlePage
         title="Keith Shingleton, David Edwards & Adam Howell Connections"
+        titleTh="เจาะลึก Keith Shingleton, David Edwards และความเชื่อมโยงกับ Adam Howell"
         subtitle="Examining the inner circle and mechanisms behind the alleged scams — from co-authored whitepapers to unverified LinkedIn achievements."
+        subtitleTh="ตรวจสอบวงในและกลไกเบื้องหลังการหลอกลวงที่ถูกกล่าวหา — ตั้งแต่ whitepaper ที่เขียนร่วมกันไปจนถึงผลงานบน LinkedIn ที่ตรวจสอบไม่ได้"
         date="January 29, 2026"
+        dateTh="29 มกราคม 2569"
         readTime="18 min read"
+        readTimeTh="อ่าน 18 นาที"
         translatable
       >
         <p>

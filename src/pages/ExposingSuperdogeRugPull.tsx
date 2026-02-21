@@ -26,9 +26,13 @@ const ExposingSuperdogeRugPull = () => {
       />
       <ArticlePage
         title="Exposing the SuperDoge Rug Pull – Adam Howell's $13M Crypto Scheme"
+        titleTh="เปิดโปงการหลอกลวง SuperDoge Rug Pull – แผนคริปโตมูลค่า 13 ล้านดอลลาร์ของ Adam Howell"
         subtitle="Dissecting how SuperDoge operated, the key players involved, the red flags of a classic rug pull, and a conservative estimate of how much the developers may have extracted."
+        subtitleTh="วิเคราะห์วิธีการดำเนินงานของ SuperDoge ผู้เล่นหลักที่เกี่ยวข้อง สัญญาณเตือนของ Rug Pull แบบคลาสสิก และการประมาณการอนุรักษ์นิยมว่านักพัฒนาอาจถอนเงินออกไปเท่าไหร่"
         date="January 12, 2026"
+        dateTh="12 มกราคม 2569"
         readTime="35 min read"
+        readTimeTh="อ่าน 35 นาที"
         translatable
       >
         <figure className="my-8">
