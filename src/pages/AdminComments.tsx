@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import Layout from "@/components/Layout";
+import SEOHead from "@/components/SEOHead";
 import type { Session } from "@supabase/supabase-js";
 
 interface Comment {
@@ -147,12 +148,13 @@ const AdminComments = () => {
   };
 
   if (authLoading) {
-    return <Layout><div className="min-h-[60vh] flex items-center justify-center"><p className="text-muted-foreground">Loading...</p></div></Layout>;
+    return <Layout><SEOHead title="Admin Panel" description="Admin moderation panel" noindex /><div className="min-h-[60vh] flex items-center justify-center"><p className="text-muted-foreground">Loading...</p></div></Layout>;
   }
 
   if (!session) {
     return (
       <Layout>
+        <SEOHead title="Admin Panel" description="Admin moderation panel" noindex />
         <div className="min-h-[60vh] flex items-center justify-center">
           <div className="bg-card border rounded-xl p-8 w-full max-w-sm">
             <div className="flex items-center gap-2 mb-6">
@@ -180,6 +182,7 @@ const AdminComments = () => {
 
   return (
     <Layout>
+      <SEOHead title="Admin Panel" description="Admin moderation panel" noindex />
       <section className="py-12">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="flex items-center justify-between mb-8 flex-wrap gap-4">

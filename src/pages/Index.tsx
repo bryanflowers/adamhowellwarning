@@ -16,51 +16,7 @@ import adamHowellRebillChat from "@/assets/adam-howell-rebill-chat.jpeg";
 import adamHowellDmca from "@/assets/adam-howell-dmca-request.jpg";
 import drummondDopecoinComment from "@/assets/drummond-dopecoin-comment.jpeg";
 
-// Define articles array
-const articles = [
-  {
-    slug: "/unmasking-adam-howell",
-    title: "Unmasking Adam Howell: The Serial Scammer, Extortionist, and Crypto Fraudster",
-    excerpt: "A comprehensive exposé compiling documented evidence from court records, victim accounts, and public exposes to highlight patterns of deception and failure.",
-    tag: "Featured Investigation",
-    readTime: "15 min read",
-  },
-  {
-    slug: "/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned",
-    title: "Exposing the SuperDoge Rug Pull: Adam Howell's Latest Crypto Scheme and the Millions Potentially Siphoned",
-    excerpt: "A comprehensive investigative report into the SuperDoge token, its team, blockchain evidence, and estimated losses.",
-    tag: "Deep Dive",
-    readTime: "35 min read",
-  },
-  {
-    slug: "/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond",
-    title: "Investigative Report: Uncovering the Trail of Adam Howell's Ventures in Crypto and Beyond",
-    excerpt: "Mapping out Adam Howell's history through public records, forum archives, crypto news sites, social media, and whistleblower accounts.",
-    tag: "Investigative Report",
-    readTime: "20 min read",
-  },
-  {
-    slug: "/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties",
-    title: "Investigative Update: Exposing the SuperDoge Scam – Adam Howell's Anonymous Pitch, Vanished Promises, and Inner Circle Ties",
-    excerpt: "A revealing 2021 podcast appearance that showcases Howell's tactics — hiding behind anonymity, dragging credible figures, and warning about scams to position himself as trustworthy.",
-    tag: "Update",
-    readTime: "15 min read",
-  },
-  {
-    slug: "/keith-shingleton-david-edwards",
-    title: "Deep Dive on Keith Shingleton, David Edwards and Connections to Adam Howell",
-    excerpt: "Examining the inner circle and mechanisms behind the alleged scams — from co-authored whitepapers to unverified LinkedIn achievements.",
-    tag: "Associates",
-    readTime: "18 min read",
-  },
-  {
-    slug: "/the-architect-of-deception-and-adam-howells-web-of-accomplices",
-    title: "The Architect of Deception and Adam Howell's Web of Accomplices",
-    excerpt: "Key enablers like Andrew Drummond and Kanokrat form the backbone of extortion tactics, turning personal grudges into profitable smear operations.",
-    tag: "Network Analysis",
-    readTime: "12 min read",
-  },
-];
+const PROSE_CLASSES = "prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h4:text-lg prose-p:leading-relaxed prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground prose-blockquote:border-primary prose-blockquote:text-muted-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline";
 
 const Index = () => {
   const { lang, localPath } = useLanguage();
@@ -155,7 +111,7 @@ const Index = () => {
       {/* Main Article Content */}
       <article className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-4xl">
-          <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h4:text-lg prose-p:leading-relaxed prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground prose-blockquote:border-primary prose-blockquote:text-muted-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
+          <div className={PROSE_CLASSES}>
 
             <p>
               This website has been established to provide risk-mitigation intelligence regarding Adam Howell, a Canadian national with a documented history of online harassment, reputational attacks, fabricated allegations, and financially motivated disinformation campaigns. Adam Howell has recently been paying Andrew Drummond to attack several business owners and people's families.
@@ -285,7 +241,7 @@ const Index = () => {
       {/* DMCA section, rebill section, legal section, evidence section, etc. */}
       <article className="py-0">
         <div className="container mx-auto px-4 max-w-4xl">
-          <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h4:text-lg prose-p:leading-relaxed prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground prose-blockquote:border-primary prose-blockquote:text-muted-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
+          <div className={PROSE_CLASSES}>
 
             <p>
               This person has been repeatedly associated with pump-and-dump behaviour targeting low-cap or meme-based crypto tokens. These are coordinated schemes in which the person artificially inflates (pumps) a token's value—often using YouTube content, social media engagement, and direct messaging—before offloading (dumping) their holdings at peak price, leaving other investors with losses.

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { blogArticles } from "@/data/blogArticles";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface RelatedArticlesProps {
   currentSlug?: string;
@@ -17,15 +18,18 @@ const caseStudyArticles = [
 ];
 
 const RelatedArticles = ({ currentSlug, maxItems = 6 }: RelatedArticlesProps) => {
+  const { localPath } = useLanguage();
+
   // Mix case studies and blog articles, excluding current
   const blogLinks = blogArticles
     .filter((a) => `/blog/${a.slug}` !== currentSlug && a.slug !== currentSlug)
     .slice(0, 3)
-    .map((a) => ({ slug: `/blog/${a.slug}`, title: a.title, tag: a.tags[0] }));
+    .map((a) => ({ slug: localPath(`/blog/${a.slug}`), title: a.title, tag: a.tags[0] }));
 
   const caseLinks = caseStudyArticles
     .filter((a) => a.slug !== currentSlug)
-    .slice(0, 3);
+    .slice(0, 3)
+    .map((a) => ({ ...a, slug: localPath(a.slug) }));
 
   const allLinks = [...caseLinks, ...blogLinks].slice(0, maxItems);
 

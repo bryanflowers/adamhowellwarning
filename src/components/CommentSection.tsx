@@ -53,6 +53,7 @@ const CommentSection = ({ articleSlug }: CommentSectionProps) => {
       setSubmitted(true);
       setName("");
       setText("");
+      queryClient.invalidateQueries({ queryKey: ["comments", articleSlug] });
       setTimeout(() => setSubmitted(false), 5000);
     },
     onError: () => {
