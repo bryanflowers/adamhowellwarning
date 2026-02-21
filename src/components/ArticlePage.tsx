@@ -7,7 +7,7 @@ import TableOfContents from "@/components/TableOfContents";
 import ImageLightbox from "@/components/ImageLightbox";
 import ArticleNarration from "@/components/ArticleNarration";
 import { useLanguage } from "@/hooks/useLanguage";
-
+import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -24,6 +24,7 @@ const ArticlePage = ({ title, subtitle, date, readTime, translatable = false, ch
   const location = useLocation();
   const { lang, localPath } = useLanguage();
   const articleSlug = location.pathname;
+  useReadingProgress();
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
   const proseRef = useRef<HTMLDivElement>(null);
   const [articleText, setArticleText] = useState("");

@@ -118,3 +118,10 @@
 .animate-page-fade-in {
   animation: page-fade-in 0.35s ease-out;
 }
+
+/* Dark mode evidence image handling */
+.dark .prose img {
+  filter: brightness(0.9);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+}
