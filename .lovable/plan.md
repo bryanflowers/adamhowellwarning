@@ -1,77 +1,80 @@
 
+# Final SEO Audit and Fixes
 
-# Thai Article Body Translations — Options and Plan
+## Issues Found
 
-## The Problem
+### 1. CRITICAL: Missing JSON-LD on UnmaskingAdamHowell
+The `UnmaskingAdamHowell` page has JSON-LD but is missing `datePublished`. All other article pages include it. This article is your highest-priority page.
 
-The `/th/` language prefix currently translates:
-- Navigation labels, buttons, footer text
-- Article titles and excerpts on listing pages (Index, Articles)
-- UI components (quiz, bingo, music, share buttons)
+### 2. CRITICAL: "Back to all articles" link not localized in ArticlePage
+Line 118-121 of `ArticlePage.tsx` has a hardcoded English "Back to all articles" link pointing to `/` instead of `localPath("/")`. Thai users clicking this link get sent to the English homepage.
 
-It does NOT translate the actual article body content. All 6 investigative articles and 40 blog posts have their full text hardcoded in English JSX.
+### 3. CRITICAL: Blog post sitemap entries missing hreflang alternates
+The 40 blog post URLs in `sitemap.xml` (lines 93-132) have NO `xhtml:link` hreflang alternates, unlike the investigative articles and listing pages which correctly include them. Even though blogs aren't translated, Google still expects hreflang annotations for consistency.
 
-## Options
+### 4. MEDIUM: `index.html` has duplicate/conflicting meta tags
+The static `index.html` has its own `og:title`, `og:description`, `og:image`, `twitter:*` tags that conflict with the dynamic `<SEOHead>` Helmet component. Since react-helmet-async should override these, the static ones are redundant clutter. Worse, the static title says "Adam Howell Public Warning" while Helmet sets per-page titles — crawlers that don't execute JS will only see the static fallback.
 
-### Option A: Auto-translate via AI edge function (Recommended)
+### 5. MEDIUM: `index.html` has leftover TODO comments
+Lines 7 and 11 have `<!-- TODO -->` comments visible in source. Unprofessional for a public-facing site.
 
-Add an on-the-fly translation layer using an AI model via a backend function. When a user visits `/th/...`, the article body is translated server-side (cached in the database for subsequent visits).
+### 6. MEDIUM: Missing `lastmod` dates in sitemap
+None of the sitemap entries include `<lastmod>` dates. Google uses these to prioritize crawling. All articles have known publication dates.
 
-**Pros:** Covers all articles automatically, low maintenance, scales to new content.
-**Cons:** First load per article has a delay (~5-10s), AI translations may have quality issues for investigative/legal language.
+### 7. MEDIUM: No Organization JSON-LD on the site level
+The homepage has a basic `WebSite` schema but no `Organization` schema with logo, social links, or `sameAs` properties. This helps Google's Knowledge Panel.
 
-**Implementation:**
-1. Create a `translate-article` backend function that accepts article text and target language, calls an AI model (e.g., Gemini Flash), and returns translated HTML.
-2. Create a `article_translations` database table to cache results (article_slug, language, translated_html).
-3. Modify `ArticlePage` to detect Thai language, check for cached translation, and either display it or trigger generation.
-4. Show a loading state ("Translating...") while generating.
+### 8. LOW: ScamBingo and RedFlagQuiz missing JSON-LD
+These interactive pages have `SEOHead` but no structured data. Adding `WebApplication` or `Quiz` schema would improve rich results.
 
-### Option B: Static Thai content components
+### 9. LOW: No `og:locale` meta tag
+The SEOHead component sets `og:title`, `og:description`, etc. but doesn't set `og:locale` (e.g., `en_US` or `th_TH`), which helps Facebook and social crawlers serve the right language.
 
-Create Thai versions of each article page (e.g., `ExposingSuperdogeRugPullTh.tsx`) with manually translated content.
-
-**Pros:** Full control over translation quality, no runtime cost.
-**Cons:** Enormous manual effort (6 articles x 300-500 lines each = ~2,400+ lines of Thai text to write), must maintain two copies of every article.
-
-### Option C: Hybrid — AI-translate once, then store as static
-
-Use the AI translation approach once to generate Thai content, review it, and store it permanently in the database. No runtime translation after the initial pass.
-
-**Pros:** Best of both worlds — automated generation with cached results.
-**Cons:** Still needs review for quality; initial setup is the same as Option A.
+### 10. LOW: `robots.txt` missing Disallow for admin
+The admin panel at `/admin/comments` is correctly `noindex` via Helmet, but crawlers could still discover and waste budget crawling it. Adding `Disallow: /admin/` to robots.txt is a belt-and-suspenders fix.
 
 ---
 
-## Recommended Plan: Option A (Auto-translate with caching)
+## Implementation Plan
 
-### Step 1: Database table for cached translations
-Create `article_translations` table with columns:
-- `id` (uuid, primary key)
-- `article_slug` (text, unique per language)
-- `language` (text, e.g. "th")
-- `translated_html` (text, the translated body)
-- `created_at` (timestamp)
+### Step 1: Fix ArticlePage "Back" link localization
+Update `ArticlePage.tsx` to use `localPath("/")` instead of hardcoded `/`, and translate the text "Back to all articles" for Thai.
 
-### Step 2: Backend function `translate-article`
-- Accepts `{ slug, text, targetLang }`
-- Checks cache first; if found, returns cached version
-- If not cached, calls Lovable AI (Gemini 2.5 Flash) to translate
-- Stores result in `article_translations` and returns it
+### Step 2: Add `datePublished` to UnmaskingAdamHowell JSON-LD
+Add the missing `datePublished` field to the JSON-LD object.
 
-### Step 3: Update `ArticlePage` component
-- Detect if current language is Thai via `useLanguage()`
-- If Thai, fetch translation from backend (shows loading spinner)
-- Render translated HTML using `dangerouslySetInnerHTML` with sanitization
-- Fall back to English if translation fails
+### Step 3: Add hreflang alternates to blog sitemap entries
+Update all 40 blog `<url>` entries in `sitemap.xml` to include `xhtml:link` alternates for `en` and `th`.
 
-### Step 4: Translation quality
-- Preserve all HTML structure (headings, links, images, figures)
-- Only translate text nodes, keep names/URLs/evidence untouched
-- Add a small "Auto-translated" disclaimer badge on Thai pages
+### Step 4: Clean up `index.html`
+- Remove TODO comments
+- Keep static meta tags as JS-disabled fallbacks but ensure they match the homepage SEOHead values
 
-### Technical Considerations
-- Gemini 2.5 Flash handles Thai well and is cost-effective
-- Article text is capped at 5,000 chars in narration; for translation we can send the full prose HTML
-- RLS: public SELECT on `article_translations`, service-role INSERT from the edge function
-- Cache invalidation: not needed unless articles are edited (rare)
+### Step 5: Add `lastmod` to sitemap entries
+Add `<lastmod>` dates based on known article publication dates.
 
+### Step 6: Add `og:locale` to SEOHead
+Add `<meta property="og:locale" content="en_US" />` (or `th_TH` when Thai) to the SEOHead component.
+
+### Step 7: Add `Disallow: /admin/` to robots.txt
+
+### Step 8: Enhance homepage JSON-LD with Organization schema
+Add logo URL, sameAs (Twitter/social links), and founding info to the structured data.
+
+### Step 9: Add JSON-LD to Quiz and Bingo pages
+Add basic `WebApplication` or `Quiz` schema for richer search presence.
+
+---
+
+## Technical Details
+
+**Files to modify:**
+- `src/components/ArticlePage.tsx` — localize back link
+- `src/components/SEOHead.tsx` — add `og:locale`
+- `src/pages/UnmaskingAdamHowell.tsx` — add datePublished to JSON-LD
+- `src/pages/Index.tsx` — enhance Organization JSON-LD
+- `src/pages/RedFlagQuiz.tsx` — add JSON-LD
+- `src/pages/ScamBingo.tsx` — add JSON-LD
+- `public/sitemap.xml` — add hreflang + lastmod to blog entries
+- `public/robots.txt` — add admin disallow
+- `index.html` — clean up TODOs and redundant tags
