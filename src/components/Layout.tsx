@@ -2,6 +2,50 @@ import { Link, useLocation } from "react-router-dom";
 import { AlertTriangle, Shield, Menu, X, ArrowUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import VictimContactSlideIn from "@/components/VictimContactSlideIn";
+import ReadingProgressBar from "@/components/ReadingProgressBar";
+
+const ScrollProgressButton = ({ show }: { show: boolean }) => {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight > 0) setProgress(Math.min(scrollTop / docHeight, 1));
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const radius = 20;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference * (1 - progress);
+
+  return (
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      className={`fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full shadow-lg transition-all hover:scale-110 ${
+        show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+      }`}
+      aria-label="Back to top"
+    >
+      <svg className="w-12 h-12 -rotate-90" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r={radius} fill="hsl(var(--primary))" />
+        <circle
+          cx="24" cy="24" r={radius}
+          fill="none"
+          stroke="hsl(var(--primary-foreground))"
+          strokeWidth="2.5"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          className="transition-[stroke-dashoffset] duration-150"
+        />
+      </svg>
+      <ArrowUp className="w-5 h-5 text-primary-foreground absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+    </button>
+  );
+};
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -30,6 +74,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <ReadingProgressBar />
       {/* Warning Banner */}
       <div className="bg-destructive text-destructive-foreground py-2 px-4 text-center text-sm font-semibold tracking-wide">
         <AlertTriangle className="inline-block w-4 h-4 mr-2 -mt-0.5" />
@@ -95,21 +140,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 animate-page-fade-in">{children}</main>
 
       {/* Victim Contact Slide-in */}
       <VictimContactSlideIn />
 
-      {/* Back to Top Button */}
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className={`fixed bottom-6 right-6 z-50 bg-primary text-primary-foreground p-3 rounded-full shadow-lg transition-all hover:scale-110 ${
-          showBackToTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
-        }`}
-        aria-label="Back to top"
-      >
-        <ArrowUp className="w-5 h-5" />
-      </button>
+      {/* Back to Top Button with scroll progress ring */}
+      <ScrollProgressButton show={showBackToTop} />
 
       {/* Footer */}
       <footer className="bg-card border-t py-8">

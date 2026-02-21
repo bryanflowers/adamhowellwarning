@@ -1,6 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
 import CommentSection from "@/components/CommentSection";
+import ShareButtons from "@/components/ShareButtons";
+import TableOfContents from "@/components/TableOfContents";
+import ImageLightbox from "@/components/ImageLightbox";
 
 interface ArticlePageProps {
   title: string;
@@ -13,6 +17,29 @@ interface ArticlePageProps {
 const ArticlePage = ({ title, subtitle, date, readTime, children }: ArticlePageProps) => {
   const location = useLocation();
   const articleSlug = location.pathname;
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
+
+  const handleArticleClick = useCallback((e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === "IMG" && target.closest(".prose")) {
+      const img = target as HTMLImageElement;
+      setLightbox({ src: img.src, alt: img.alt || "Evidence photo" });
+    }
+  }, []);
+
+  useEffect(() => {
+    const container = document.querySelector(".prose");
+    if (container) {
+      container.addEventListener("click", handleArticleClick as EventListener);
+      // Add cursor pointer to all prose images
+      container.querySelectorAll("img").forEach((img) => {
+        (img as HTMLElement).style.cursor = "zoom-in";
+      });
+    }
+    return () => {
+      container?.removeEventListener("click", handleArticleClick as EventListener);
+    };
+  }, [handleArticleClick]);
 
   return (
     <article className="py-12">
@@ -32,7 +59,7 @@ const ArticlePage = ({ title, subtitle, date, readTime, children }: ArticlePageP
           {subtitle && (
             <p className="text-lg text-muted-foreground leading-relaxed">{subtitle}</p>
           )}
-          <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground flex-wrap">
             {date && (
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
@@ -45,6 +72,7 @@ const ArticlePage = ({ title, subtitle, date, readTime, children }: ArticlePageP
                 {readTime}
               </span>
             )}
+            <ShareButtons title={title} />
           </div>
           <div className="h-1 w-24 bg-primary mt-6 rounded-full" />
         </header>
@@ -54,6 +82,11 @@ const ArticlePage = ({ title, subtitle, date, readTime, children }: ArticlePageP
         </div>
 
         <CommentSection articleSlug={articleSlug} />
+
+        <TableOfContents />
+        {lightbox && (
+          <ImageLightbox src={lightbox.src} alt={lightbox.alt} onClose={() => setLightbox(null)} />
+        )}
       </div>
     </article>
   );
