@@ -1,10 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { AlertTriangle, Shield, Menu, X, ArrowUp, Sun, Moon } from "lucide-react";
+import { AlertTriangle, Shield, Menu, X, ArrowUp, Sun, Moon, Globe } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import VictimContactSlideIn from "@/components/VictimContactSlideIn";
 import ReadingProgressBar from "@/components/ReadingProgressBar";
 import GlobalSearch from "@/components/GlobalSearch";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t } from "@/i18n/translations";
 
 const ScrollProgressButton = ({ show }: { show: boolean }) => {
   const [progress, setProgress] = useState(0);
@@ -49,18 +51,18 @@ const ScrollProgressButton = ({ show }: { show: boolean }) => {
   );
 };
 
-const navLinks = [
-  { to: "/", label: "Home" },
-  { to: "/articles", label: "All Articles" },
-  { to: "/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned", label: "SuperDoge Exposé" },
-  { to: "/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond", label: "Investigative Report" },
-  { to: "/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties", label: "SuperDoge Update" },
-  { to: "/keith-shingleton-david-edwards", label: "Associates" },
-  { to: "/the-architect-of-deception-and-adam-howells-web-of-accomplices", label: "Web of Accomplices" },
-  { to: "/music", label: "Music" },
-  { to: "/quiz", label: "Quiz" },
-  { to: "/bingo", label: "Bingo" },
-  { to: "/blog", label: "Crypto Scam Blog" },
+const navLinksConfig = [
+  { path: "/", labelKey: "home" as const },
+  { path: "/articles", labelKey: "allArticles" as const },
+  { path: "/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned", labelKey: "superdogeExpose" as const },
+  { path: "/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond", labelKey: "investigativeReport" as const },
+  { path: "/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties", labelKey: "superdogeUpdate" as const },
+  { path: "/keith-shingleton-david-edwards", labelKey: "associates" as const },
+  { path: "/the-architect-of-deception-and-adam-howells-web-of-accomplices", labelKey: "webOfAccomplices" as const },
+  { path: "/music", labelKey: "music" as const },
+  { path: "/quiz", labelKey: "quiz" as const },
+  { path: "/bingo", labelKey: "bingo" as const },
+  { path: "/blog", labelKey: "cryptoScamBlog" as const },
 ];
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -68,6 +70,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const location = useLocation();
   const { theme, setTheme } = useTheme();
+  const { lang, toggleLanguage, localPath } = useLanguage();
+  const tr = t[lang];
+
+  // Build localized nav links
+  const navLinks = navLinksConfig.map((link) => ({
+    to: localPath(link.path),
+    label: tr[link.labelKey],
+  }));
 
   useEffect(() => {
     const handleScroll = () => {
@@ -83,20 +93,20 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Warning Banner */}
       <div className="bg-destructive text-destructive-foreground py-2 px-4 text-center text-sm font-semibold tracking-wide">
         <AlertTriangle className="inline-block w-4 h-4 mr-2 -mt-0.5" />
-        PUBLIC WARNING: Investor & Partner Alert
+        {tr.banner}
         <AlertTriangle className="inline-block w-4 h-4 ml-2 -mt-0.5" />
       </div>
 
       {/* Header */}
       <header className="bg-card border-b sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to={localPath("/")} className="flex items-center gap-3 group">
             <Shield className="w-8 h-8 text-primary" />
             <div>
               <h1 className="text-xl font-black tracking-tight text-foreground leading-none" style={{ fontFamily: "'Playfair Display', serif" }}>
                 Adam Howell Warning
               </h1>
-              <p className="text-xs text-muted-foreground tracking-widest uppercase">Investigative Reports</p>
+              <p className="text-xs text-muted-foreground tracking-widest uppercase">{tr.investigativeReports}</p>
             </div>
           </Link>
 
@@ -117,6 +127,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             ))}
             <GlobalSearch />
             <button
+              onClick={toggleLanguage}
+              className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors flex items-center gap-1"
+              aria-label="Toggle language"
+              title={lang === "en" ? "เปลี่ยนเป็นภาษาไทย" : "Switch to English"}
+            >
+              <Globe className="w-5 h-5" />
+              <span className="text-xs font-bold">{lang === "en" ? "TH" : "EN"}</span>
+            </button>
+            <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
               aria-label="Toggle theme"
@@ -126,6 +145,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </nav>
 
           <div className="flex items-center gap-2 lg:hidden">
+            <button
+              onClick={toggleLanguage}
+              className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors flex items-center gap-1"
+              aria-label="Toggle language"
+            >
+              <Globe className="w-4 h-4" />
+              <span className="text-xs font-bold">{lang === "en" ? "TH" : "EN"}</span>
+            </button>
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
@@ -173,10 +200,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <footer className="bg-card border-t py-8">
         <div className="container mx-auto px-4 text-center">
           <p className="text-muted-foreground text-sm">
-            This site documents publicly available information for investor protection purposes.
+            {tr.footerLine1}
           </p>
           <p className="text-muted-foreground text-xs mt-2">
-            If you have information to share, please reach out through secure channels.
+            {tr.footerLine2}
           </p>
         </div>
       </footer>

@@ -1,67 +1,28 @@
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-
-const articles = [
-  {
-    slug: "/unmasking-adam-howell",
-    title: "Unmasking Adam Howell: The Serial Scammer, Extortionist, and Crypto Fraudster",
-    excerpt: "A comprehensive exposé compiling documented evidence from court records, victim accounts, and public exposes to highlight patterns of deception and failure.",
-    tag: "Featured Investigation",
-    readTime: "15 min read",
-  },
-  {
-    slug: "/keith-shingleton-david-edwards",
-    title: "Deep Dive on Keith Shingleton, David Edwards and Connections to Adam Howell",
-    excerpt: "Examining the inner circle and mechanisms behind the alleged scams — from co-authored whitepapers to unverified LinkedIn achievements.",
-    tag: "Associates",
-    readTime: "18 min read",
-  },
-  {
-    slug: "/the-architect-of-deception-and-adam-howells-web-of-accomplices",
-    title: "The Architect of Deception and Adam Howell's Web of Accomplices",
-    excerpt: "Key enablers like Andrew Drummond and Kanokrat form the backbone of extortion tactics, turning personal grudges into profitable smear operations.",
-    tag: "Network Analysis",
-    readTime: "12 min read",
-  },
-  {
-    slug: "/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned",
-    title: "Exposing the SuperDoge Rug Pull: Adam Howell's Latest Crypto Scheme and the Millions Potentially Siphoned",
-    excerpt: "A comprehensive investigative report into the SuperDoge token, its team, blockchain evidence, and estimated losses.",
-    tag: "Investigative Report",
-    readTime: "35 min read",
-  },
-  {
-    slug: "/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties",
-    title: "Investigative Update: Exposing the SuperDoge Scam – Adam Howell's Anonymous Pitch, Vanished Promises, and Inner Circle Ties",
-    excerpt: "A revealing 2021 podcast appearance showcases Howell's tactics — hiding behind anonymity, dragging credible figures, and warning about scams to position himself as trustworthy.",
-    tag: "Investigative Update",
-    readTime: "15 min read",
-  },
-  {
-    slug: "/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond",
-    title: "Investigative Report: Uncovering the Trail of Adam Howell's Ventures in Crypto and Beyond",
-    excerpt: "A comprehensive investigation mapping every venture, failed project, and scam pattern — from DopeCoin to SuperDoge and beyond.",
-    tag: "Investigative Report",
-    readTime: "20 min read",
-  },
-];
+import { useLanguage } from "@/hooks/useLanguage";
+import { t, articlesMeta } from "@/i18n/translations";
 
 const Articles = () => {
+  const { lang, localPath } = useLanguage();
+  const tr = t[lang];
+  const articles = articlesMeta[lang];
+
   return (
     <Layout>
       <section className="py-16 md:py-20">
         <div className="container mx-auto px-4">
           <h1 className="text-3xl md:text-5xl font-black mb-4 text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
-            All Investigative Articles
+            {tr.articlesTitle}
           </h1>
-          <p className="text-muted-foreground mb-10 text-lg">In-depth reports documenting the evidence trail against Adam Howell.</p>
+          <p className="text-muted-foreground mb-10 text-lg">{tr.articlesSubtitle}</p>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {articles.map((article) => (
               <Link
                 key={article.slug}
-                to={article.slug}
+                to={localPath(article.slug)}
                 className="group bg-card border rounded-xl p-6 hover:shadow-lg transition-all hover:border-primary/30 hover:-translate-y-0.5"
               >
                 <span className="inline-block text-xs font-bold tracking-widest uppercase text-primary mb-3">
@@ -74,7 +35,7 @@ const Articles = () => {
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-muted-foreground">{article.readTime}</span>
                   <span className="text-primary flex items-center gap-1 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                    Read <ArrowRight className="w-4 h-4" />
+                    {tr.readMore} <ArrowRight className="w-4 h-4" />
                   </span>
                 </div>
               </Link>

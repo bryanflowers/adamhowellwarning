@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, CheckCircle, XCircle, RotateCcw, Share2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t } from "@/i18n/translations";
 
 interface Question {
   id: number;
@@ -136,6 +138,8 @@ const getRating = (score: number, total: number) => {
 };
 
 const RedFlagQuiz = () => {
+  const { lang } = useLanguage();
+  const tr = t[lang];
   const [currentQ, setCurrentQ] = useState(0);
   const [selected, setSelected] = useState<boolean[]>(() => Array(questions[0].options.length).fill(false));
   const [submitted, setSubmitted] = useState(false);
@@ -205,12 +209,12 @@ const RedFlagQuiz = () => {
           <div className="text-center mb-10">
             <div className="flex items-center justify-center gap-3 mb-4">
               <AlertTriangle className="w-8 h-8 text-primary" />
-              <h1 className="text-3xl md:text-4xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-                Spot the Red Flag
+               <h1 className="text-3xl md:text-4xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+                {tr.quizTitle}
               </h1>
             </div>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Read real-world crypto scenarios and identify the red flags. How sharp is your scam detector?
+              {tr.quizSubtitle}
             </p>
           </div>
 
@@ -225,7 +229,7 @@ const RedFlagQuiz = () => {
               <p className="text-sm leading-relaxed mb-6 text-foreground">{question.scenario}</p>
 
               <p className="text-xs text-muted-foreground mb-3 font-medium uppercase tracking-wide">
-                Select all red flags:
+                {tr.selectAllRedFlags}
               </p>
               <div className="space-y-3 mb-6">
                 {question.options.map((opt, i) => {
@@ -272,11 +276,11 @@ const RedFlagQuiz = () => {
               <div className="flex justify-end gap-3">
                 {!submitted ? (
                   <Button onClick={handleSubmit} disabled={!selected.some(Boolean)}>
-                    Check Answer
+                    {tr.checkAnswer}
                   </Button>
                 ) : (
                   <Button onClick={handleNext}>
-                    {currentQ + 1 >= questions.length ? "See Results" : "Next Question"}
+                    {currentQ + 1 >= questions.length ? tr.seeResults : tr.nextQuestion}
                   </Button>
                 )}
               </div>
@@ -284,16 +288,16 @@ const RedFlagQuiz = () => {
           ) : (
             <div className="bg-card border rounded-xl p-8 text-center">
               <h2 className="text-2xl font-black mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
-                Your Scam Detector Rating
+                {tr.yourRating}
               </h2>
               <div className={`text-4xl font-black mb-2 ${rating.color}`}>{rating.label}</div>
               <p className="text-muted-foreground mb-4">{rating.desc}</p>
               <p className="text-lg font-bold mb-6">
-                {score} / {totalFlags} correct identifications ({Math.round((score / totalFlags) * 100)}%)
+                {score} / {totalFlags} {tr.correctIdentifications} ({Math.round((score / totalFlags) * 100)}%)
               </p>
               <div className="flex justify-center gap-3 flex-wrap">
                 <Button onClick={restart} variant="outline" className="gap-2">
-                  <RotateCcw className="w-4 h-4" /> Try Again
+                  <RotateCcw className="w-4 h-4" /> {tr.tryAgain}
                 </Button>
                 <Button
                   onClick={() => {
@@ -307,7 +311,7 @@ const RedFlagQuiz = () => {
                   }}
                   className="gap-2"
                 >
-                  <Share2 className="w-4 h-4" /> Share Result
+                  <Share2 className="w-4 h-4" /> {tr.shareResult}
                 </Button>
               </div>
             </div>

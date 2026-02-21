@@ -32,6 +32,29 @@ const PageLoader = () => (
   </div>
 );
 
+// All app routes — rendered once for / and once for /th
+const AppRoutes = () => (
+  <>
+    <Route index element={<Index />} />
+    <Route path="unmasking-adam-howell" element={<UnmaskingAdamHowell />} />
+    <Route path="superdoge-rug-pull" element={<Navigate to="exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned" replace />} />
+    <Route path="investigative-report" element={<Navigate to="investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond" replace />} />
+    <Route path="superdoge-scam-update" element={<Navigate to="investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties" replace />} />
+    <Route path="keith-shingleton-david-edwards" element={<KeithShingletonDavidEdwards />} />
+    <Route path="the-architect-of-deception-and-adam-howells-web-of-accomplices" element={<ArchitectOfDeception />} />
+    <Route path="exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned" element={<ExposingSuperdogeRugPull />} />
+    <Route path="investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties" element={<InvestigativeUpdateSuperdoge />} />
+    <Route path="investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond" element={<InvestigativeReportUncovering />} />
+    <Route path="articles" element={<Articles />} />
+    <Route path="blog" element={<Blog />} />
+    <Route path="blog/:slug" element={<BlogPost />} />
+    <Route path="music" element={<Music />} />
+    <Route path="quiz" element={<RedFlagQuiz />} />
+    <Route path="bingo" element={<ScamBingo />} />
+    <Route path="admin/comments" element={<AdminComments />} />
+  </>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -42,23 +65,10 @@ const App = () => (
         <ErrorBoundary>
           <Suspense fallback={<PageLoader />}>
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/unmasking-adam-howell" element={<UnmaskingAdamHowell />} />
-              <Route path="/superdoge-rug-pull" element={<Navigate to="/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned" replace />} />
-              <Route path="/investigative-report" element={<Navigate to="/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond" replace />} />
-              <Route path="/superdoge-scam-update" element={<Navigate to="/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties" replace />} />
-              <Route path="/keith-shingleton-david-edwards" element={<KeithShingletonDavidEdwards />} />
-              <Route path="/the-architect-of-deception-and-adam-howells-web-of-accomplices" element={<ArchitectOfDeception />} />
-              <Route path="/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned" element={<ExposingSuperdogeRugPull />} />
-              <Route path="/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties" element={<InvestigativeUpdateSuperdoge />} />
-              <Route path="/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond" element={<InvestigativeReportUncovering />} />
-              <Route path="/articles" element={<Articles />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/music" element={<Music />} />
-              <Route path="/quiz" element={<RedFlagQuiz />} />
-              <Route path="/bingo" element={<ScamBingo />} />
-              <Route path="/admin/comments" element={<AdminComments />} />
+              {/* English routes */}
+              <Route path="/">{AppRoutes()}</Route>
+              {/* Thai routes */}
+              <Route path="/th">{AppRoutes()}</Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

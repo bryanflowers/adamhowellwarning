@@ -10,8 +10,12 @@ import { musicTracks, allGenres, type MusicTrack } from "@/data/musicTracks";
 import AudioVisualizer from "@/components/AudioVisualizer";
 import { useFavorites } from "@/hooks/useFavorites";
 import { toast } from "sonner";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t } from "@/i18n/translations";
 
 const Music = () => {
+  const { lang } = useLanguage();
+  const tr = t[lang];
   const [activeGenre, setActiveGenre] = useState<string | null>(null);
   const [currentTrack, setCurrentTrack] = useState<MusicTrack | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -180,14 +184,14 @@ const Music = () => {
             <div className="flex items-center justify-center gap-3 mb-4">
               <MusicIcon className="w-8 h-8 text-primary" />
               <h1 className="text-3xl md:text-4xl font-black tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-                The Soundtrack of Deception
+                {tr.musicTitle}
               </h1>
             </div>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              50 original AI-generated tracks across multiple genres — each one inspired by the investigative findings on this site.
+              {tr.musicSubtitle}
             </p>
             <p className="text-xs text-muted-foreground/70 mt-2 max-w-xl mx-auto italic">
-              These songs were created solely to raise awareness about cryptocurrency scams and help protect potential victims. No profit is made from this music.
+              {lang === "th" ? "เพลงเหล่านี้สร้างขึ้นเพื่อสร้างความตระหนักรู้เกี่ยวกับการหลอกลวงคริปโตเคอร์เรนซี ไม่มีการแสวงกำไรจากเพลงเหล่านี้" : "These songs were created solely to raise awareness about cryptocurrency scams and help protect potential victims. No profit is made from this music."}
             </p>
           </div>
 
@@ -198,7 +202,7 @@ const Music = () => {
               size="sm"
               onClick={() => { setActiveGenre(null); setShowPlaylist(false); }}
             >
-              All Genres
+              {tr.allGenres}
             </Button>
             {allGenres.map((genre) => (
               <Button
@@ -219,7 +223,7 @@ const Music = () => {
               onClick={() => setShowPlaylist(!showPlaylist)}
             >
               <ListMusic className="w-4 h-4" />
-              My Playlist ({favorites.length})
+              {tr.myPlaylist} ({favorites.length})
             </Button>
           </div>
 
@@ -228,7 +232,7 @@ const Music = () => {
             <div className="flex justify-center items-center gap-3 mb-8">
               <Button onClick={playAll} size="lg" className="gap-2">
                 <Play className="w-5 h-5" />
-                Play All{showPlaylist ? " Playlist" : activeGenre ? ` ${activeGenre}` : ""} ({playableTracks.length} tracks)
+                {tr.playAll}{showPlaylist ? ` ${tr.myPlaylist}` : activeGenre ? ` ${activeGenre}` : ""} ({playableTracks.length})
               </Button>
               <Button
                 variant={shuffleMode ? "default" : "outline"}
@@ -242,7 +246,7 @@ const Music = () => {
                 }}
               >
                 <Shuffle className="w-5 h-5" />
-                Shuffle {shuffleMode ? "On" : "Off"}
+                Shuffle {shuffleMode ? tr.shuffleOn : tr.shuffleOff}
               </Button>
             </div>
           )}
