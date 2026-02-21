@@ -1,7 +1,11 @@
+import { useState, useEffect, useCallback } from "react";
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { AlertTriangle, FileText, ArrowRight, Shield, Eye, Calendar, Clock } from "lucide-react";
 import { blogArticles } from "@/data/blogArticles";
+import ShareButtons from "@/components/ShareButtons";
+import TableOfContents from "@/components/TableOfContents";
+import ImageLightbox from "@/components/ImageLightbox";
 import andrewDrummondPost from "@/assets/andrew-drummond-post-court.png";
 import fakeFbMessages from "@/assets/adam-howell-fake-fb-messages.jpg";
 import adamHowellPassport from "@/assets/adam-howell-passport.jpeg";
@@ -55,6 +59,29 @@ const articles = [
 ];
 
 const Index = () => {
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
+
+  const handleArticleClick = useCallback((e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === "IMG" && target.closest(".prose")) {
+      const img = target as HTMLImageElement;
+      setLightbox({ src: img.src, alt: img.alt || "Evidence photo" });
+    }
+  }, []);
+
+  useEffect(() => {
+    const container = document.querySelector(".prose");
+    if (container) {
+      container.addEventListener("click", handleArticleClick as EventListener);
+      container.querySelectorAll("img").forEach((img) => {
+        (img as HTMLElement).style.cursor = "zoom-in";
+      });
+    }
+    return () => {
+      container?.removeEventListener("click", handleArticleClick as EventListener);
+    };
+  }, [handleArticleClick]);
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -76,9 +103,12 @@ const Index = () => {
             <p className="text-lg md:text-xl opacity-80 leading-relaxed max-w-2xl mb-4">
               Warning about Adam Howell (Canadian)
             </p>
-            <div className="flex items-center gap-4 text-sm opacity-60 mb-8">
+            <div className="flex items-center gap-4 text-sm opacity-60 mb-4 flex-wrap">
               <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> November 22, 2026</span>
               <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> 25 min read</span>
+            </div>
+            <div className="mb-8">
+              <ShareButtons title="Conduct Profile of Adam Howell – Birthdate 2nd of March 1982" />
             </div>
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-lg px-4 py-2">
@@ -449,6 +479,11 @@ const Index = () => {
           </p>
         </div>
       </section>
+
+      <TableOfContents />
+      {lightbox && (
+        <ImageLightbox src={lightbox.src} alt={lightbox.alt} onClose={() => setLightbox(null)} />
+      )}
     </Layout>
   );
 };
