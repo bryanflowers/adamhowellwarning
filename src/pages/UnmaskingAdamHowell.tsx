@@ -27,6 +27,7 @@ const UnmaskingAdamHowell = () => {
         title="Unmasking Adam Howell: The Serial Scammer, Extortionist, and Crypto Fraudster – A Warning to Investors"
         subtitle="A comprehensive exposé compiling documented evidence from court records, victim accounts, and public exposes to highlight his patterns of deception and failure."
         readTime="15 min read"
+        translatable
       >
         <h2>Introduction: The Predator Behind the Schemes</h2>
         <p>

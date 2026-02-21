@@ -25,6 +25,7 @@ const ArchitectOfDeception = () => {
         subtitle="Key enablers like Andrew Drummond and Kanokrat form the backbone of his extortion tactics, turning personal grudges into potentially profitable smear operations."
         date="January 22, 2026"
         readTime="12 min read"
+        translatable
       >
         <figure className="my-8">
           <img src={adamHowellAiPhoto} alt="Adams AI photo" className="rounded-lg shadow-lg max-w-[298px]" />
