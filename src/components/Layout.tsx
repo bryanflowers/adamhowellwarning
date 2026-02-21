@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { AlertTriangle, Shield, Menu, X, ArrowUp } from "lucide-react";
 import { useState, useEffect } from "react";
+import VictimContactSlideIn from "@/components/VictimContactSlideIn";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -95,6 +96,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       {/* Main Content */}
       <main className="flex-1">{children}</main>
+
+      {/* Victim Contact Slide-in */}
+      <VictimContactSlideIn />
 
       {/* Back to Top Button */}
       <button
