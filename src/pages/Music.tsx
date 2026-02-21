@@ -21,6 +21,15 @@ const Music = () => {
     ? musicTracks.filter((t) => t.genre === activeGenre)
     : musicTracks;
 
+  const playableTracks = filteredTracks.filter((t) => !!t.audioUrl);
+
+  const playAll = () => {
+    if (playableTracks.length === 0) return;
+    setCurrentTrack(playableTracks[0]);
+    setIsPlaying(true);
+    setProgress(0);
+  };
+
   const playTrack = (track: MusicTrack) => {
     if (!track.audioUrl) return;
     if (currentTrack?.id === track.id) {
@@ -44,24 +53,24 @@ const Music = () => {
 
   const skipNext = () => {
     if (!currentTrack) return;
-    const idx = musicTracks.findIndex((t) => t.id === currentTrack.id);
-    const next = musicTracks[(idx + 1) % musicTracks.length];
-    if (next.audioUrl) {
-      setCurrentTrack(next);
-      setIsPlaying(true);
-      setProgress(0);
-    }
+    const pool = playableTracks.length > 0 ? playableTracks : musicTracks.filter((t) => !!t.audioUrl);
+    const idx = pool.findIndex((t) => t.id === currentTrack.id);
+    if (idx === -1 || pool.length === 0) return;
+    const next = pool[(idx + 1) % pool.length];
+    setCurrentTrack(next);
+    setIsPlaying(true);
+    setProgress(0);
   };
 
   const skipPrev = () => {
     if (!currentTrack) return;
-    const idx = musicTracks.findIndex((t) => t.id === currentTrack.id);
-    const prev = musicTracks[(idx - 1 + musicTracks.length) % musicTracks.length];
-    if (prev.audioUrl) {
-      setCurrentTrack(prev);
-      setIsPlaying(true);
-      setProgress(0);
-    }
+    const pool = playableTracks.length > 0 ? playableTracks : musicTracks.filter((t) => !!t.audioUrl);
+    const idx = pool.findIndex((t) => t.id === currentTrack.id);
+    if (idx === -1 || pool.length === 0) return;
+    const prev = pool[(idx - 1 + pool.length) % pool.length];
+    setCurrentTrack(prev);
+    setIsPlaying(true);
+    setProgress(0);
   };
 
   useEffect(() => {
@@ -151,6 +160,16 @@ const Music = () => {
               </Button>
             ))}
           </div>
+
+          {/* Play All */}
+          {playableTracks.length > 0 && (
+            <div className="flex justify-center mb-8">
+              <Button onClick={playAll} size="lg" className="gap-2">
+                <Play className="w-5 h-5" />
+                Play All{activeGenre ? ` ${activeGenre}` : ""} ({playableTracks.length} tracks)
+              </Button>
+            </div>
+          )}
 
           {/* Track Grid */}
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
