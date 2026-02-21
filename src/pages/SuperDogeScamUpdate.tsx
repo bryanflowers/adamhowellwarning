@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import ArticlePage from "@/components/ArticlePage";
+import RelatedArticles from "@/components/RelatedArticles";
 
 const SuperDogeScamUpdate = () => {
   return (
@@ -65,6 +66,7 @@ const SuperDogeScamUpdate = () => {
         <p>
           Investors: Demand transparency. Regulators: Investigate cross-border fraud (Howell in Thailand). If you have leads, share—we're exposing these scammers.
         </p>
+        <RelatedArticles currentSlug="/superdoge-scam-update" />
       </ArticlePage>
     </Layout>
   );

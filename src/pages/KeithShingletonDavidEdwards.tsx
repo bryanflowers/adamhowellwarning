@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import ArticlePage from "@/components/ArticlePage";
+import RelatedArticles from "@/components/RelatedArticles";
 
 const KeithShingletonDavidEdwards = () => {
   return (
@@ -85,6 +86,7 @@ const KeithShingletonDavidEdwards = () => {
         <p>
           Shingleton and Edwards form the backbone of Howell's operations—Shingleton in shadows with sales muscle, Edwards with community hype—while Howell's addictions allegedly drain funds. This trio's pattern: Hype, raise, abandon, erase. Investors, beware: Legit facades like Digital Chipmunks hide deeper risks. If you have leads, share them—we're exposing this for good.
         </p>
+        <RelatedArticles currentSlug="/keith-shingleton-david-edwards" />
       </ArticlePage>
     </Layout>
   );

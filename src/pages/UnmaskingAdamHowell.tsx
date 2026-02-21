@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import ArticlePage from "@/components/ArticlePage";
+import RelatedArticles from "@/components/RelatedArticles";
 import adamHowellPassport from "@/assets/adam-howell-passport.jpeg";
 import andrewDrummondPost from "@/assets/andrew-drummond-post.png";
 
@@ -126,6 +127,8 @@ const UnmaskingAdamHowell = () => {
         <p>
           Adam Howell is not an innovator but a predator who preys on trust, hype, and greed in the crypto space. His repeated failures—from multimillion rug pulls like SuperDoge to extortionate demands—have devastated partners and investors alike. With a fresh defamation conviction and flight to Dubai, he's a flight risk embodying the dangers of unregulated markets. Angel investors: Scrutinize any pitch involving Howell; his history of blowing up partnerships and siphoning funds makes him a toxic liability. The public must stay vigilant—report suspicions to authorities, and remember: If it sounds too good to be true, it likely is with Howell involved.
         </p>
+
+        <RelatedArticles currentSlug="/unmasking-adam-howell" />
       </ArticlePage>
     </Layout>
   );
