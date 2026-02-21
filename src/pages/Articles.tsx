@@ -11,27 +11,6 @@ const articles = [
     readTime: "15 min read",
   },
   {
-    slug: "/superdoge-rug-pull",
-    title: "Exposing the SuperDoge Rug Pull: Adam Howell's Charity-Fueled Crypto Scam",
-    excerpt: "Dissecting how SuperDoge operated, the red flags ignored, the unprofessional tactics employed, and the potential legal violations that scream fraud.",
-    tag: "Deep Dive",
-    readTime: "45 min read",
-  },
-  {
-    slug: "/investigative-report",
-    title: "Uncovering the Trail of Adam Howell's Ventures in Crypto and Beyond",
-    excerpt: "Mapping out Adam Howell's history through public records, forum archives, crypto news sites, social media, and whistleblower accounts.",
-    tag: "Investigative Report",
-    readTime: "20 min read",
-  },
-  {
-    slug: "/superdoge-scam-update",
-    title: "Exposing the SuperDoge Scam – Anonymous Pitch, Vanished Promises, and Inner Circle Ties",
-    excerpt: "A revealing 2021 podcast appearance that showcases Howell's tactics — hiding behind anonymity, dragging credible figures, and warning about scams to position himself as trustworthy.",
-    tag: "Update",
-    readTime: "15 min read",
-  },
-  {
     slug: "/keith-shingleton-david-edwards",
     title: "Deep Dive on Keith Shingleton, David Edwards and Connections to Adam Howell",
     excerpt: "Examining the inner circle and mechanisms behind the alleged scams — from co-authored whitepapers to unverified LinkedIn achievements.",

@@ -9,9 +9,9 @@ interface RelatedArticlesProps {
 
 const caseStudyArticles = [
   { slug: "/unmasking-adam-howell", title: "Unmasking Adam Howell: Serial Scammer & Crypto Fraudster", tag: "Case Study" },
-  { slug: "/superdoge-rug-pull", title: "SuperDoge Rug Pull: Charity-Fueled Crypto Scam Exposed", tag: "Case Study" },
-  { slug: "/investigative-report", title: "Adam Howell's Ventures in Crypto and Beyond", tag: "Investigation" },
-  { slug: "/superdoge-scam-update", title: "SuperDoge Scam Update: Anonymous Pitch & Vanished Promises", tag: "Update" },
+  { slug: "/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned", title: "SuperDoge Rug Pull: Charity-Fueled Crypto Scam Exposed", tag: "Case Study" },
+  { slug: "/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond", title: "Adam Howell's Ventures in Crypto and Beyond", tag: "Investigation" },
+  { slug: "/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties", title: "SuperDoge Scam Update: Anonymous Pitch & Vanished Promises", tag: "Update" },
   { slug: "/keith-shingleton-david-edwards", title: "Keith Shingleton, David Edwards & Adam Howell Connections", tag: "Associates" },
   { slug: "/the-architect-of-deception-and-adam-howells-web-of-accomplices", title: "The Architect of Deception: Adam Howell's Web of Accomplices", tag: "Network" },
 ];
