@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Shield, Check, X, Trash2, RefreshCw, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,37 +23,15 @@ const AdminComments = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
+  const [loginPending, setLoginPending] = useState(false);
   const [filter, setFilter] = useState<string>("all");
+  const hasLoadedRef = useRef(false);
+  const loadingRef = useRef(false);
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setAuthLoading(false);
-      if (session) loadComments();
-    });
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setAuthLoading(false);
-      if (session) loadComments();
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const login = async () => {
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      toast.error("Invalid credentials");
-    }
-    setLoading(false);
-  };
-
-  const logout = async () => {
-    await supabase.auth.signOut();
-    setComments([]);
-  };
-
-  const loadComments = async () => {
+  const loadComments = useCallback(async () => {
+    // Prevent concurrent loads
+    if (loadingRef.current) return;
+    loadingRef.current = true;
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("moderate-comments", {
@@ -66,7 +44,54 @@ const AdminComments = () => {
       toast.error("Failed to load comments.");
     } finally {
       setLoading(false);
+      loadingRef.current = false;
     }
+  }, []);
+
+  useEffect(() => {
+    // Set up listener FIRST (before getSession)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+      setAuthLoading(false);
+      setLoginPending(false);
+
+      // Only load on initial auth or sign-in, not on every token refresh
+      if (newSession && !hasLoadedRef.current) {
+        hasLoadedRef.current = true;
+        loadComments();
+      }
+      if (!newSession) {
+        hasLoadedRef.current = false;
+      }
+    });
+
+    // Then check existing session
+    supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
+      setSession(existingSession);
+      setAuthLoading(false);
+      if (existingSession && !hasLoadedRef.current) {
+        hasLoadedRef.current = true;
+        loadComments();
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [loadComments]);
+
+  const login = async () => {
+    setLoginPending(true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      toast.error("Invalid credentials");
+      setLoginPending(false);
+    }
+    // Don't reset loginPending here — onAuthStateChange will handle it on success
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setComments([]);
+    setSession(null);
   };
 
   const updateStatus = async (commentId: string, status: string) => {
@@ -110,6 +135,7 @@ const AdminComments = () => {
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
+  // Show loading spinner while checking auth
   if (authLoading) {
     return (
       <Layout>
@@ -120,6 +146,7 @@ const AdminComments = () => {
     );
   }
 
+  // Show login form — also block if loginPending (waiting for onAuthStateChange)
   if (!session) {
     return (
       <Layout>
@@ -144,12 +171,12 @@ const AdminComments = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && login()}
+              onKeyDown={(e) => e.key === "Enter" && !loginPending && email && password && login()}
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground mb-4 focus:outline-none focus:ring-2 focus:ring-ring"
               placeholder="Enter password"
             />
-            <Button onClick={login} disabled={!email || !password || loading} className="w-full">
-              {loading ? "Signing in..." : "Sign In"}
+            <Button onClick={login} disabled={!email || !password || loginPending} className="w-full">
+              {loginPending ? "Signing in..." : "Sign In"}
             </Button>
           </div>
         </div>
@@ -167,8 +194,8 @@ const AdminComments = () => {
               <h1 className="text-2xl font-bold text-foreground">Comment Moderation</h1>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={loadComments} className="gap-2">
-                <RefreshCw className="w-4 h-4" /> Refresh
+              <Button variant="outline" size="sm" onClick={loadComments} disabled={loading} className="gap-2">
+                <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} /> Refresh
               </Button>
               <Button variant="ghost" size="sm" onClick={logout} className="gap-2">
                 <LogOut className="w-4 h-4" /> Sign Out
