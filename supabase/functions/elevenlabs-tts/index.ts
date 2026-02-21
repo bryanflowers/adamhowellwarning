@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { articleSlug, articleText } = await req.json();
+    const { articleSlug, articleText, language } = await req.json();
 
     if (!articleSlug || !articleText) {
       return new Response(
@@ -21,6 +21,7 @@ Deno.serve(async (req) => {
       );
     }
 
+    const lang = language || "en";
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -47,7 +48,13 @@ Deno.serve(async (req) => {
 
     // Trim text to ~5000 chars for ElevenLabs limit
     const trimmedText = articleText.slice(0, 4900);
-    const voiceId = "JBFqnCBsd6RMkjVDRZzb"; // George - professional male voice
+
+    // Language-specific config:
+    // Thai → eleven_multilingual_v2 (supports Thai), Alice voice (good multilingual)
+    // English → eleven_turbo_v2_5 (fast, English-optimized), George voice
+    const isThai = lang === "th";
+    const voiceId = isThai ? "Xb7hH8MSUJpSbSDYk0k2" : "JBFqnCBsd6RMkjVDRZzb"; // Alice for Thai, George for English
+    const modelId = isThai ? "eleven_multilingual_v2" : "eleven_turbo_v2_5";
 
     const ttsResponse = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
@@ -59,7 +66,7 @@ Deno.serve(async (req) => {
         },
         body: JSON.stringify({
           text: trimmedText,
-          model_id: "eleven_turbo_v2_5",
+          model_id: modelId,
           voice_settings: {
             stability: 0.6,
             similarity_boost: 0.75,
