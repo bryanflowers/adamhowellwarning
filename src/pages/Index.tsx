@@ -131,7 +131,7 @@ const Index = () => {
         "author": { "@id": "https://web-rescu.lovable.app/#organization" },
         "publisher": { "@id": "https://web-rescu.lovable.app/#organization" },
         "datePublished": "2024-11-22",
-        "dateModified": "2025-02-01",
+        "dateModified": "2026-02-21",
         "mainEntityOfPage": "https://web-rescu.lovable.app",
       },
     ],
@@ -164,7 +164,7 @@ const Index = () => {
               {lang === "th" ? "คำเตือนเกี่ยวกับ Adam Howell (ชาวแคนาดา)" : "Warning about Adam Howell (Canadian)"}
             </p>
             <div className="flex items-center gap-4 text-sm opacity-60 mb-4 flex-wrap">
-              <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> {lang === "th" ? "22 พฤศจิกายน 2569" : "November 22, 2026"}</span>
+              <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> {lang === "th" ? "22 พฤศจิกายน 2567" : "November 22, 2024"}</span>
               <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {lang === "th" ? "อ่าน 25 นาที" : "25 min read"}</span>
             </div>
             <div className="mb-4">
