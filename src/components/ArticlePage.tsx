@@ -79,10 +79,10 @@ const ArticlePage = ({
   // Extract plain text from the prose content for TTS
   useEffect(() => {
     if (proseRef.current) {
-      const bodyText = proseRef.current.innerText || proseRef.current.textContent || "";
-      const header = [displayTitle, displaySubtitle].filter(Boolean).join(". ");
-      const fullText = header ? `${header}. ${bodyText}` : bodyText;
-      setArticleText(fullText.slice(0, 5000));
+      const firstHeading = proseRef.current.querySelector("h1, h2, h3, h4, h5, h6");
+      const startNode = (firstHeading || proseRef.current) as HTMLElement;
+      const bodyText = startNode.innerText || startNode.textContent || "";
+      setArticleText(bodyText.slice(0, 5000));
     }
   }, [children, displayTitle, displaySubtitle, translatedHtml]);
 

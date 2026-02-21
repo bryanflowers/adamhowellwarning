@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
     // English → eleven_turbo_v2_5 (fast, English-optimized), George voice
     const isThai = lang === "th";
     const voiceId = isThai ? "Xb7hH8MSUJpSbSDYk0k2" : "JBFqnCBsd6RMkjVDRZzb"; // Alice for Thai, George for English
-    const modelId = isThai ? "eleven_multilingual_v2" : "eleven_turbo_v2_5";
+    const modelId = isThai ? "eleven_v3" : "eleven_turbo_v2_5";
 
     const ttsResponse = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
@@ -67,6 +67,7 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           text: trimmedText,
           model_id: modelId,
+          ...(isThai && { language_code: "tha" }),
           voice_settings: {
             stability: 0.6,
             similarity_boost: 0.75,
