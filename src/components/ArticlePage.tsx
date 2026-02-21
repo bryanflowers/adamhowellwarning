@@ -77,12 +77,28 @@ const ArticlePage = ({
   }, [handleArticleClick, translatedHtml]);
 
   // Extract plain text from the prose content for TTS
+  // Use requestAnimationFrame + small delay to ensure DOM is fully painted
   useEffect(() => {
-    if (proseRef.current) {
+    let cancelled = false;
+    const extract = () => {
+      if (!proseRef.current || cancelled) return;
       const bodyText = proseRef.current.innerText || proseRef.current.textContent || "";
+      // Guard: if body text is suspiciously short, retry once after a delay
+      if (bodyText.length < 200) {
+        setTimeout(() => {
+          if (cancelled || !proseRef.current) return;
+          const retryText = proseRef.current.innerText || proseRef.current.textContent || "";
+          const prefix = [displayTitle, displaySubtitle].filter(Boolean).join(". ") + ". ";
+          setArticleText((prefix + retryText).slice(0, 5000));
+        }, 500);
+        return;
+      }
       const prefix = [displayTitle, displaySubtitle].filter(Boolean).join(". ") + ". ";
       setArticleText((prefix + bodyText).slice(0, 5000));
-    }
+    };
+    // Wait for next frame to ensure DOM is committed
+    requestAnimationFrame(() => setTimeout(extract, 50));
+    return () => { cancelled = true; };
   }, [children, displayTitle, displaySubtitle, translatedHtml]);
 
   // Fetch Thai translation — try DB cache first (instant), then edge function
