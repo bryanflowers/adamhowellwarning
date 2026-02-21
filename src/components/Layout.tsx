@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
-import { AlertTriangle, Shield, Menu, X, ArrowUp } from "lucide-react";
+import { AlertTriangle, Shield, Menu, X, ArrowUp, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 import VictimContactSlideIn from "@/components/VictimContactSlideIn";
 import ReadingProgressBar from "@/components/ReadingProgressBar";
 import GlobalSearch from "@/components/GlobalSearch";
@@ -66,6 +67,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const location = useLocation();
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -114,12 +116,27 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               </Link>
             ))}
             <GlobalSearch />
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
           </nav>
 
-          {/* Mobile menu button */}
-          <button className="lg:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          <div className="flex items-center gap-2 lg:hidden">
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+            <button className="p-2" onClick={() => setMenuOpen(!menuOpen)}>
+              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Nav */}
