@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { X, Send, ShieldAlert, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const VictimContactSlideIn = () => {
   const [visible, setVisible] = useState(false);
@@ -36,20 +38,21 @@ const VictimContactSlideIn = () => {
     if (!trimmedName || !trimmedEmail || !trimmedMessage) return;
 
     setSending(true);
-    // For now, store in localStorage until Resend is connected
     try {
-      const submissions = JSON.parse(localStorage.getItem("victim-submissions") || "[]");
-      submissions.push({
-        name: trimmedName,
-        email: trimmedEmail,
-        message: trimmedMessage,
-        date: new Date().toISOString(),
+      const { data, error } = await supabase.functions.invoke("send-victim-contact", {
+        body: { name: trimmedName, email: trimmedEmail, message: trimmedMessage },
       });
-      localStorage.setItem("victim-submissions", JSON.stringify(submissions));
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
       setSubmitted(true);
       setName("");
       setEmail("");
       setMessage("");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to send message";
+      toast.error(msg);
     } finally {
       setSending(false);
     }
