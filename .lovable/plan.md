@@ -1,115 +1,127 @@
 
 
-# Full Bug Check and UX Improvements
+# Bug Check and UX Improvements (Round 2)
 
 ## Bugs Found
 
-### 1. BUG (MEDIUM): CommentSection heading and form labels are English-only
-`CommentSection.tsx` line 78 shows `Comments (X)` and lines 104-147 have all-English text: "Leave a Comment", "Name", "Comment", "Submit Comment", "Thank you!", etc. Thai users see a jarring mix of Thai content and English comment UI.
+### 1. BUG (MEDIUM): Quiz share toast is English-only in Thai mode
+`RedFlagQuiz.tsx` line 309: `toast.success("Result copied to clipboard!")` is always English. Thai users see English toast after sharing their quiz result.
 
-**Fix:** Add Thai translations for all comment section strings using `lang` (already imported).
+**Fix:** Use `lang` to show `"คัดลอกผลลัพธ์แล้ว!"` when Thai.
 
-### 2. BUG (MEDIUM): TableOfContents heading is English-only
-`TableOfContents.tsx` line 54: `"Contents"` is hardcoded. Thai users see English.
+### 2. BUG (MEDIUM): Bingo share toast is English-only in Thai mode
+`ScamBingo.tsx` line 155: `toast.success("Copied to clipboard!")` is always English.
 
-**Fix:** Import `useLanguage` and show "สารบัญ" when Thai.
+**Fix:** Use `lang` to show `"คัดลอกแล้ว!"` when Thai.
 
-### 3. BUG (MEDIUM): ShareButtons "Copy Link" toast is English-only
-`ShareButtons.tsx` line 19: `toast.success("Link copied to clipboard")` is always English. Line 42: `"Copy Link"` button text is English.
+### 3. BUG (MEDIUM): Quiz questions and scenarios are English-only
+`RedFlagQuiz.tsx` lines 19-130: All 10 quiz questions (scenarios, options, explanations) are hardcoded in English. Thai users taking the quiz see 100% English content despite the rest of the UI being localized.
 
-**Fix:** Use `lang` to show Thai toast and button text.
+**Fix:** This is a large localization task. For now, add a notice banner when `lang === "th"` explaining that quiz content is currently only available in English, rather than leaving users confused.
 
-### 4. BUG (LOW): GlobalSearch "No results found" is English-only
-`GlobalSearch.tsx` line 119: `"No results found"` is hardcoded in English.
+### 4. BUG (MEDIUM): Bingo share text is always English
+`ScamBingo.tsx` line 149: The share text `"BINGO! I spotted X scam red flags..."` is hardcoded in English.
 
-**Fix:** Show Thai text when `lang === "th"`.
+**Fix:** Use Thai share text when `lang === "th"`.
 
-### 5. BUG (LOW): Music page "No favorites yet" is English-only
-`Music.tsx` line 276-277: The empty favorites message is hardcoded in English.
+### 5. BUG (LOW): Quiz rating labels and descriptions are English-only
+`RedFlagQuiz.tsx` lines 132-138: `getRating()` returns English labels ("Elite Scam Detective", "Sharp Investor", etc.) regardless of language.
 
-**Fix:** Use `lang` to show Thai translation.
+**Fix:** Add Thai translations for the 4 rating tiers.
 
-### 6. BUG (LOW): ArticleNarration toast errors are English-only
-`ArticleNarration.tsx` lines 71 and 87: `toast.error("Failed to generate audio narration")` and `toast.error("Audio playback failed")` are always English.
+### 6. BUG (LOW): Quiz share text is English-only
+`RedFlagQuiz.tsx` line 304: `"I scored X% on the Spot the Red Flag crypto quiz!"` is always English.
 
-**Fix:** Use `language` prop to show Thai error messages.
+**Fix:** Use Thai text when `lang === "th"`.
 
-### 7. BUG (LOW): Music page track error toast is English-only
-`Music.tsx` line 193: `toast.error("Track failed to load, skipping...")` is English.
+### 7. BUG (LOW): "Generating..." label on Music tracks is English-only
+`Music.tsx` line 315: `"Generating..."` is hardcoded. Thai users see English on disabled track cards.
 
-**Fix:** Use `lang` for Thai text.
+**Fix:** Show `"กำลังสร้าง..."` when Thai.
+
+### 8. BUG (LOW): Music "Shuffle" label is partially English
+`Music.tsx` line 269: `Shuffle {shuffleMode ? tr.shuffleOn : tr.shuffleOff}` — the word "Shuffle" itself is hardcoded English.
+
+**Fix:** Add a `shuffle` key to the translation object, or inline Thai text.
+
+### 9. BUG (LOW): Blog article content (HTML) is English-only
+`BlogPost.tsx` line 50: Blog article content is rendered via `dangerouslySetInnerHTML` from `article.content` which is always English. Unlike the investigative articles, blog posts have no translation mechanism.
+
+**Fix:** This is a structural limitation (blog content would need a translation pipeline). Add an "English only" notice when Thai is active, similar to the quiz.
+
+### 10. BUG (LOW): VictimContactSlideIn error message fallback is English
+`VictimContactSlideIn.tsx` line 119: The catch block uses `"Failed to send message"` as a fallback error message in English.
+
+**Fix:** Use Thai fallback when `lang === "th"`.
 
 ---
 
 ## UX Improvements
 
-### 8. UX (MEDIUM): No keyboard Escape to close VictimContactSlideIn modal
-The victim contact modal (`VictimContactSlideIn.tsx`) doesn't handle Escape key. The ImageLightbox handles it, and the search handles it, but this modal does not. Users who open the form expect Escape to close it.
+### 11. UX (MEDIUM): Body scroll not locked when VictimContactSlideIn modal is open
+When the victim contact form modal opens (line 169), the background page is still scrollable. The `ImageLightbox` correctly locks scroll with `document.body.style.overflow = "hidden"` but the victim contact modal does not.
 
-**Fix:** Add a `useEffect` with keydown listener for Escape when `formOpen` is true.
+**Fix:** Add `document.body.style.overflow = "hidden"` when `formOpen` is true, restore on close.
 
-### 9. UX (MEDIUM): TableOfContents and VictimContactSlideIn overlap
-Both are fixed-positioned at `bottom-24 left-4` (TOC line 50) and `bottom-24 left-4` (VictimContactSlideIn line 113). On pages with long articles, both render at the same position and overlap.
+### 12. UX (MEDIUM): No focus trap in VictimContactSlideIn modal
+When the modal is open, users can tab out of the modal to interact with background elements. This is an accessibility issue.
 
-**Fix:** Move the TOC button to `bottom-24 left-20` (or `left-[4.5rem]`) when the victim CTA is also visible, or position the TOC slightly higher to avoid collision.
+**Fix:** Auto-focus the first input when the modal opens (using a ref + useEffect).
 
-### 10. UX (LOW): No email validation on VictimContactSlideIn
-`VictimContactSlideIn.tsx` line 84 checks for empty fields but doesn't validate the email format. Users could submit "abc" as an email, making responses impossible.
+### 13. UX (LOW): "FREE SPACE" in Bingo is always English
+`ScamBingo.tsx` line 76: `result[FREE_SPACE_INDEX] = "FREE SPACE"` is hardcoded. Although the `localizeSquare` function maps it via `bingoSquaresTh`, the original string "FREE SPACE" is set before localization and doesn't include the emoji consistently.
 
-**Fix:** Add a basic email regex check before submission and show an error toast if invalid.
+**Fix:** Already handled by `localizeSquare()` and the translation map has `"FREE SPACE 🎯": "ช่องฟรี 🎯"` — this is actually working. No fix needed.
+
+### 14. UX (LOW): ErrorBoundary "Go Home" button is English-only
+`ErrorBoundary.tsx` line 33: `"Something went wrong"` and line 45: `"Go Home"` are hardcoded English. If a Thai user hits an error, they see English.
+
+**Fix:** Since ErrorBoundary is a class component without hooks, check `window.location.pathname` to determine language and show Thai text.
 
 ---
 
 ## Implementation Plan
 
-### Step 1: Localize CommentSection
-**File:** `src/components/CommentSection.tsx`
-Add Thai text for: heading ("ความคิดเห็น"), "Loading comments...", "No comments yet...", "Leave a Comment", "Name", "Comment", "Submit Comment", "Submitting...", thank-you message, and review notice.
+### Step 1: Localize Quiz toasts, share text, and rating labels
+**File:** `src/pages/RedFlagQuiz.tsx`
+- Add Thai text for `toast.success` (line 309)
+- Add Thai share text (line 304)
+- Add Thai rating labels in `getRating()` (lines 132-138)
+- Add an "English only" notice banner for quiz content when Thai
 
-### Step 2: Localize TableOfContents
-**File:** `src/components/TableOfContents.tsx`
-Import `useLanguage`, show "สารบัญ" for Thai.
+### Step 2: Localize Bingo share text and toast
+**File:** `src/pages/ScamBingo.tsx`
+- Add Thai share text (line 149)
+- Add Thai `toast.success` (line 155)
 
-### Step 3: Localize ShareButtons
-**File:** `src/components/ShareButtons.tsx`
-Use `lang` to show Thai toast message and "คัดลอกลิงก์" button text.
-
-### Step 4: Localize GlobalSearch empty state
-**File:** `src/components/GlobalSearch.tsx`
-Show "ไม่พบผลลัพธ์" when Thai.
-
-### Step 5: Localize Music page empty favorites
+### Step 3: Localize Music remaining English strings
 **File:** `src/pages/Music.tsx`
-Use `lang` for Thai empty-favorites text.
+- Translate "Generating..." (line 315) and "Shuffle" label (line 269)
 
-### Step 6: Localize ArticleNarration error toasts
-**File:** `src/components/ArticleNarration.tsx`
-Use `language` prop for Thai error messages.
-
-### Step 7: Localize Music track error toast
-**File:** `src/pages/Music.tsx`
-Use `lang` for Thai track error toast.
-
-### Step 8: Add Escape key to VictimContactSlideIn
+### Step 4: Fix VictimContactSlideIn error fallback + body scroll lock
 **File:** `src/components/VictimContactSlideIn.tsx`
-Add `useEffect` listening for Escape key when `formOpen` is true.
+- Localize error fallback (line 119)
+- Add body scroll lock when `formOpen` is true
+- Auto-focus first input on modal open
 
-### Step 9: Fix TOC/VictimCTA overlap
-**File:** `src/components/TableOfContents.tsx`
-Change position from `bottom-24 left-4` to `bottom-40 left-4` to stack above the victim CTA area.
+### Step 5: Add English-only notice on blog posts when Thai
+**File:** `src/pages/BlogPost.tsx`
+- Add a small info banner above blog content when `lang === "th"` indicating content is in English only
 
-### Step 10: Add email validation to VictimContactSlideIn
-**File:** `src/components/VictimContactSlideIn.tsx`
-Add simple email format validation before submission with Thai/English error toast.
+### Step 6: Localize ErrorBoundary
+**File:** `src/components/ErrorBoundary.tsx`
+- Check `window.location.pathname` for `/th` prefix
+- Show Thai text for heading and button
 
 ---
 
-## Files to modify (7 files):
-- `src/components/CommentSection.tsx` -- Full Thai localization
-- `src/components/TableOfContents.tsx` -- Localize heading + fix position
-- `src/components/ShareButtons.tsx` -- Localize toast and button text
-- `src/components/GlobalSearch.tsx` -- Localize empty state
-- `src/components/ArticleNarration.tsx` -- Localize error toasts
-- `src/components/VictimContactSlideIn.tsx` -- Escape key + email validation
-- `src/pages/Music.tsx` -- Localize empty favorites + error toast
+## Technical Details
+
+### Files to modify (6 files):
+- `src/pages/RedFlagQuiz.tsx` — Quiz localization (toasts, share, ratings, notice)
+- `src/pages/ScamBingo.tsx` — Bingo localization (share, toast)
+- `src/pages/Music.tsx` — "Generating..." and "Shuffle" labels
+- `src/components/VictimContactSlideIn.tsx` — Error fallback, scroll lock, auto-focus
+- `src/pages/BlogPost.tsx` — English-only notice for Thai users
+- `src/components/ErrorBoundary.tsx` — Thai error page text
 
