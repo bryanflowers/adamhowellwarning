@@ -24,6 +24,7 @@ const InvestigativeUpdateSuperdoge = () => {
         subtitle="A revealing 2021 podcast appearance showcases Howell's tactics — hiding behind anonymity, dragging credible figures, and warning about scams to position himself as trustworthy."
         date="January 29, 2026"
         readTime="15 min read"
+        translatable
       >
         <p>
           In our ongoing investigation into Adam Howell's pattern of crypto ventures—marked by hype, fundraising, abandonment, and allegations of scams—we turn to a revealing 2021 podcast appearance that showcases his tactics. Adam Howell, the Thailand-based Canadian founder of DopeCoin and other failed projects like Smoke Exchange and CryptoBillings, appeared anonymously on <em>The Bad Crypto Podcast</em> as the "King of SuperDoge" to promote his latest scheme: SuperDoge, an NFT-backed animated series pitched as a comedic bridge between crypto and mainstream entertainment. The episode, titled "Is SuperDoge the Next Shib?" (aired November 10, 2021), reveals Howell as a masterful storyteller who drags credible figures into his web, hides behind anonymity to evade scrutiny, and warns about "rug pulls and scams" to position himself as a trustworthy innovator—all while delivering what appears to be a load of unfulfilled promises.

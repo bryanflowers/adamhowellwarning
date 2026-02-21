@@ -24,6 +24,7 @@ const InvestigativeReportUncovering = () => {
         subtitle="Mapping out Adam Howell's history through public records, forum archives, crypto news sites, social media, and whistleblower accounts."
         date="January 28, 2026"
         readTime="20 min read"
+        translatable
       >
         <p>
           As an investigative reporter with a focus on financial fraud and emerging tech scams, I've spent the past several days diving deep into public records, forum archives, crypto news sites, social media, and whistleblower accounts to map out Adam Howell's history. Howell, a Canadian entrepreneur now reportedly based in Thailand, has positioned himself as a "serial entrepreneur" and early crypto innovator. However, a pattern emerges: unfinished projects, overhyped fundraising, abandoned communities, and allegations of outright scams. He boasts of founding the 103rd crypto listed on CoinMarketCap (DopeCoin in 2014), but his track record is riddled with failures and red flags.

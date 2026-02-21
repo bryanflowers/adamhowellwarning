@@ -24,6 +24,7 @@ const KeithShingletonDavidEdwards = () => {
         subtitle="Examining the inner circle and mechanisms behind the alleged scams — from co-authored whitepapers to unverified LinkedIn achievements."
         date="January 29, 2026"
         readTime="18 min read"
+        translatable
       >
         <p>
           As our investigation into Canadian entrepreneur Adam Howell's web of crypto ventures deepens, a clearer picture emerges of his inner circle and the mechanisms behind his alleged scams. Howell, the founder of DopeCoin and several other failed projects, has a history of hyping cannabis-themed cryptocurrencies, raising funds, and abandoning communities amid accusations of rug pulls and non-delivery. Central to this operation is Keith Shingleton, often described as Howell's right-hand man who operates largely in the shadows—handling sales, marketing, and operations without always appearing on official team lists. Shingleton's involvement spans multiple ventures, from co-authoring whitepapers to boasting about unverified achievements on LinkedIn. Joining this circle is David Edwards, a UK-based digital marketer whose community management role in Howell's projects has evolved into promoting his own potentially scam-like service, EZi Gold, through abandoned DopeCoin channels.

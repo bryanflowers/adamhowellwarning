@@ -15,10 +15,11 @@ interface ArticlePageProps {
   subtitle?: string;
   date?: string;
   readTime?: string;
+  translatable?: boolean;
   children: React.ReactNode;
 }
 
-const ArticlePage = ({ title, subtitle, date, readTime, children }: ArticlePageProps) => {
+const ArticlePage = ({ title, subtitle, date, readTime, translatable = false, children }: ArticlePageProps) => {
   const location = useLocation();
   const { lang } = useLanguage();
   const articleSlug = location.pathname;
@@ -62,7 +63,7 @@ const ArticlePage = ({ title, subtitle, date, readTime, children }: ArticlePageP
 
   // Fetch Thai translation when language is Thai
   useEffect(() => {
-    if (lang !== "th") {
+    if (lang !== "th" || !translatable) {
       setTranslatedHtml(null);
       setTranslationError(false);
       return;

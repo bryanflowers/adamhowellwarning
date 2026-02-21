@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Link } from "react-router-dom";
-import { AlertTriangle, FileText, ArrowRight, Shield, Eye, Calendar, Clock } from "lucide-react";
+import { AlertTriangle, FileText, ArrowRight, Shield, Eye, Calendar, Clock, Globe } from "lucide-react";
 import { blogArticles } from "@/data/blogArticles";
 import ShareButtons from "@/components/ShareButtons";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -15,6 +15,8 @@ import adamHowellPassport from "@/assets/adam-howell-passport.jpeg";
 import adamHowellRebillChat from "@/assets/adam-howell-rebill-chat.jpeg";
 import adamHowellDmca from "@/assets/adam-howell-dmca-request.jpg";
 import drummondDopecoinComment from "@/assets/drummond-dopecoin-comment.jpeg";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const PROSE_CLASSES = "prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h4:text-lg prose-p:leading-relaxed prose-p:text-muted-foreground prose-strong:text-foreground prose-li:text-muted-foreground prose-blockquote:border-primary prose-blockquote:text-muted-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline";
 
@@ -23,6 +25,9 @@ const Index = () => {
   const tr = t[lang];
   const localArticles = articlesMeta[lang];
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
+  const proseRef = useRef<HTMLDivElement>(null);
+  const [translatedHtml, setTranslatedHtml] = useState<string | null>(null);
+  const [translating, setTranslating] = useState(false);
 
   const handleArticleClick = useCallback((e: MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -44,6 +49,38 @@ const Index = () => {
       container?.removeEventListener("click", handleArticleClick as EventListener);
     };
   }, [handleArticleClick]);
+
+  // Translate Index page prose when in Thai
+  useEffect(() => {
+    if (lang !== "th") {
+      setTranslatedHtml(null);
+      return;
+    }
+    const fetchTranslation = async () => {
+      setTranslating(true);
+      try {
+        const proseEl = proseRef.current;
+        if (!proseEl) { setTranslating(false); return; }
+        const englishHtml = proseEl.innerHTML;
+
+        const { data, error } = await supabase.functions.invoke("translate-article", {
+          body: { slug: "/", html: englishHtml, targetLang: "th" },
+        });
+
+        if (error || !data?.translated_html) {
+          console.error("Index translation error:", error);
+        } else {
+          setTranslatedHtml(data.translated_html);
+        }
+      } catch (err) {
+        console.error("Index translation fetch error:", err);
+      } finally {
+        setTranslating(false);
+      }
+    };
+    const timer = setTimeout(fetchTranslation, 500);
+    return () => clearTimeout(timer);
+  }, [lang]);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -109,9 +146,35 @@ const Index = () => {
       </section>
 
       {/* Main Article Content */}
+      {translating && lang === "th" ? (
+        <div className="container mx-auto px-4 max-w-4xl py-12">
+          <div className="flex items-center gap-3 text-muted-foreground mb-6">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary" />
+            <span className="text-sm">กำลังแปลบทความ... Translating article...</span>
+          </div>
+          <Skeleton className="h-6 w-3/4 mb-4" />
+          <Skeleton className="h-4 w-full mb-2" />
+          <Skeleton className="h-4 w-full mb-2" />
+          <Skeleton className="h-4 w-5/6 mb-6" />
+          <Skeleton className="h-6 w-2/3 mb-4" />
+          <Skeleton className="h-4 w-full mb-2" />
+          <Skeleton className="h-4 w-4/5" />
+        </div>
+      ) : lang === "th" && translatedHtml ? (
+        <article className="py-12 md:py-16">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="flex items-center gap-2 mb-4 px-3 py-1.5 bg-muted/50 rounded-md text-xs text-muted-foreground w-fit">
+              <Globe className="w-3 h-3" />
+              แปลอัตโนมัติ · Auto-translated
+            </div>
+            <div className={PROSE_CLASSES} dangerouslySetInnerHTML={{ __html: translatedHtml }} />
+          </div>
+        </article>
+      ) : (
+      <>
       <article className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-4xl">
-          <div className={PROSE_CLASSES}>
+          <div ref={proseRef} className={PROSE_CLASSES}>
 
             <p>
               This website has been established to provide risk-mitigation intelligence regarding Adam Howell, a Canadian national with a documented history of online harassment, reputational attacks, fabricated allegations, and financially motivated disinformation campaigns. Adam Howell has recently been paying Andrew Drummond to attack several business owners and people's families.
@@ -360,6 +423,8 @@ const Index = () => {
           </div>
         </div>
       </article>
+      </>
+      )}
 
       {/* Articles Section */}
       <section className="py-16 bg-secondary/30">

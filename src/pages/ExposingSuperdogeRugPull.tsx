@@ -29,6 +29,7 @@ const ExposingSuperdogeRugPull = () => {
         subtitle="Dissecting how SuperDoge operated, the key players involved, the red flags of a classic rug pull, and a conservative estimate of how much the developers may have extracted."
         date="January 12, 2026"
         readTime="35 min read"
+        translatable
       >
         <figure className="my-8">
           <img src={drummondSuperdogeDefense} alt="Andrew Drummond defending Adam Howell's SuperDoge launch" className="rounded-lg shadow-lg max-w-[450px] w-full" />
