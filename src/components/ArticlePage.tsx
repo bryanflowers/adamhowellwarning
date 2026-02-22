@@ -89,12 +89,14 @@ const ArticlePage = ({
           if (cancelled || !proseRef.current) return;
           const retryText = proseRef.current.innerText || proseRef.current.textContent || "";
           const prefix = [displayTitle, displaySubtitle].filter(Boolean).join(". ") + ". ";
-          setArticleText((prefix + retryText).slice(0, 5000));
+          const maxLen = lang === "th" ? 5000 : 50000;
+          setArticleText((prefix + retryText).slice(0, maxLen));
         }, 500);
         return;
       }
       const prefix = [displayTitle, displaySubtitle].filter(Boolean).join(". ") + ". ";
-      setArticleText((prefix + bodyText).slice(0, 5000));
+      const maxLen2 = lang === "th" ? 5000 : 50000;
+      setArticleText((prefix + bodyText).slice(0, maxLen2));
     };
     // Wait for next frame to ensure DOM is committed
     requestAnimationFrame(() => setTimeout(extract, 50));

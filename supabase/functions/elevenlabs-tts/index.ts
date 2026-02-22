@@ -6,6 +6,43 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+/** Split text into chunks of ~maxLen chars at sentence boundaries */
+function splitIntoChunks(text: string, maxLen = 4500): string[] {
+  if (text.length <= maxLen) return [text];
+
+  const chunks: string[] = [];
+  let remaining = text;
+
+  while (remaining.length > 0) {
+    if (remaining.length <= maxLen) {
+      chunks.push(remaining);
+      break;
+    }
+
+    // Find last sentence boundary within maxLen
+    const window = remaining.slice(0, maxLen);
+    let splitIdx = -1;
+    for (const sep of [". ", "! ", "? "]) {
+      const idx = window.lastIndexOf(sep);
+      if (idx > splitIdx) splitIdx = idx + sep.length;
+    }
+
+    // Fallback to last space
+    if (splitIdx <= 0) {
+      splitIdx = window.lastIndexOf(" ");
+    }
+    // Last resort: hard cut
+    if (splitIdx <= 0) {
+      splitIdx = maxLen;
+    }
+
+    chunks.push(remaining.slice(0, splitIdx).trimEnd());
+    remaining = remaining.slice(splitIdx).trimStart();
+  }
+
+  return chunks;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -40,62 +77,91 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Generate audio via ElevenLabs
     const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
     if (!ELEVENLABS_API_KEY) {
       throw new Error("ELEVENLABS_API_KEY is not configured");
     }
 
-    // Log text length for debugging
-    console.log(`TTS request: slug=${articleSlug}, lang=${lang}, text length=${articleText.length}`);
-    // Trim text to ~5000 chars for ElevenLabs limit
-    const trimmedText = articleText.slice(0, 4900);
-    console.log(`Trimmed text first 200 chars: ${trimmedText.slice(0, 200)}`);
-
-    // Language-specific config:
-    // Thai → eleven_multilingual_v2 (supports Thai), Alice voice (good multilingual)
-    // English → eleven_turbo_v2_5 (fast, English-optimized), George voice
     const isThai = lang === "th";
-    const voiceId = isThai ? "Xb7hH8MSUJpSbSDYk0k2" : "JBFqnCBsd6RMkjVDRZzb"; // Alice for Thai, George for English
+    const voiceId = isThai ? "Xb7hH8MSUJpSbSDYk0k2" : "JBFqnCBsd6RMkjVDRZzb";
     const modelId = isThai ? "eleven_v3" : "eleven_turbo_v2_5";
 
-    const ttsResponse = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
-      {
-        method: "POST",
-        headers: {
-          "xi-api-key": ELEVENLABS_API_KEY,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: trimmedText,
-          model_id: modelId,
-          // v3 auto-detects language, no language_code needed
-          ...(!isThai && {
-            voice_settings: {
-              stability: 0.6,
-              similarity_boost: 0.75,
-              style: 0.3,
-              use_speaker_boost: true,
-            },
-          }),
-        }),
-      }
-    );
+    // Thai: single chunk capped at 4900 chars
+    // English: use request stitching for long text
+    const fullText = isThai ? articleText.slice(0, 4900) : articleText;
+    const chunks = isThai ? [fullText] : splitIntoChunks(fullText, 4500);
 
-    if (!ttsResponse.ok) {
-      const errText = await ttsResponse.text();
-      console.error("ElevenLabs error:", ttsResponse.status, errText);
-      throw new Error(`ElevenLabs API error: ${ttsResponse.status}`);
+    console.log(`TTS request: slug=${articleSlug}, lang=${lang}, text length=${articleText.length}, chunks=${chunks.length}`);
+
+    // Generate audio for each chunk (sequentially for ordering, with stitching context)
+    const audioBuffers: ArrayBuffer[] = [];
+
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i];
+      const body: Record<string, unknown> = {
+        text: chunk,
+        model_id: modelId,
+      };
+
+      // Request stitching context for English multi-chunk
+      if (!isThai && chunks.length > 1) {
+        if (i > 0) {
+          body.previous_text = chunks[i - 1].slice(-200);
+        }
+        if (i < chunks.length - 1) {
+          body.next_text = chunks[i + 1].slice(0, 200);
+        }
+      }
+
+      // Voice settings for English
+      if (!isThai) {
+        body.voice_settings = {
+          stability: 0.6,
+          similarity_boost: 0.75,
+          style: 0.3,
+          use_speaker_boost: true,
+        };
+      }
+
+      console.log(`Generating chunk ${i + 1}/${chunks.length}, length=${chunk.length}`);
+
+      const ttsResponse = await fetch(
+        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
+        {
+          method: "POST",
+          headers: {
+            "xi-api-key": ELEVENLABS_API_KEY,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      if (!ttsResponse.ok) {
+        const errText = await ttsResponse.text();
+        console.error(`ElevenLabs error on chunk ${i + 1}:`, ttsResponse.status, errText);
+        throw new Error(`ElevenLabs API error on chunk ${i + 1}: ${ttsResponse.status}`);
+      }
+
+      audioBuffers.push(await ttsResponse.arrayBuffer());
     }
 
-    const audioBuffer = await ttsResponse.arrayBuffer();
+    // Concatenate all MP3 buffers
+    const totalLength = audioBuffers.reduce((sum, buf) => sum + buf.byteLength, 0);
+    const combined = new Uint8Array(totalLength);
+    let offset = 0;
+    for (const buf of audioBuffers) {
+      combined.set(new Uint8Array(buf), offset);
+      offset += buf.byteLength;
+    }
+
+    console.log(`Combined audio: ${audioBuffers.length} chunks, ${totalLength} bytes`);
 
     // Upload to storage
     const fileName = `${articleSlug.replace(/\//g, "_").replace(/^_/, "")}.mp3`;
     const { error: uploadError } = await supabase.storage
       .from("article-audio")
-      .upload(fileName, audioBuffer, {
+      .upload(fileName, combined.buffer, {
         contentType: "audio/mpeg",
         upsert: true,
       });
