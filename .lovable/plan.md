@@ -1,47 +1,72 @@
 
 
-# Fix Thai Audio: Prevent Narration Until Translation is Ready
+# Implement Request Stitching for Full English Article Narration
 
-## Root Cause
+## Problem
+English articles are capped at 5,000 characters (~5-7 minutes of audio), meaning longer articles get cut off. ElevenLabs has a per-request text limit, so sending the full article in one call won't work.
 
-When visiting a Thai article page, this sequence happens:
+## Solution
+Use ElevenLabs **request stitching** -- split the article into chunks at sentence boundaries, generate audio for each chunk with `previous_text`/`next_text` context for smooth transitions, then concatenate the MP3 buffers into a single file. Thai audio stays unchanged (single chunk, 5000 char limit).
 
-1. Page renders with English `children` in the prose container
-2. `articleText` is extracted: **Thai title + English body** (because the translation hasn't loaded yet)
-3. Narration button appears immediately (since `translating` stays `false` when cache hits)
-4. Translation loads from cache (after ~100ms) and prose re-renders with Thai content
-5. `articleText` updates to Thai title + Thai body
+## Changes
 
-The problem: the narration button is visible and clickable between steps 2-4 with **wrong content**. Even without clicking, the `ArticleNarration` component checks its own audio cache on mount, and if the user clicks "Listen" before step 5 completes, the audio is generated from English body text with a Thai title prefix.
+### 1. Client Side: Remove 5000 char cap for English (`src/components/ArticlePage.tsx`)
 
-## Fix
+- Change the `.slice(0, 5000)` text extraction to send the **full article text** for English
+- Keep a reasonable upper bound (e.g. 50,000 chars) to avoid abuse
+- Thai articles keep the 5000 char limit since they use a different, more expensive model
 
-### 1. Add a "translation ready" guard (`src/components/ArticlePage.tsx`)
+Lines ~92 and ~97: change `.slice(0, 5000)` to send full text (or a much higher limit like 50,000).
 
-Change the narration button condition from:
+### 2. Edge Function: Implement Stitching (`supabase/functions/elevenlabs-tts/index.ts`)
+
+The core logic change:
+
+- **For English text over 4,500 chars**: Split into chunks of ~4,500 chars at sentence boundaries (`. `, `! `, `? `)
+- **Generate audio for each chunk** in parallel, passing `previous_text` (last ~200 chars of prior chunk) and `next_text` (first ~200 chars of next chunk) for natural prosody
+- **Concatenate** all MP3 ArrayBuffers into a single file before uploading to storage
+- **For Thai or short English text**: Keep existing single-request behavior
+
+```text
+Flow:
+  Full text (e.g. 15,000 chars)
+       |
+  Split into chunks at sentence boundaries
+       |
+  [Chunk 1: 4500 chars] [Chunk 2: 4500 chars] [Chunk 3: 4500 chars] [Chunk 4: 1500 chars]
+       |                      |                      |                      |
+  TTS request            TTS request            TTS request            TTS request
+  (next_text=...)        (prev+next)            (prev+next)            (prev_text=...)
+       |                      |                      |                      |
+       v                      v                      v                      v
+  [MP3 buffer 1]         [MP3 buffer 2]         [MP3 buffer 3]         [MP3 buffer 4]
+       |
+  Concatenate all buffers
+       |
+  Single MP3 file -> Upload to storage -> Cache in DB
 ```
-articleText && !(lang === "th" && translating)
-```
-to:
-```
-articleText && !(lang === "th" && translatable && !translatedHtml)
-```
 
-This hides the narration button on Thai translatable pages until `translatedHtml` is actually set -- not just until `translating` is false. The button will only appear once the Thai content is rendered in the prose and `articleText` has been re-extracted from the Thai DOM.
+### 3. Delete stale English audio cache
 
-### 2. Delete the stale Thai audio cache (database)
+Delete the cached audio for `/unmasking-adam-howell-the-serial-scammer-extortionist-and-crypto-fraudster-a-warning-to-investors` so it regenerates with full stitching.
 
-Remove the incorrectly cached Thai audio:
-```sql
-DELETE FROM article_audio
-WHERE article_slug = '/th/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned';
-```
+## Technical Details
 
-Also delete the mp3 file from storage bucket `article-audio` with key `th_exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned.mp3`.
+### Chunk splitting function
+- Target ~4,500 chars per chunk
+- Split at sentence endings (`. `, `? `, `! `) to avoid mid-word cuts
+- If no sentence boundary found, fall back to splitting at the nearest space
 
-## Summary
-- 1 line changed in `ArticlePage.tsx` (line 202)
-- 1 database row deleted
-- 1 storage file deleted
-- After the fix, the "Listen" button on Thai pages only appears once the Thai translation is loaded and the text has been re-extracted from the translated content
+### Request stitching parameters
+- `previous_text`: Last ~200 chars of the previous chunk (provides prosody context)
+- `next_text`: First ~200 chars of the next chunk (provides prosody context)
+- First chunk: no `previous_text`; last chunk: no `next_text`
+
+### MP3 concatenation
+- MP3 is a frame-based format -- raw concatenation of MP3 buffers produces valid playback
+- Simply combine all ArrayBuffers sequentially into one before uploading
+
+### Files modified
+- `supabase/functions/elevenlabs-tts/index.ts` -- stitching logic
+- `src/components/ArticlePage.tsx` -- remove 5000 char cap for English
 
