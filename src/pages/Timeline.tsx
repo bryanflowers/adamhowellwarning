@@ -134,8 +134,8 @@ const Timeline = () => {
           breadcrumb: {
             "@type": "BreadcrumbList",
             itemListElement: [
-              { "@type": "ListItem", position: 1, name: lang === "th" ? "หน้าแรก" : "Home", item: `https://web-rescu.lovable.app${lang === "th" ? "/th" : ""}` },
-              { "@type": "ListItem", position: 2, name: lang === "th" ? "ไทม์ไลน์" : "Timeline", item: `https://web-rescu.lovable.app${lang === "th" ? "/th" : ""}/timeline` },
+              { "@type": "ListItem", position: 1, name: lang === "th" ? "หน้าแรก" : "Home", item: `https://adamhowellwarning.com${lang === "th" ? "/th" : ""}` },
+              { "@type": "ListItem", position: 2, name: lang === "th" ? "ไทม์ไลน์" : "Timeline", item: `https://adamhowellwarning.com${lang === "th" ? "/th" : ""}/timeline` },
             ],
           },
         }}

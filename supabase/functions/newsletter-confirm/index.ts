@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
         });
       }
 
-      const confirmUrl = `https://web-rescu.lovable.app/confirm-newsletter?token=${subscriber.confirmation_token}`;
+      const confirmUrl = `https://adamhowellwarning.com/confirm-newsletter?token=${subscriber.confirmation_token}`;
 
       const emailRes = await fetch("https://api.resend.com/emails", {
         method: "POST",
@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
           Authorization: `Bearer ${resendKey}`,
         },
         body: JSON.stringify({
-          from: "Adam Howell Warning <noreply@web-rescu.lovable.app>",
+          from: "Adam Howell Warning <noreply@adamhowellwarning.com>",
           to: [email],
           subject: "Confirm Your Newsletter Subscription",
           html: `

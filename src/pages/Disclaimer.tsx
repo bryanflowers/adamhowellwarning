@@ -3,7 +3,7 @@ import SEOHead from "@/components/SEOHead";
 import { useLanguage } from "@/hooks/useLanguage";
 import { PROSE_CLASSES } from "@/lib/constants";
 
-const BASE_URL = "https://web-rescu.lovable.app";
+const BASE_URL = "https://adamhowellwarning.com";
 
 const content = {
   en: {

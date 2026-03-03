@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
 
-const BASE_URL = "https://web-rescu.lovable.app";
+const BASE_URL = "https://adamhowellwarning.com";
 
 interface SEOHeadProps {
   title: string;

@@ -15,7 +15,7 @@ const UnmaskingAdamHowell = () => {
     "publisher": { "@type": "Organization", "name": "Adam Howell Warning" },
     "datePublished": "2024-06-15",
     "dateModified": "2026-02-01",
-    "mainEntityOfPage": "https://web-rescu.lovable.app/unmasking-adam-howell-the-serial-scammer-extortionist-and-crypto-fraudster-a-warning-to-investors",
+    "mainEntityOfPage": "https://adamhowellwarning.com/unmasking-adam-howell-the-serial-scammer-extortionist-and-crypto-fraudster-a-warning-to-investors",
   };
 
   return (

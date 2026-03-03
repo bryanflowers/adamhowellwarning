@@ -18,7 +18,7 @@ const InvestigativeReportUncovering = () => {
           "datePublished": "2026-01-28",
           "dateModified": "2026-02-01",
           "author": { "@type": "Organization", "name": "Adam Howell Warning" },
-          "mainEntityOfPage": "https://web-rescu.lovable.app/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond",
+          "mainEntityOfPage": "https://adamhowellwarning.com/investigative-report-uncovering-the-trail-of-adam-howells-ventures-in-crypto-and-beyond",
         }}
       />
       <ArticlePage
