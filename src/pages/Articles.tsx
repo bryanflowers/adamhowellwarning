@@ -48,7 +48,7 @@ const Articles = () => {
               "@type": "ListItem",
               "position": index + 1,
               "name": article.title,
-              "url": `https://web-rescu.lovable.app${article.slug}`,
+              "url": `https://adamhowellwarning.com${article.slug}`,
             })),
           },
         }}

@@ -23,7 +23,7 @@ const ExposingSuperdogeRugPull = () => {
           "datePublished": "2026-01-12",
           "dateModified": "2026-02-01",
           "author": { "@type": "Organization", "name": "Adam Howell Warning" },
-          "mainEntityOfPage": "https://web-rescu.lovable.app/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned",
+          "mainEntityOfPage": "https://adamhowellwarning.com/exposing-the-superdoge-rug-pull-adam-howells-latest-crypto-scheme-and-the-millions-potentially-siphoned",
         }}
       />
       <ArticlePage

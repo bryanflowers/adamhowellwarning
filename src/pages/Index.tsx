@@ -109,18 +109,18 @@ const Index = () => {
       {
         "@type": "WebSite",
         "name": "Adam Howell Warning",
-        "url": "https://web-rescu.lovable.app",
+        "url": "https://adamhowellwarning.com",
         "description": "Documented evidence and investigative reports exposing Adam Howell's crypto fraud, rug pulls, and extortion schemes.",
-        "publisher": { "@id": "https://web-rescu.lovable.app/#organization" },
+        "publisher": { "@id": "https://adamhowellwarning.com/#organization" },
       },
       {
         "@type": "Organization",
-        "@id": "https://web-rescu.lovable.app/#organization",
+        "@id": "https://adamhowellwarning.com/#organization",
         "name": "Adam Howell Warning",
-        "url": "https://web-rescu.lovable.app",
+        "url": "https://adamhowellwarning.com",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://web-rescu.lovable.app/og-adam-howell.png",
+          "url": "https://adamhowellwarning.com/og-adam-howell.png",
         },
         "sameAs": [
           "https://twitter.com/adamhowellwarning",
@@ -130,11 +130,11 @@ const Index = () => {
         "@type": "Article",
         "headline": "Conduct Profile of Adam Howell – Birthdate 2nd of March 1982",
         "description": "Documented evidence exposing Adam Howell's crypto fraud, SuperDoge rug pull, DopeCoin pump-and-dump, extortion schemes, and defamation campaigns.",
-        "author": { "@id": "https://web-rescu.lovable.app/#organization" },
-        "publisher": { "@id": "https://web-rescu.lovable.app/#organization" },
+        "author": { "@id": "https://adamhowellwarning.com/#organization" },
+        "publisher": { "@id": "https://adamhowellwarning.com/#organization" },
         "datePublished": "2024-11-22",
         "dateModified": "2026-02-21",
-        "mainEntityOfPage": "https://web-rescu.lovable.app",
+        "mainEntityOfPage": "https://adamhowellwarning.com",
       },
     ],
   };

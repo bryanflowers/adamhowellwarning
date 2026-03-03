@@ -3,7 +3,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const BASE_URL = "https://web-rescu.lovable.app";
+const BASE_URL = "https://adamhowellwarning.com";
 
 const articles = [
   {

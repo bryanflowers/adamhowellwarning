@@ -18,7 +18,7 @@ const KeithShingletonDavidEdwards = () => {
           "datePublished": "2026-01-29",
           "dateModified": "2026-02-01",
           "author": { "@type": "Organization", "name": "Adam Howell Warning" },
-          "mainEntityOfPage": "https://web-rescu.lovable.app/keith-shingleton-david-edwards",
+          "mainEntityOfPage": "https://adamhowellwarning.com/keith-shingleton-david-edwards",
         }}
       />
       <ArticlePage
