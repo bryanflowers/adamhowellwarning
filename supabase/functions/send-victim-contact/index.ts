@@ -1,0 +1,152 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+};
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    let body: Record<string, unknown>;
+    try {
+      body = await req.json();
+    } catch {
+      return new Response(JSON.stringify({ error: "Invalid request body" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const name = typeof body.name === "string" ? body.name.trim().slice(0, 100) : "";
+    const email = typeof body.email === "string" ? body.email.trim().slice(0, 255) : "";
+    const message = typeof body.message === "string" ? body.message.trim().slice(0, 5000) : "";
+
+    if (!name || !email || !message) {
+      return new Response(JSON.stringify({ error: "All fields are required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (!EMAIL_REGEX.test(email)) {
+      return new Response(JSON.stringify({ error: "Invalid email address" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Store in database (service role bypasses RLS for insert)
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+
+    const dbPromise = supabase
+      .from("victim_contacts")
+      .insert({ name, email, message })
+      .then(({ error: dbErr }) => {
+        if (dbErr) console.error("DB insert error:", dbErr.message);
+        return !dbErr;
+      });
+
+    // Send email via Resend
+    const resendKey = Deno.env.get("RESEND_API_KEY");
+    let emailSent = false;
+
+    if (resendKey) {
+      const escapedName = escapeHtml(name);
+      const escapedEmail = escapeHtml(email);
+      const escapedMessage = escapeHtml(message).replace(/\n/g, "<br>");
+
+      const htmlBody = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#0a0a0a;font-family:'Segoe UI',Roboto,Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;background:#111;border:1px solid #222;border-radius:8px;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);padding:24px;text-align:center;">
+      <h1 style="margin:0;color:#e8550f;font-size:20px;font-weight:800;">ADAM HOWELL WARNING</h1>
+      <p style="margin:6px 0 0;color:#94a3b8;font-size:12px;">Victim Contact Submission</p>
+    </div>
+    <div style="padding:24px;">
+      <div style="background:#1a1a2e;border:1px solid #2a2a4e;border-radius:6px;padding:16px;margin-bottom:16px;">
+        <p style="color:#94a3b8;margin:0 0 8px;font-size:13px;"><strong style="color:#f1f5f9;">Name:</strong> ${escapedName}</p>
+        <p style="color:#94a3b8;margin:0;font-size:13px;"><strong style="color:#f1f5f9;">Email:</strong> <a href="mailto:${escapedEmail}" style="color:#e8550f;">${escapedEmail}</a></p>
+      </div>
+      <h3 style="color:#f1f5f9;margin:0 0 8px;font-size:15px;">Message:</h3>
+      <div style="background:#0a0a0a;border:1px solid #222;border-radius:6px;padding:16px;">
+        <p style="color:#cbd5e1;line-height:1.6;margin:0;font-size:14px;">${escapedMessage}</p>
+      </div>
+    </div>
+    <div style="background:#0a0a0a;padding:16px 24px;border-top:1px solid #222;text-align:center;">
+      <p style="color:#475569;font-size:11px;margin:0;">Submitted ${new Date().toISOString()} &bull; adamhowellwarning.com</p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+      try {
+        const resendRes = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${resendKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "Adam Howell Warning <noreply@adamhowellwarning.com>",
+            to: ["b@bazookaemail.com"],
+            reply_to: email,
+            subject: `Victim Report from ${name}`,
+            html: htmlBody,
+          }),
+        });
+
+        if (resendRes.ok) {
+          await resendRes.json();
+          emailSent = true;
+        } else {
+          const errText = await resendRes.text();
+          console.error("Resend API error:", resendRes.status, errText);
+        }
+      } catch (emailErr) {
+        console.error("Email send error:", emailErr);
+      }
+    } else {
+      console.error("RESEND_API_KEY not configured");
+    }
+
+    const dbSaved = await dbPromise;
+
+    if (!dbSaved && !emailSent) {
+      return new Response(JSON.stringify({ error: "Failed to process submission" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+});
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}

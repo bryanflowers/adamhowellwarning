@@ -1,0 +1,25 @@
+project_id = "nivsgeuojdcynzbyrcto"
+
+[functions.generate-suno-music]
+verify_jwt = false
+
+[functions.suno-webhook]
+verify_jwt = false
+
+[functions.moderate-comments]
+verify_jwt = false
+
+[functions.send-victim-contact]
+verify_jwt = false
+
+[functions.elevenlabs-tts]
+verify_jwt = false
+
+[functions.translate-article]
+verify_jwt = false
+
+[functions.newsletter-confirm]
+verify_jwt = false
+
+[functions.rss-feed]
+verify_jwt = false
