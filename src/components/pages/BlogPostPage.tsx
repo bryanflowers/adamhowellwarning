@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useParams } from "next/navigation";
+import { useEffect } from "react";
 import ArticlePage from "@/components/ArticlePage";
 import RelatedArticles from "@/components/RelatedArticles";
 import { getArticleBySlug } from "@/data/blogArticles";
@@ -15,8 +16,13 @@ const BlogPost = () => {
   const { localPath } = useLanguage();
   const article = slug ? getArticleBySlug(slug) : undefined;
 
+  useEffect(() => {
+    if (!article && slug !== undefined) {
+      router.replace(localPath("/blog"));
+    }
+  }, [article, slug, router, localPath]);
+
   if (!article) {
-    router.replace(localPath("/blog"));
     return null;
   }
 

@@ -28,7 +28,7 @@ class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
-      const isThai = window.location.pathname === "/th" || window.location.pathname.startsWith("/th/");
+      const isThai = typeof window !== "undefined" && (window.location.pathname === "/th" || window.location.pathname.startsWith("/th/"));
       return (
         this.props.fallback ?? (
           <div className="min-h-screen flex items-center justify-center bg-background text-foreground">

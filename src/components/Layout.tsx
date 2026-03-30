@@ -224,7 +224,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             </Link>
             <span aria-hidden="true">|</span>
             <a
-              href={`https://hrmvdwirbrmogwhtglsx.supabase.co/functions/v1/rss-feed`}
+              href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/rss-feed`}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-primary transition-colors"

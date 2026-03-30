@@ -45,13 +45,5 @@ const slugToImageKey: Record<string, string> = {
 export function getHeroImageForSlug(slug: string): string | undefined {
   const key = slugToImageKey[slug];
   if (!key) return undefined;
-  // In Next.js, reference images from /assets/blog/ via static imports or public folder
-  // Since these are in src/assets, we use a dynamic require pattern
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const img = require(`@/assets/blog/${key}.jpg`);
-    return img.default?.src || img.default || img;
-  } catch {
-    return undefined;
-  }
+  return `/blog/${key}.jpg`;
 }
