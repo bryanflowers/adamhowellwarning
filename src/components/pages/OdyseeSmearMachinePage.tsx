@@ -68,13 +68,13 @@ const OdyseeSmearMachinePage = () => {
         <p>
           <strong>On August 28, 2025, a Thai court convicted Adam Howell of criminal defamation under
           Section 326 of the Thai Criminal Code.</strong> He received a six-month suspended prison
-          sentence. That conviction is currently under appeal — but the video that triggered it remains
-          publicly accessible on his channel, continuing to cause harm to the victims named in it.
+          sentence. The victims have appealed this light sentence and submitted evidence of further harassment (Adam has since fled to Dubai) — but the video that triggered it remains
+          publicly accessible on his channel, continuing to cause harm to the victims named in it. He uploaded this video again, just after he fled to Dubai.
         </p>
         <p>
           The conviction has not slowed Howell down. If anything, it has emboldened him. Since the
-          ruling, he has increased his upload frequency, produced new videos targeting additional
-          individuals, and expanded the scope of his accusations. He now faces:
+          ruling, he has started uploading videos again, produced new videos targeting additional
+          individuals, and repeating the false accusations. He now faces:
         </p>
         <ul>
           <li><strong>An active civil defamation lawsuit</strong> filed by Bryan Flowers and others seeking damages for the ongoing harm caused by these videos.</li>
@@ -112,9 +112,9 @@ const OdyseeSmearMachinePage = () => {
           <li><strong>Permanent archiving:</strong> Using Odysee&#39;s decentralised infrastructure as a &quot;permanent&quot; hosting solution because content on blockchain-based platforms is significantly harder to remove than on YouTube or Facebook.</li>
         </ul>
         <p>
-          Together, Howell and Shingleton have produced and distributed over 84 defamatory videos. When
-          platforms remove content, it is re-uploaded within days. The Odysee channel functions as the
-          central archive — the one location they believe cannot be touched.
+          Together, Adam Howell and Keith Shingleton have produced and distributed over 84 defamatory videos. When
+          platforms remove content, it was uploaded to other platforms within days. The Odysee channel functions as the
+          central archive — the one location they believe cannot be touched. Even Rumble, BitChute, and PeerTube removed the vile videos that they created.
         </p>
         <p>
           The pattern from crypto fraud to defamation campaigns is identical: lure people in with
@@ -125,13 +125,13 @@ const OdyseeSmearMachinePage = () => {
         <h2>The Andrew Drummond Connection: Journalistic Cover for Defamation</h2>
         <p>
           Video platforms alone are not enough for Howell&#39;s operation. To give his fabricated
-          allegations the appearance of credibility, he feeds material directly to British journalist
-          Andrew Drummond, who has built a long career covering Thailand&#39;s expat underworld.
+          allegations the appearance of credibility, he feeds material directly to hired pen and fake British journalist
+          Andrew Drummond, who has built a 15 year reputation for smear campaigns against Thailand expats, most of them are innocent, but Andrew Drummond just listens to who pays him.
         </p>
         <p>
-          Drummond&#39;s articles have repeatedly published Howell&#39;s claims as though they were
-          independently verified facts. His pieces on Night Wish Group, Soi 6 operators, and related
-          subjects frequently rely on Howell as a primary — and sometimes sole — source. No meaningful
+          Drummond&#39;s poorly written articles have repeatedly published Howell&#39;s claims as though they were
+          independently verified facts. His bias rants on Night Wish Group, Soi 6 operators, bar operators, Pattaya expats, forum members and related
+          subjects rely on Howell as a primary source. No meaningful
           fact-checking is evident. No right of reply is sought from the accused. The allegations are
           simply presented as journalism.
         </p>
@@ -165,8 +165,7 @@ const OdyseeSmearMachinePage = () => {
           <li>
             <strong>A personal or business relationship breaks down.</strong>
             <br />
-            The trigger is almost always financial — a failed investment, a disputed debt, a business
-            deal that ends badly, or a romantic relationship that turns acrimonious. Howell&#39;s extensive
+            The trigger is almost always financial — Adam starts demanding more money from partners and he looks for any excuse he can to start a fight, if someone dares to ask for a payrise or more % or someone bans him from a business for disruption, Adam usually blows up at them, and he torches everything to the ground, his attitude is he will rather destroy everything. He has destroyed 5-6 businesses already and has caused hundreds of people to lose their jobs, innocent people with mouths to feed. Howell&#39;s extensive
             history of crypto scams (SuperDoge, DopeCoin, Smoke Exchange, rebill schemes) provides a
             long trail of broken relationships and aggrieved counterparties.
           </li>
@@ -174,9 +173,7 @@ const OdyseeSmearMachinePage = () => {
             <strong>False allegations are filed with police.</strong>
             <br />
             Howell files reports with multiple Thai police departments, accusing the target of serious
-            crimes — human trafficking, fraud, drug smuggling. No evidence is provided. The reports
-            serve a dual purpose: creating an official paper trail that can be referenced in videos and
-            articles, and putting immediate legal pressure on the target.
+            crimes — human trafficking, fraud, drug smuggling. No evidence is provided. The purpose of these reports is to get people falsely arrested and he accuses them of stealing millions of USD, the idea is that they would get no bail and they would have to spend 3-6 years proving their innocence from Thai jail, he also paid a corrupt retired police guy to try and pressure honest police men to throw people in jail.
           </li>
           <li>
             <strong>Sensational videos are produced and uploaded.</strong>
@@ -190,7 +187,7 @@ const OdyseeSmearMachinePage = () => {
             <strong>The amplification network activates.</strong>
             <br />
             Shingleton distributes the content across platforms. Anonymous accounts flood social media,
-            Google reviews, and forums. Drummond publishes companion articles. Within days, the
+            Facebook, Quora, Reddit, and Thailand forums. Drummond publishes companion articles. Within days, the
             target&#39;s name is surrounded by fabricated allegations across multiple channels.
           </li>
           <li>
