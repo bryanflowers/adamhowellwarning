@@ -1,5 +1,5 @@
 # robots.txt for adamhowellwarning.com
-# Last Updated: 2026-03-03
+# Last Updated: 2026-04-18
 
 # Search Engine Crawlers
 User-agent: Googlebot
@@ -75,6 +75,14 @@ Allow: /
 Disallow: /admin/
 
 User-agent: meta-externalagent
+Allow: /
+Disallow: /admin/
+
+User-agent: Bytespider
+Allow: /
+Disallow: /admin/
+
+User-agent: AmazonBot
 Allow: /
 Disallow: /admin/
 

@@ -14,6 +14,10 @@ const ShareButtons = ({ title, url }: ShareButtonsProps) => {
   const shareUrl = url || (typeof window !== "undefined" ? window.location.href : "");
 
   const copyLink = async () => {
+    if (!navigator?.clipboard?.writeText) {
+      toast.error(lang === "th" ? "ไม่สามารถคัดลอกลิงก์ได้" : "Clipboard not available");
+      return;
+    }
     try {
       await navigator.clipboard.writeText(shareUrl);
       toast.success(lang === "th" ? "คัดลอกลิงก์แล้ว" : "Link copied to clipboard");

@@ -35,6 +35,7 @@ const BlogPost = () => {
           "datePublished": article.date,
           "dateModified": article.date,
           "author": { "@type": "Organization", "name": "Adam Howell Warning" },
+          "publisher": { "@type": "Organization", "name": "Adam Howell Warning" },
           "mainEntityOfPage": `https://adamhowellwarning.com/blog/${article.slug}`,
         }}
       />

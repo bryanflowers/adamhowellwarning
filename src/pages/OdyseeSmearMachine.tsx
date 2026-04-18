@@ -7,8 +7,8 @@ const OdyseeSmearMachine = () => {
   return (
     <Layout>
       <SEOHead
-        title="Adam Howell's Odysee Smear Machine: Extortion, Defamation & the Keith Shingleton – Andrew Drummond Connection"
-        description="Warning about Adam Howell's escalating smear campaign on Odysee (@Soi6Whistleblower). Convicted of criminal defamation, he continues to produce false videos with Keith Shingleton and journalist Andrew Drummond to extort and harass ex-partners and their associates."
+        title="Adam Howell's Odysee Smear Machine: Extortion & Defamation Exposed"
+        description="Convicted defamer Adam Howell escalates smear campaigns via Odysee @Soi6Whistleblower with Keith Shingleton and Andrew Drummond to extort ex-partners."
         ogType="article"
         publishedTime="2026-04-18"
         jsonLd={{

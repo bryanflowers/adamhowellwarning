@@ -43,7 +43,7 @@ const ArticleNarration = ({ articleSlug, articleText, language = "en", className
         audioRef.current.pause();
         setIsPlaying(false);
       } else {
-        audioRef.current.play();
+        audioRef.current.play().catch(() => setIsPlaying(false));
         setIsPlaying(true);
       }
       return;
