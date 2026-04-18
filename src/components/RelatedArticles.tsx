@@ -17,6 +17,7 @@ const caseStudyArticles = [
   { slug: "/investigative-update-exposing-the-superdoge-scam-adam-howells-anonymous-pitch-vanished-promises-and-inner-circle-ties", title: "SuperDoge Scam Update: Anonymous Pitch & Vanished Promises", tag: "Update" },
   { slug: "/keith-shingleton-david-edwards", title: "Keith Shingleton, David Edwards & Adam Howell Connections", tag: "Associates" },
   { slug: "/the-architect-of-deception-and-adam-howells-web-of-accomplices", title: "The Architect of Deception: Adam Howell's Web of Accomplices", tag: "Network" },
+  { slug: "/adam-howells-odysee-smear-machine-extortion-defamation-keith-shingleton-andrew-drummond-connection", title: "Adam Howell's Odysee Smear Machine: Extortion & Defamation", tag: "Exposé" },
 ];
 
 const RelatedArticles = ({ currentSlug, maxItems = 6 }: RelatedArticlesProps) => {

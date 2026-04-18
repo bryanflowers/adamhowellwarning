@@ -9,18 +9,36 @@ export const useLanguage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const lang: Language = (pathname === "/th" || pathname.startsWith("/th/")) ? "th" : "en";
+  // Detect language from URL — first segment
+  const lang: Language =
+    pathname === "/th" || pathname.startsWith("/th/") ? "th" : "en";
 
   const toggleLanguage = () => {
     const search = searchParams.toString() ? `?${searchParams.toString()}` : "";
-    if (lang === "en") {
-      router.push(`/th${pathname === "/" ? "" : pathname}${search}`);
-    } else {
-      router.push((pathname.replace(/^\/th/, "") || "/") + search);
-    }
+
+    // Strip existing language prefix from pathname
+    const stripped = pathname.replace(/^\/(en|th)(?=\/|$)/, "") || "";
+
+    // Build new URL with the opposite language
+    const newLang: Language = lang === "en" ? "th" : "en";
+    const newPath = `/${newLang}${stripped}` || `/${newLang}`;
+
+    router.push(newPath + search);
   };
 
-  const localPath = (path: string) => (lang === "th" ? `/th${path}` : path);
+  // Always prefix with current language — both /en and /th need prefixes
+  const localPath = (path: string) => {
+    // If path is already absolute with a locale, return as-is
+    if (path.startsWith("/en/") || path.startsWith("/th/") || path === "/en" || path === "/th") {
+      return path;
+    }
+    // Root path becomes /en or /th
+    if (path === "/") {
+      return `/${lang}`;
+    }
+    // Everything else gets the lang prefix
+    return `/${lang}${path}`;
+  };
 
   return { lang, toggleLanguage, localPath };
 };
