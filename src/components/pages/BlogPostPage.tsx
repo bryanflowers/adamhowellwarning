@@ -13,7 +13,7 @@ const BlogPost = () => {
   const params = useParams<{ slug: string }>();
   const slug = params?.slug;
   const router = useRouter();
-  const { localPath } = useLanguage();
+  const { lang, localPath } = useLanguage();
   const article = slug ? getArticleBySlug(slug) : undefined;
 
   useEffect(() => {
