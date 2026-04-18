@@ -29,6 +29,7 @@ const About = lazy(() => import("./pages/About"));
 const Timeline = lazy(() => import("./pages/Timeline"));
 const Glossary = lazy(() => import("./pages/Glossary"));
 const ConfirmNewsletter = lazy(() => import("./pages/ConfirmNewsletter"));
+const OdyseeSmearMachine = lazy(() => import("./pages/OdyseeSmearMachine"));
 
 const queryClient = new QueryClient();
 
@@ -65,6 +66,8 @@ const AppRoutes = () => (
     <Route path="timeline" element={<Timeline />} />
     <Route path="glossary" element={<Glossary />} />
     <Route path="confirm-newsletter" element={<ConfirmNewsletter />} />
+    <Route path="adam-howells-odysee-smear-machine-extortion-defamation-keith-shingleton-andrew-drummond-connection" element={<OdyseeSmearMachine />} />
+    <Route path="odysee-smear-machine" element={<Navigate to="adam-howells-odysee-smear-machine-extortion-defamation-keith-shingleton-andrew-drummond-connection" replace />} />
   </>
 );
 
