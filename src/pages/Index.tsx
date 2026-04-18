@@ -22,6 +22,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import ArticleNarration from "@/components/ArticleNarration";
 import { PROSE_CLASSES } from "@/lib/constants";
+import DOMPurify from "dompurify";
 
 const Index = () => {
   const { lang, localPath } = useLanguage();
@@ -51,6 +52,9 @@ const Index = () => {
     }
     return () => {
       container?.removeEventListener("click", handleArticleClick as EventListener);
+      container?.querySelectorAll("img").forEach((img) => {
+        (img as HTMLElement).style.cursor = "";
+      });
     };
   }, [handleArticleClick]);
 
@@ -218,7 +222,7 @@ const Index = () => {
               <Globe className="w-3 h-3" />
               แปลอัตโนมัติ · Auto-translated
             </div>
-            <div className={PROSE_CLASSES} dangerouslySetInnerHTML={{ __html: translatedHtml }} />
+            <div className={PROSE_CLASSES} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(translatedHtml) }} />
           </div>
         </article>
       ) : (

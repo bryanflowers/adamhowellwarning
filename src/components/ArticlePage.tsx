@@ -11,6 +11,7 @@ import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PROSE_CLASSES } from "@/lib/constants";
+import DOMPurify from "dompurify";
 
 interface ArticlePageProps {
   title: string;
@@ -73,6 +74,9 @@ const ArticlePage = ({
     }
     return () => {
       container?.removeEventListener("click", handleArticleClick as EventListener);
+      container?.querySelectorAll("img").forEach((img) => {
+        (img as HTMLElement).style.cursor = "";
+      });
     };
   }, [handleArticleClick, translatedHtml]);
 
@@ -144,7 +148,15 @@ const ArticlePage = ({
         }
 
         // Step 2: Not cached — call edge function to generate + cache
-        if (!englishHtml) {
+        // Re-capture HTML in case prose rendered after initial capture
+        let html = englishHtml || proseRef.current?.innerHTML || "";
+        if (!html) {
+          // Wait for DOM to render and retry once
+          await new Promise((r) => setTimeout(r, 300));
+          html = proseRef.current?.innerHTML || "";
+        }
+        if (!html) {
+          console.warn("Translation skipped: no English HTML available");
           return;
         }
 
@@ -153,7 +165,7 @@ const ArticlePage = ({
         const { data, error } = await supabase.functions.invoke("translate-article", {
           body: {
             slug: cacheSlug,
-            html: englishHtml,
+            html: html,
             targetLang: "th",
           },
         });
@@ -248,7 +260,7 @@ const ArticlePage = ({
             className={PROSE_CLASSES}
           >
             {lang === "th" && translatedHtml ? (
-              <div dangerouslySetInnerHTML={{ __html: translatedHtml }} />
+              <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(translatedHtml) }} />
             ) : (
               children
             )}

@@ -61,7 +61,7 @@ const Music = () => {
       }
       setSearchParams({}, { replace: true });
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [searchParams, setSearchParams]);
 
   const playAll = () => {
     if (playableTracks.length === 0) return;

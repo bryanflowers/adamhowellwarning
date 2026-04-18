@@ -6,6 +6,7 @@ import { getArticleBySlug } from "@/data/blogArticles";
 import { useLanguage } from "@/hooks/useLanguage";
 import SEOHead from "@/components/SEOHead";
 import { getHeroImageForSlug } from "@/utils/blogHeroImages";
+import DOMPurify from "dompurify";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -53,7 +54,7 @@ const BlogPost = () => {
             ⚠️ เนื้อหาบทความนี้มีเฉพาะภาษาอังกฤษเท่านั้นในขณะนี้
           </div>
         )}
-        <div dangerouslySetInnerHTML={{ __html: article.content }} />
+        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }} />
         <RelatedArticles currentSlug={`/blog/${article.slug}`} />
       </ArticlePage>
     </Layout>
