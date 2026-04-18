@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { ScrollToTop } from "./components/ScrollToTop";
 import ErrorBoundary from "./components/ErrorBoundary";
 
@@ -32,6 +32,12 @@ const ConfirmNewsletter = lazy(() => import("./pages/ConfirmNewsletter"));
 const OdyseeSmearMachine = lazy(() => import("./pages/OdyseeSmearMachine"));
 
 const queryClient = new QueryClient();
+
+/** Redirect /en/* to /* — English lives at root, not /en */
+const StripEnPrefix = () => {
+  const { "*": rest } = useParams();
+  return <Navigate to={`/${rest || ""}`} replace />;
+};
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
@@ -85,6 +91,9 @@ const App = () => (
               <Route path="/">{AppRoutes()}</Route>
               {/* Thai routes */}
               <Route path="/th">{AppRoutes()}</Route>
+              {/* Redirect /en/* to /* — English is the default at root */}
+              <Route path="/en" element={<Navigate to="/" replace />} />
+              <Route path="/en/*" element={<StripEnPrefix />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
