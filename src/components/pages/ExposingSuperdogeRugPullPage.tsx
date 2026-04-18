@@ -3,6 +3,7 @@
 import ArticlePage from "@/components/ArticlePage";
 import RelatedArticles from "@/components/RelatedArticles";
 import SEOHead from "@/components/SEOHead";
+import { useLanguage } from "@/hooks/useLanguage";
 import drummondSuperdogeDefense from "@/assets/drummond-superdoge-defense.png";
 import superDogeEdgeNft from "@/assets/superdoge-edge-nft-podcast.jpg";
 import adamHowellCourt from "@/assets/adam-howell-court.png";
@@ -10,6 +11,7 @@ import keithShingletonCoo from "@/assets/keith-shingleton-linkedin-coo.png";
 import superDogeCharities from "@/assets/superdoge-charities.png";
 
 const ExposingSuperdogeRugPull = () => {
+  const { localPath } = useLanguage();
   return (
     <>
       <SEOHead
@@ -49,7 +51,7 @@ const ExposingSuperdogeRugPull = () => {
 
         <h2>Adam Howell: A Serial Scammer at the Helm - Who Claimed to Be Broke (After Making 2M USD Pumping and Dumping DopeCoin)</h2>
         <p>
-          Adam Howell, the admitted founder of SuperDoge, has a long track record of fraudulent schemes that predates this venture. Public warnings and exposés paint him as a career con artist. For instance, a dedicated warning site (<a href="/">adamhowellwarning.com</a>) highlights his involvement in micro-cap crypto scams like Dope Coin, describing him as a manipulator of fringe tokens. In 2021, he was linked to the Lendefi project, where he authored misleading documents to mislead the public into thinking that his partners were scammers, as detailed on Bitcoin forums. Earlier schemes include rebill scams that defrauded thousands by charging for unsolicited messages. Even tangential reports reference Howell's pursuit of "fast cash from crypto scams." These patterns—hyped launches followed by abrupt exits—mirror SuperDoge's trajectory, suggesting it was another vehicle for quick profits at investors' expense.
+          Adam Howell, the admitted founder of SuperDoge, has a long track record of fraudulent schemes that predates this venture. Public warnings and exposés paint him as a career con artist. For instance, a dedicated warning site (<a href={localPath("/")}>adamhowellwarning.com</a>) highlights his involvement in micro-cap crypto scams like Dope Coin, describing him as a manipulator of fringe tokens. In 2021, he was linked to the Lendefi project, where he authored misleading documents to mislead the public into thinking that his partners were scammers, as detailed on Bitcoin forums. Earlier schemes include rebill scams that defrauded thousands by charging for unsolicited messages. Even tangential reports reference Howell's pursuit of "fast cash from crypto scams." These patterns—hyped launches followed by abrupt exits—mirror SuperDoge's trajectory, suggesting it was another vehicle for quick profits at investors' expense.
         </p>
         <p>
           Howell operated under the alias "Dev" in SuperDoge's early promotions, including a YouTube AMA session where he claimed to have built one of the world's earliest cryptocurrencies in 2014 (the 110th ever created). This aligns with his self-described background in crypto development, but anonymity was a deliberate choice: in the AMA, he promised to reveal his identity in three months, a deadline that never came. Instead, the project faded, reinforcing suspicions of intentional obfuscation to evade accountability.
@@ -82,7 +84,7 @@ const ExposingSuperdogeRugPull = () => {
         </ul>
 
         <p>
-          Adam Howell's COO is called <a href="/keith-shingleton-david-edwards">Keith Shingleton</a>, he is a man who is behind all of Adam's scams, he wasn't listed as a founder or partner on any of the sites. But on his LinkedIn, he was listed as COO:
+          Adam Howell's COO is called <a href={localPath("/keith-shingleton-david-edwards")}>Keith Shingleton</a>, he is a man who is behind all of Adam's scams, he wasn't listed as a founder or partner on any of the sites. But on his LinkedIn, he was listed as COO:
         </p>
 
         <figure className="my-8">
@@ -219,7 +221,7 @@ const ExposingSuperdogeRugPull = () => {
 
         <h3>adamhowellwarning.com - Warning Website</h3>
         <p>
-          A dedicated warning website (<a href="/">adamhowellwarning.com</a>) documents: "A notable component of Howell's track record involves involvement in micro-cap cryptocurrency schemes, most notably: Dope Coin (and similar fringe tokens)."
+          A dedicated warning website (<a href={localPath("/")}>adamhowellwarning.com</a>) documents: "A notable component of Howell's track record involves involvement in micro-cap cryptocurrency schemes, most notably: Dope Coin (and similar fringe tokens)."
         </p>
 
         <h3>Reddit Community Discussions</h3>

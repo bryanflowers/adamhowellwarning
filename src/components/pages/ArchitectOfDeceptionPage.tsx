@@ -3,11 +3,13 @@
 import ArticlePage from "@/components/ArticlePage";
 import RelatedArticles from "@/components/RelatedArticles";
 import SEOHead from "@/components/SEOHead";
+import { useLanguage } from "@/hooks/useLanguage";
 import adamHowellAiPhoto from "@/assets/adam-howell-ai-photo.png";
 import adamHowellRebillChat from "@/assets/adam-howell-rebill-chat.jpeg";
 import kanokrat from "@/assets/kanokrat.jpg";
 
 const ArchitectOfDeception = () => {
+  const { localPath } = useLanguage();
   return (
     <>
       <SEOHead
@@ -46,7 +48,7 @@ const ArchitectOfDeception = () => {
 
         <h2>The Crypto Facade: SuperDoge and Beyond</h2>
         <p>
-          Launched in 2021 on the Binance Smart Chain, SuperDoge ($SUPDOG) was marketed as a charitable superhero-themed token with deflationary mechanics and automatic donations. Under Howell's anonymous alias "Dev," it skyrocketed to a $13 million market cap in days, boasting $500,000 in claimed donations to charities. Yet, this was a classic rug pull: insiders, likely holding 10-30% of the 1 billion token supply, dumped holdings after the hype, crashing the value to near zero by 2026. The website vanished, social channels went dark, and promised audits never materialized. Conservative estimates suggest $2-5 million extracted, with verifiable charities receiving far less—pointing to siphoning. You can read more about his SuperDoge scam <a href="/superdoge-rug-pull">here</a>.
+          Launched in 2021 on the Binance Smart Chain, SuperDoge ($SUPDOG) was marketed as a charitable superhero-themed token with deflationary mechanics and automatic donations. Under Howell's anonymous alias "Dev," it skyrocketed to a $13 million market cap in days, boasting $500,000 in claimed donations to charities. Yet, this was a classic rug pull: insiders, likely holding 10-30% of the 1 billion token supply, dumped holdings after the hype, crashing the value to near zero by 2026. The website vanished, social channels went dark, and promised audits never materialized. Conservative estimates suggest $2-5 million extracted, with verifiable charities receiving far less—pointing to siphoning. You can read more about his SuperDoge scam <a href={localPath("/superdoge-rug-pull")}>here</a>.
         </p>
         <p>
           This mirrors Howell's earlier ventures, like DopeCoin (raised $2 million in 2014 before dormancy) and failed NFT schemes. He employs "rebill" tactics in other projects, trapping users in hidden recurring charges. When investors or partners push back, the retaliation begins: false accusations amplified through paid channels.
