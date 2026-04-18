@@ -42,7 +42,7 @@ class ErrorBoundary extends Component<Props, State> {
               <button
                 onClick={() => {
                   this.setState({ hasError: false, error: null });
-                  window.location.href = isThai ? "/th" : "/";
+                  window.location.href = isThai ? "/th" : "/en";
                 }}
                 className="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-6 py-3 text-sm font-medium hover:bg-primary/90 transition-colors"
               >

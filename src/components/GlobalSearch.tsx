@@ -47,7 +47,7 @@ const GlobalSearch = () => {
 
     const tracks: SearchResult[] = musicTracks
       .filter((track) => track.title.toLowerCase().includes(q) || track.description.toLowerCase().includes(q) || track.genre.toLowerCase().includes(q))
-      .map((track) => ({ title: track.title, slug: localPath(`/music?track=${track.id}`), type: "music", subtitle: `${track.genre} — ${track.description}` }));
+      .map((track) => ({ title: track.title, slug: localPath("/music") + `?track=${track.id}`, type: "music", subtitle: `${track.genre} — ${track.description}` }));
 
     return [...articles, ...blogs, ...tracks].slice(0, 8);
   }, [query, localPath]);
